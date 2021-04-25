@@ -202,6 +202,9 @@ static double getFitNess( std::unordered_map<BasicBlock*, std::unordered_set<Ins
                           std::unordered_set<BasicBlock*>& RegionOfInfluence) {
     
     // get the fitness of phi instruction
+    if (RegionOfInfluence.size() == 0) {
+        return double(0);
+    }
     return double(PhiInfluenceNodes.size()) / double(RegionOfInfluence.size());
 }
 
@@ -286,7 +289,6 @@ namespace SplitMergeSpace {
       return true;
     }
   };
-
 } // namespace SplitMergeSpace
 
 static void generateSplitCFG(Instruction* PhiInstruction,
@@ -299,9 +301,13 @@ static void generateSplitCFG(Instruction* PhiInstruction,
     // revival edges
     std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
 
+    // associate data fact with edge
+    
 
     // kill edges
     std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> KillEdges;
+
+    // data flow fact
 
 }
 
