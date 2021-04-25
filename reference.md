@@ -35,6 +35,17 @@ bin/opt -S -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/sample3.ll -o ../l
 
 bin/opt -S -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/sample3-ssa.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample3-ssa-sccp.ll
 
+### Benchmarks
+~/cs6241/llvm-project/build/bin/clang++ -S -emit-llvm -O1 -Xclang -disable-llvm-passes -DUSE_MPI=0 *.cc
+~/cs6241/llvm-project/build/bin/llvm-link *.ll -o ~/cs6241/llvm-project/llvm/lib/Transforms/SplitMerge/test/ir/lulesh-single.ll
+bin/opt -S -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-single.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa.ll
+bin/opt -S -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa-sccp.ll
+
+~/cs6241/llvm-project/build/bin/clang -S -emit-llvm *.cc
+~/cs6241/llvm-project/build/bin/llvm-link *.ll -o ~/cs6241/llvm-project/llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-single.ll
+bin/opt -S -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-single.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa.ll
+bin/opt -S -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa-sccp.ll
+
 
 ### Run Pass
 bin/opt -load lib/LLVMSplitMerge.so -FuncPhiInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp.ll
