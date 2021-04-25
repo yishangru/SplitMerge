@@ -1,10 +1,3 @@
-1. LLVM Phi Node
-https://stackoverflow.com/questions/11485531/what-exactly-phi-instruction-does-and-how-to-use-it-in-llvm
-
-
-## Command
-
-### sample1
 bin/clang -S -emit-llvm -O1 -Xclang -disable-llvm-passes ../llvm/lib/Transforms/SplitMerge/test/src/sample1.c -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample1.ll
 
 bin/clang -S -emit-llvm ../llvm/lib/Transforms/SplitMerge/test/src/sample1.c -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-no.ll
@@ -13,7 +6,6 @@ bin/opt -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-no.ll > ../ll
 
 bin/opt -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-no-ssa.ll > ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-no-ssa-sccp.ll
 
-### sample2
 bin/clang -S -emit-llvm -O1 -Xclang -disable-llvm-passes ../llvm/lib/Transforms/SplitMerge/test/src/sample2.c -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample2.ll
 
 bin/clang -S -emit-llvm ../llvm/lib/Transforms/SplitMerge/test/src/sample2.c -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no.ll
@@ -21,9 +13,3 @@ bin/clang -S -emit-llvm ../llvm/lib/Transforms/SplitMerge/test/src/sample2.c -o 
 bin/opt -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no.ll > ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no-ssa.ll
 
 bin/opt -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no-ssa.ll > ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no-ssa-sccp.ll
-
-
-## Notions
-- Undecidable problem
-
-In computability theory and computational complexity theory, an undecidable problem is a decision problem for which it is proved to be impossible to construct an algorithm that always leads to a correct yes-or-no answer.
