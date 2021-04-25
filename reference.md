@@ -3,24 +3,28 @@ https://stackoverflow.com/questions/11485531/what-exactly-phi-instruction-does-a
 
 
 ## Command
+### Build
+cmake -DLLVM_ENABLE_PROJECTS=clang -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=On -DLLVM_TARGETS_TO_BUILD=host -DLLVM_ENABLE_STATS ../llvm
+
+Use `-disable-llvm-passes` for generating IR.
 
 ### sample1
 bin/clang -S -emit-llvm -O1 -Xclang -disable-llvm-passes ../llvm/lib/Transforms/SplitMerge/test/src/sample1.c -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample1.ll
 
 bin/clang -S -emit-llvm ../llvm/lib/Transforms/SplitMerge/test/src/sample1.c -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-no.ll
 
-bin/opt -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-no.ll > ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-no-ssa.ll
+bin/opt -S -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/sample1.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa.ll
 
-bin/opt -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-no-ssa.ll > ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-no-ssa-sccp.ll
+bin/opt -S -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp.ll
 
 ### sample2
 bin/clang -S -emit-llvm -O1 -Xclang -disable-llvm-passes ../llvm/lib/Transforms/SplitMerge/test/src/sample2.c -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample2.ll
 
 bin/clang -S -emit-llvm ../llvm/lib/Transforms/SplitMerge/test/src/sample2.c -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no.ll
 
-bin/opt -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no.ll > ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no-ssa.ll
+bin/opt -S -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/sample2.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa.ll
 
-bin/opt -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no-ssa.ll > ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-no-ssa-sccp.ll
+bin/opt -S -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll
 
 
 ## Notions
