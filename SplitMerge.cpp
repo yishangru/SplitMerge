@@ -26,7 +26,7 @@ static void getReachableNodes(Instruction* PhiInstruction, std::unordered_map<Ba
     assert(ReachableMap.find(PhiBB) == ReachableMap.end());
 
     if (succ_empty(PhiBB)) {
-        errs() << "BB has no successors." << "\n";
+        //outs() << "BB has no successors." << "\n";
     }
 
     std::unordered_set<BasicBlock*> Pending;
@@ -111,12 +111,14 @@ static void getInfluencedNodes( Instruction* PhiInstruction,
             Instruction* Usage = cast<Instruction>(&*U);
 
             if (!isa<PHINode>(Usage)) {
-              if (Usage->isUnaryOp()) {
+              if (Usage->isBinaryOp()) {
                 WhetherUpdateInfluence = true;
-              } else if (Usage->isBinaryOp()) {
+              } else if (isa<CmpInst>(Usage)) {
+                WhetherUpdateInfluence = true;
+              } else if (isa<SExtInst>(Usage)) {
                 WhetherUpdateInfluence = true;
               } else {
-                outs() << "Neith Unary Op Or Binary Op -- [ " << *Usage  << " ]" << "\n";
+                //outs() << "Neither Binary Op Or Compare -- [ " << *Usage  << " ]" << "\n";
                 continue;
               }
             } else {
@@ -134,10 +136,18 @@ static void getInfluencedNodes( Instruction* PhiInstruction,
                 if (isa<ConstantInt>(ComeValue)) {
                   continue;
                 } else {
-                  assert(isa<Instruction>(ComeValue));
+
+                  if (!isa<Instruction>(ComeValue)) {
+                      //outs() << "Non Instruction Value --- " << *ComeValue << "\n";
+                      WhetherAllVisited = false;
+                      break;
+                  }
 
                   Instruction* InstValue = cast<Instruction>(ComeValue);
                   if (InstValue == PhiInstruction) {
+                      continue;
+                  }
+                  if (ComeValue == Visiting) {
                       continue;
                   }
 
@@ -244,16 +254,16 @@ static void printStatisticForDm(  Instruction* PhiInstruction,
     errs() << "\tTotal Influence Blocks: " << TotalBBInfluence << "\n";
     errs() << "\tTotal Influence Insts: " << TotalInstInfluence << "\n";
     errs() << "\tFitness: " << getFitNess(PhiInfluenceNodes, RegionOfInfluence) << "\n";
-    outs() << "\tReachable BB: " << ReachBBString << "\n";
-    outs() << "\tInfluence BB: " << InfluenceBBString << "\n";
-    outs() << "\tROI: " << ROIString << "\n";
+    //outs() << "\tReachable BB: " << ReachBBString << "\n";
+    //outs() << "\tInfluence BB: " << InfluenceBBString << "\n";
+    //outs() << "\tROI: " << ROIString << "\n";
 }
 
 namespace SplitMergeSpace {
   struct Edge {
     BasicBlock* Start;
     BasicBlock* End;
-
+    int64_t ExactValue;
 
     struct EdgeHashFunction {
       std::size_t operator()(const Edge& E) const {
@@ -264,14 +274,15 @@ namespace SplitMergeSpace {
         std::stringstream Strm2;
         Strm2 << E.End;
 
-        std::string HashString = Strm1.str() + Strm2.str();
+        std::string HashString = Strm1.str() + Strm2.str(); //+ std::to_string(E.ExactValue);
         return std::hash<std::string>{}(HashString);
       }
     };
 
-    Edge(BasicBlock* Start, BasicBlock* End) {
+    Edge(BasicBlock* Start, BasicBlock* End, int64_t Value) {
         this->Start = Start;
         this->End = End;
+        this->ExactValue = Value;
     }
 
     Edge(const Edge& E) {
@@ -286,7 +297,19 @@ namespace SplitMergeSpace {
       if (E.End != this->End) {
           return false;
       }
+      /*
+      if (E.ExactValue != this->ExactValue) {
+          return false;
+      }
+      */
       return true;
+    }
+
+    static std::string edgeString(const Edge& E)  {
+      std::string EdgeS = "( " + E.Start->getName().str() + " --- ";
+      EdgeS += (E.End->getName().str() + " )");
+      EdgeS += ("  :  " + std::to_string(E.ExactValue));
+      return EdgeS;
     }
   };
 } // namespace SplitMergeSpace
@@ -297,9 +320,83 @@ static void generateSplitCFG(Instruction* PhiInstruction,
 
     assert(isa<PHINode>(PhiInstruction));
     PHINode* PhiInst = cast<PHINode>(PhiInstruction);
+    BasicBlock* PhiBB = PhiInst->getParent();
 
     // revival edges
     std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
+
+    // Edge -> Value
+    std::unordered_map<SplitMergeSpace::Edge, int64_t, SplitMergeSpace::Edge::EdgeHashFunction> EdgeValueMap;
+    // Value -> Edges
+    std::unordered_map<int64_t, std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction>> ValueEdgesMap;
+
+    // Value -> State
+    std::unordered_map<int64_t , std::size_t> StateMap;
+    // State -> Value
+    std::unordered_map<std::size_t, int64_t> StateReverseMap;
+
+    std::size_t TotalValue = PhiInst->getNumIncomingValues();
+    for (std::size_t I = 0; I < TotalValue; I++) {
+        Value* ComeValue = PhiInst->getIncomingValue(I);
+        BasicBlock* ComeBB = PhiInst->getIncomingBlock(I);
+
+        if (isa<ConstantInt>(ComeValue)) {
+            ConstantInt* ConsInst = cast<ConstantInt>(ComeValue);
+            int64_t ActualValue = ConsInst->getSExtValue();
+
+            SplitMergeSpace::Edge RevivalEdge{ComeBB, PhiBB, ActualValue};
+
+            if (RevivalEdges.find(RevivalEdge) != RevivalEdges.end()) {
+                errs() << "Edge Already Present In Revival Edge:  " << SplitMergeSpace::Edge::edgeString(RevivalEdge) << "\n";
+                assert(false);
+            }
+
+            if (EdgeValueMap.find(RevivalEdge) != EdgeValueMap.end()) {
+                errs() << "Edge Already Present In Edge Value Map:  " << SplitMergeSpace::Edge::edgeString(RevivalEdge) << "\n";
+                assert(false);
+            }
+
+            int64_t StoreValue = RevivalEdge.ExactValue;
+
+            RevivalEdges.insert(RevivalEdge);
+            EdgeValueMap[RevivalEdge] = StoreValue;
+
+            if (ValueEdgesMap.find(StoreValue) == ValueEdgesMap.end()) {
+                ValueEdgesMap[StoreValue] = std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction>();
+            }
+
+            if (ValueEdgesMap[StoreValue].find(RevivalEdge) != ValueEdgesMap[StoreValue].end()) {
+                errs() << "Edge Already Present In Value Edge Map:  " << SplitMergeSpace::Edge::edgeString(RevivalEdge) << "\n";
+                assert(false);
+            }
+            ValueEdgesMap[StoreValue].insert(RevivalEdge);
+
+            if (StateMap.find(StoreValue) == StateMap.end()) {
+                std::size_t CurState = StateMap.size() + 1;
+                StateMap[StoreValue] = CurState;
+                StateReverseMap[CurState] = StoreValue;
+            }
+        }
+    }
+
+    outs() << "Revival Edges:" << "\n";
+    for (auto& E : RevivalEdges) {
+        assert(EdgeValueMap.find(E) != EdgeValueMap.end());
+        assert(EdgeValueMap[E] == E.ExactValue);
+        assert(ValueEdgesMap.find(E.ExactValue) != ValueEdgesMap.end());
+        assert(ValueEdgesMap[E.ExactValue].find(E) != ValueEdgesMap[E.ExactValue].end());
+
+        outs() << "\t" << SplitMergeSpace::Edge::edgeString(E) << "\n";
+    }
+
+    outs() << "\n";
+    outs() << "Value - State" << "\n";
+    for (auto& VSPair : StateMap) {
+        assert(StateReverseMap.find(VSPair.second) != StateReverseMap.end());
+        assert(StateReverseMap[VSPair.second] == VSPair.first);
+
+        outs() << "\t" << VSPair.first << " -- " << VSPair.second;
+    }
 
     // associate data fact with edge
 
@@ -347,16 +444,16 @@ struct FuncPhiInfo : public ModulePass {
                 assert(false);
             }
             
-            bool AllConstant = true;
+            bool AllNonConstant = true;
             for (std::size_t I = 0; I < TotalValues; I++) {
                 Value* ComeValue = PhiNode->getIncomingValue(I);
-                if (!isa<ConstantInt>(ComeValue)) {
-                    AllConstant = false;
+                if (isa<ConstantInt>(ComeValue)) {
+                    AllNonConstant = false;
                     break;
                 }
             }
 
-            if (AllConstant) {
+            if (!AllNonConstant) {
                 // print
                 std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>> ReachableMap = std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>>();
                 std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>> PhiInfluenceNodes = std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>();
@@ -378,6 +475,69 @@ struct FuncPhiInfo : public ModulePass {
 };
 } // namespace
 
+namespace {
+// generate test pseudo-CFG for viz
+struct FuncCFGSplitInfo : public ModulePass {
+  static char ID;
+  FuncCFGSplitInfo() : ModulePass(ID) {}
+
+  bool runOnModule(Module &M) override {
+    errs() << "Function CFG Generate Pass: " << "\n";
+
+    // get all predicate
+    for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
+
+      errs().write_escaped(F->getName()) << '\n';
+
+      for (Function::iterator BB = F->begin(), BBE = F->end(); BB != BBE; ++BB) {
+
+        for (BasicBlock::iterator IN = BB->begin(), INE = BB->end(); IN != INE; ++IN) {
+          // check for phi node and constant before, both phi condition are constant
+
+          Instruction* CurInst = &*IN;
+          if (!isa<PHINode>(CurInst)) {
+            continue;
+          }
+
+          PHINode* PhiNode = cast<PHINode>(CurInst);
+
+          std::size_t TotalValues = PhiNode->getNumIncomingValues();
+          if (TotalValues < 2) {
+            errs() << "Phi Node With Less Than 2 Incoming Value" << "\n";
+            assert(false);
+          }
+
+          bool AllNonConstant = true;
+          for (std::size_t I = 0; I < TotalValues; I++) {
+            Value* ComeValue = PhiNode->getIncomingValue(I);
+            if (isa<ConstantInt>(ComeValue)) {
+              AllNonConstant = false;
+              break;
+            }
+          }
+
+          if (!AllNonConstant) {
+            // print
+            std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>> ReachableMap = std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>>();
+            std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>> PhiInfluenceNodes = std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>();
+            std::unordered_set<BasicBlock*> RegionOfInfluence = std::unordered_set<BasicBlock*>();
+
+            getReachableNodes(PhiNode, ReachableMap);
+            getInfluencedNodes(PhiNode, PhiInfluenceNodes);
+            getRegionOfInfluence(PhiNode, ReachableMap, PhiInfluenceNodes, RegionOfInfluence);
+
+            // generate cfg for test
+
+            errs() << "\n";
+          }
+        }
+      }
+
+    }
+    return false;
+  }
+};
+} // namespace
 
 namespace {
 
@@ -421,10 +581,13 @@ struct ModuleSplitMerge : public ModulePass {
 
 // register pass
 char ModuleSplitMerge::ID = 0;
-static RegisterPass<ModuleSplitMerge> X("ModuleSplitMerge", "Module Split Merge Pass");
+static RegisterPass<ModuleSplitMerge> W("ModuleSplitMerge", "Module Split Merge Pass");
 
 char FuncSplitMerge::ID = 1;
-static RegisterPass<FuncSplitMerge> Y("FuncSplitMerge", "Function Split Merge Pass");
+static RegisterPass<FuncSplitMerge> X("FuncSplitMerge", "Function Split Merge Pass");
 
 char FuncPhiInfo::ID = 2;
-static RegisterPass<FuncPhiInfo> Z("FuncPhiInfo", "Function Phi Node Info");
+static RegisterPass<FuncPhiInfo> Y("FuncPhiInfo", "Function Phi Node Info");
+
+char FuncCFGSplitInfo::ID = 2;
+static RegisterPass<FuncCFGSplitInfo> Z("FuncCFGSplitInfo", "Func CFG Split Info");
