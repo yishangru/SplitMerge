@@ -44,15 +44,28 @@ static void getReachableNodes(Instruction* PhiInstruction, std::unordered_map<Ba
             Visiting = Inst;
             break;
         }
+        //outs() << Visiting->getName() << "\n";
         Pending.erase(Visiting);
 
         std::size_t CurSize = 0;
         if (ReachableMap.find(Visiting) != ReachableMap.end()) {
             CurSize = ReachableMap[Visiting].size();
+
+            // collect reachable from successors
+            for (BasicBlock *Succ : successors(Visiting)) {
+                if (ReachableMap.find(Succ) == ReachableMap.end()) {
+                    continue;
+                }
+                for (auto& SuccReachBlock : ReachableMap[Succ]) {
+                    ReachableMap[Visiting].insert(SuccReachBlock);
+                }
+            }
+
         } else {
             ReachableMap[Visiting] = std::unordered_set<BasicBlock*>();
             for (BasicBlock *Succ : successors(Visiting)) {
                 ReachableMap[Visiting].insert(Succ);
+                Pending.insert(Succ);
             }
         }
 
@@ -103,8 +116,8 @@ static void getInfluencedNodes( Instruction* PhiInstruction,
               } else if (Usage->isBinaryOp()) {
                 WhetherUpdateInfluence = true;
               } else {
-                errs() << "Neith Unary Op Or Binary Op" << "\n";
-                assert(false);
+                outs() << "Neith Unary Op Or Binary Op -- [ " << *Usage  << " ]" << "\n";
+                continue;
               }
             } else {
               PHINode* PhiNode = cast<PHINode>(Usage);
@@ -185,13 +198,14 @@ static void getRegionOfInfluence( Instruction* PhiInstruction,
     }
 }
 
-static double getFitNess( Instruction* PhiInstruction, 
-                          std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>& PhiInfluenceNodes,
+static double getFitNess( std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>& PhiInfluenceNodes,
                           std::unordered_set<BasicBlock*>& RegionOfInfluence) {
     
     // get the fitness of phi instruction
-    BasicBlock* PhiBB = PhiInstruction->getParent();
-    return double(PhiInfluenceNodes[PhiBB].size()) / double(RegionOfInfluence.size());
+    if (RegionOfInfluence.size() == 0) {
+        return double(0);
+    }
+    return double(PhiInfluenceNodes.size()) / double(RegionOfInfluence.size());
 }
 
 static void printStatisticForDm(  Instruction* PhiInstruction,
@@ -229,13 +243,75 @@ static void printStatisticForDm(  Instruction* PhiInstruction,
     errs() << instInfo(PhiInstruction) << "\n";
     errs() << "\tTotal Influence Blocks: " << TotalBBInfluence << "\n";
     errs() << "\tTotal Influence Insts: " << TotalInstInfluence << "\n";
-    errs() << "\tFitness: " << getFitNess(PhiInstruction, PhiInfluenceNodes, RegionOfInfluence) << "\n";
+    errs() << "\tFitness: " << getFitNess(PhiInfluenceNodes, RegionOfInfluence) << "\n";
     outs() << "\tReachable BB: " << ReachBBString << "\n";
     outs() << "\tInfluence BB: " << InfluenceBBString << "\n";
     outs() << "\tROI: " << ROIString << "\n";
 }
 
-static void generateSplitCFG() {
+namespace SplitMergeSpace {
+  struct Edge {
+    BasicBlock* Start;
+    BasicBlock* End;
+
+
+    struct EdgeHashFunction {
+      std::size_t operator()(const Edge& E) const {
+
+        std::stringstream Strm1;
+        Strm1 << E.Start;
+
+        std::stringstream Strm2;
+        Strm2 << E.End;
+
+        std::string HashString = Strm1.str() + Strm2.str();
+        return std::hash<std::string>{}(HashString);
+      }
+    };
+
+    Edge(BasicBlock* Start, BasicBlock* End) {
+        this->Start = Start;
+        this->End = End;
+    }
+
+    Edge(const Edge& E) {
+        this->Start = E.Start;
+        this->End = E.End;
+    }
+
+    bool operator==(const Edge& E) const {
+      if (E.Start != this->Start) {
+          return false;
+      }
+      if (E.End != this->End) {
+          return false;
+      }
+      return true;
+    }
+  };
+} // namespace SplitMergeSpace
+
+static void generateSplitCFG(Instruction* PhiInstruction,
+                             std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>& PhiInfluenceNodes,
+                             std::unordered_set<BasicBlock*>& RegionOfInfluence) {
+
+    assert(isa<PHINode>(PhiInstruction));
+    PHINode* PhiInst = cast<PHINode>(PhiInstruction);
+
+    // revival edges
+    std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
+
+    // associate data fact with edge
+    
+
+    // kill edges
+    std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> KillEdges;
+
+    // data flow fact
+
+}
+
+static void generateNewFunction() {
 
 }
 
@@ -304,105 +380,6 @@ struct FuncPhiInfo : public ModulePass {
 
 
 namespace {
-
-struct Query {
-public:
-  enum QueryAnswer {
-    UNDEF = 0,
-    TRUE = 1,
-    FALSE = 2,
-    UNAVAIL = 3
-  };
-
-  struct QueryHashFunction {
-    std::size_t operator()(const Query& Q) const {
-      std::string Operand1String;
-      if (isa<ConstantInt>(Q.QOperand1)) {
-        ConstantInt* ConstOp1 = cast<ConstantInt>(Q.QOperand1);
-        Operand1String = std::to_string(ConstOp1->getSExtValue());
-      } else {
-        std::stringstream Strm;
-        Strm << Q.QOperand1;
-        Operand1String = Strm.str();
-      }
-      std::string Operand2String;
-      if (isa<ConstantInt>(Q.QOperand2)) {
-        ConstantInt* ConstOp2 = cast<ConstantInt>(Q.QOperand2);
-        Operand2String = std::to_string(ConstOp2->getSExtValue());
-      } else {
-        std::stringstream Strm;
-        Strm << Q.QOperand2;
-        Operand2String = Strm.str();
-      }
-      std::string HashString = std::to_string(Q.QPredicate) + Operand1String + Operand2String;
-      return std::hash<std::string>{}(HashString);
-    }
-  };
-
-  Value* QOperand1;
-  Value* QOperand2;
-  CmpInst::Predicate QPredicate;
-
-  Query() {}
-
-  Query(Value* Operand1, Value* Operand2, CmpInst::Predicate CmpPredicate) {
-    assert(isa<ConstantInt>(Operand2));
-    this->QOperand1 = Operand1;
-    this->QOperand2 = Operand2;
-    this->QPredicate = CmpPredicate;
-    this->HashValue = QueryHashFunction{}(*this);
-  }
-
-  Query(const Query& Q) {
-    this->QOperand1 = Q.QOperand1;
-    this->QOperand2 = Q.QOperand2;
-    this->QPredicate = Q.QPredicate;
-    this->HashValue = Q.HashValue;
-  }
-
-  bool operator==(const Query& Q) const {
-    if (this->HashValue != Q.HashValue) {
-      return false;
-    }
-    if (Q.QPredicate != this->QPredicate) {
-      return false;
-    }
-    return (compareValue(this->QOperand1, Q.QOperand1) && compareValue(this->QOperand2, Q.QOperand2));
-  }
-
-private:
-  std::size_t HashValue;
-  static bool compareValue(Value* Value1, Value* Value2) {
-    if ((!isa<ConstantInt>(Value1)) && (!isa<Instruction>(Value1))) {
-      //outs() << "Value1 Not As Constant Or INST" << "\n";
-      assert(false);
-    }
-    if ((!isa<ConstantInt>(Value2)) && (!isa<Instruction>(Value2))) {
-      //outs() << "Value2 Not As Constant Or INST" << "\n";
-      assert(false);
-    }
-    if (isa<ConstantInt>(Value1)) {
-      if (!isa<ConstantInt>(Value2)) {
-        return false;
-      }
-      // compare content int
-      ConstantInt* Const1 = cast<ConstantInt>(Value1);
-      ConstantInt* Const2 = cast<ConstantInt>(Value2);
-      return (Const1->getSExtValue()) == (Const2->getSExtValue());
-    } else {
-      Instruction* Inst1 = cast<Instruction>(Value1);
-      Instruction* Inst2 = cast<Instruction>(Value2);
-      return Inst1 == Inst2;
-    }
-  }
-};
-
-static std::unordered_map<Query::QueryAnswer, std::string, std::hash<int>> QueryAnswerStringMap {
-    {Query::QueryAnswer::UNAVAIL, "Not Avail"},
-    {Query::QueryAnswer::FALSE, "False"},
-    {Query::QueryAnswer::TRUE, "True"},
-    {Query::QueryAnswer::UNDEF, "Undef"},
-};
 
 // Infeasible Pass - The first implementation, without getAnalysisUsage.
 struct FuncSplitMerge : public FunctionPass {
