@@ -43,10 +43,11 @@ if.else8:                                         ; preds = %if.end4
 
 if.end10:                                         ; preds = %if.else8, %if.then6
   %m.0 = phi i32 [ %add7, %if.then6 ], [ %sub9, %if.else8 ]
-  %add12 = add nsw i32 %x.0, %y.0
-  %add13 = add nsw i32 %add12, %m.0
-  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0), i32 %add13)
-  ret i32 %add13
+  %add12 = add nsw i32 10, %x.0
+  %add13 = add nsw i32 %add12, %y.0
+  %add14 = add nsw i32 %add13, %m.0
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0), i32 %add14)
+  ret i32 %add14
 }
 
 ; Function Attrs: argmemonly nounwind willreturn

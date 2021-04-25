@@ -1,5 +1,5 @@
-; ModuleID = '../llvm/lib/Transforms/SplitMerge/test/ir/sample2.ll'
-source_filename = "../llvm/lib/Transforms/SplitMerge/test/src/sample2.c"
+; ModuleID = '../llvm/lib/Transforms/SplitMerge/test/ir/sample3-ssa.ll'
+source_filename = "../llvm/lib/Transforms/SplitMerge/test/src/sample3.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
@@ -7,17 +7,18 @@ target triple = "x86_64-unknown-linux-gnu"
 @.str.1 = private unnamed_addr constant [15 x i8] c"result was %d\0A\00", align 1
 
 ; Function Attrs: nounwind uwtable
-define dso_local i32 @dm_sample_cond_loop(i32 %condition) #0 {
+define dso_local i32 @dm_sample_loop_complex() #0 {
 entry:
   br label %while.cond
 
 while.cond:                                       ; preds = %cleanup.cont, %entry
+  %condition.0 = phi i32 [ 0, %entry ], [ %condition.1, %cleanup.cont ]
   %loop.0 = phi i32 [ 0, %entry ], [ %loop.1, %cleanup.cont ]
   %a.0 = phi i32 [ 0, %entry ], [ %a.1, %cleanup.cont ]
   br label %while.body
 
 while.body:                                       ; preds = %while.cond
-  %cmp = icmp sgt i32 %condition, 10
+  %cmp = icmp eq i32 %condition.0, 0
   br i1 %cmp, label %if.then, label %if.else
 
 if.then:                                          ; preds = %while.body
@@ -29,6 +30,7 @@ if.else:                                          ; preds = %while.body
   br label %if.end
 
 if.end:                                           ; preds = %if.else, %if.then
+  %condition.1 = phi i32 [ 1, %if.then ], [ 0, %if.else ]
   %loop.1 = phi i32 [ %add, %if.then ], [ %add1, %if.else ]
   %a.1 = phi i32 [ 1, %if.then ], [ 2, %if.else ]
   %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i64 0, i64 0), i32 %a.0)

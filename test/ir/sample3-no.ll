@@ -1,5 +1,5 @@
-; ModuleID = '../llvm/lib/Transforms/SplitMerge/test/src/sample2.c'
-source_filename = "../llvm/lib/Transforms/SplitMerge/test/src/sample2.c"
+; ModuleID = '../llvm/lib/Transforms/SplitMerge/test/src/sample3.c'
+source_filename = "../llvm/lib/Transforms/SplitMerge/test/src/sample3.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
@@ -7,23 +7,23 @@ target triple = "x86_64-unknown-linux-gnu"
 @.str.1 = private unnamed_addr constant [15 x i8] c"result was %d\0A\00", align 1
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define dso_local i32 @dm_sample_cond_loop(i32 %condition) #0 {
+define dso_local i32 @dm_sample_loop_complex() #0 {
 entry:
-  %condition.addr = alloca i32, align 4
   %a = alloca i32, align 4
   %loop = alloca i32, align 4
+  %condition = alloca i32, align 4
   %b = alloca i32, align 4
   %retval5 = alloca i32, align 4
-  store i32 %condition, i32* %condition.addr, align 4
   store i32 0, i32* %a, align 4
   store i32 0, i32* %loop, align 4
+  store i32 0, i32* %condition, align 4
   br label %while.body
 
 while.body:                                       ; preds = %entry, %if.end4
   %0 = load i32, i32* %a, align 4
   store i32 %0, i32* %b, align 4
-  %1 = load i32, i32* %condition.addr, align 4
-  %cmp = icmp sgt i32 %1, 10
+  %1 = load i32, i32* %condition, align 4
+  %cmp = icmp eq i32 %1, 0
   br i1 %cmp, label %if.then, label %if.else
 
 if.then:                                          ; preds = %while.body
@@ -32,6 +32,7 @@ if.then:                                          ; preds = %while.body
   %3 = load i32, i32* %loop, align 4
   %add = add nsw i32 %3, %2
   store i32 %add, i32* %loop, align 4
+  store i32 1, i32* %condition, align 4
   br label %if.end
 
 if.else:                                          ; preds = %while.body
@@ -40,6 +41,7 @@ if.else:                                          ; preds = %while.body
   %5 = load i32, i32* %loop, align 4
   %add1 = add nsw i32 %5, %4
   store i32 %add1, i32* %loop, align 4
+  store i32 0, i32* %condition, align 4
   br label %if.end
 
 if.end:                                           ; preds = %if.else, %if.then

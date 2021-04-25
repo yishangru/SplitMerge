@@ -12,6 +12,7 @@ entry:
   %condition2.addr = alloca i32, align 4
   %condition3.addr = alloca i32, align 4
   %x = alloca i32, align 4
+  %h = alloca i32, align 4
   %y = alloca i32, align 4
   %m = alloca i32, align 4
   %retval11 = alloca i32, align 4
@@ -19,8 +20,10 @@ entry:
   store i32 %condition2, i32* %condition2.addr, align 4
   store i32 %condition3, i32* %condition3.addr, align 4
   store i32 10, i32* %x, align 4
-  %0 = load i32, i32* %condition1.addr, align 4
-  %cmp = icmp sgt i32 %0, 20
+  %0 = load i32, i32* %x, align 4
+  store i32 %0, i32* %h, align 4
+  %1 = load i32, i32* %condition1.addr, align 4
+  %cmp = icmp sgt i32 %1, 20
   br i1 %cmp, label %if.then, label %if.else
 
 if.then:                                          ; preds = %entry
@@ -33,52 +36,54 @@ if.else:                                          ; preds = %entry
 
 if.end:                                           ; preds = %if.else, %if.then
   store i32 20, i32* %y, align 4
-  %1 = load i32, i32* %condition2.addr, align 4
-  %cmp1 = icmp sgt i32 %1, 20
+  %2 = load i32, i32* %condition2.addr, align 4
+  %cmp1 = icmp sgt i32 %2, 20
   br i1 %cmp1, label %if.then2, label %if.else3
 
 if.then2:                                         ; preds = %if.end
-  %2 = load i32, i32* %y, align 4
-  %add = add nsw i32 %2, 10
+  %3 = load i32, i32* %y, align 4
+  %add = add nsw i32 %3, 10
   store i32 %add, i32* %y, align 4
   br label %if.end4
 
 if.else3:                                         ; preds = %if.end
-  %3 = load i32, i32* %y, align 4
-  %sub = sub nsw i32 %3, 10
+  %4 = load i32, i32* %y, align 4
+  %sub = sub nsw i32 %4, 10
   store i32 %sub, i32* %y, align 4
   br label %if.end4
 
 if.end4:                                          ; preds = %if.else3, %if.then2
-  %4 = load i32, i32* %x, align 4
-  store i32 %4, i32* %m, align 4
-  %5 = load i32, i32* %condition3.addr, align 4
-  %cmp5 = icmp sgt i32 %5, 20
+  %5 = load i32, i32* %x, align 4
+  store i32 %5, i32* %m, align 4
+  %6 = load i32, i32* %condition3.addr, align 4
+  %cmp5 = icmp sgt i32 %6, 20
   br i1 %cmp5, label %if.then6, label %if.else8
 
 if.then6:                                         ; preds = %if.end4
-  %6 = load i32, i32* %m, align 4
-  %add7 = add nsw i32 %6, 30
+  %7 = load i32, i32* %m, align 4
+  %add7 = add nsw i32 %7, 30
   store i32 %add7, i32* %m, align 4
   br label %if.end10
 
 if.else8:                                         ; preds = %if.end4
-  %7 = load i32, i32* %m, align 4
-  %sub9 = sub nsw i32 %7, 30
+  %8 = load i32, i32* %m, align 4
+  %sub9 = sub nsw i32 %8, 30
   store i32 %sub9, i32* %m, align 4
   br label %if.end10
 
 if.end10:                                         ; preds = %if.else8, %if.then6
-  %8 = load i32, i32* %x, align 4
-  %9 = load i32, i32* %y, align 4
-  %add12 = add nsw i32 %8, %9
-  %10 = load i32, i32* %m, align 4
-  %add13 = add nsw i32 %add12, %10
-  store i32 %add13, i32* %retval11, align 4
-  %11 = load i32, i32* %retval11, align 4
-  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0), i32 %11)
-  %12 = load i32, i32* %retval11, align 4
-  ret i32 %12
+  %9 = load i32, i32* %h, align 4
+  %10 = load i32, i32* %x, align 4
+  %add12 = add nsw i32 %9, %10
+  %11 = load i32, i32* %y, align 4
+  %add13 = add nsw i32 %add12, %11
+  %12 = load i32, i32* %m, align 4
+  %add14 = add nsw i32 %add13, %12
+  store i32 %add14, i32* %retval11, align 4
+  %13 = load i32, i32* %retval11, align 4
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0), i32 %13)
+  %14 = load i32, i32* %retval11, align 4
+  ret i32 %14
 }
 
 declare dso_local i32 @printf(i8*, ...) #1

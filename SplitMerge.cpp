@@ -48,7 +48,7 @@ static void getReachableNodes(BasicBlock* PhiBB, std::unordered_map<BasicBlock*,
 
         // new node reachable, need update predesscor
         if (CurSize != ReachableMap[Visiting].size()) {
-            for (BasicBlock *Pred : predessors(Visiting)) {
+            for (BasicBlock *Pred : predecessors(Visiting)) {
                 if (ReachableMap.find(Pred) != ReachableMap.end()) {
                     Pending.insert(Pred);
                 }
