@@ -12,6 +12,137 @@
 #include <unordered_set>
 using namespace llvm;
 
+
+static void getReachableNodes(BasicBlock* PhiBB, std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>>& ReachableMap) {
+    // get reach node for Cur BB in the current CFG
+    if (succ_empty(PhiBB)) {
+        return;
+    }
+
+    std::unordered_set<BasicBlock*> Pending;
+    ReachableMap[PhiBB] = std::unordered_set<BasicBlock*>();
+    
+    // initial
+    for (BasicBlock *Succ : successors(PhiBB)) {
+        ReachableMap[PhiBB].insert(Succ);
+        Pending.insert(Succ);
+    }
+
+    while (!Pending.empty()) {
+        BasicBlock* Visiting;
+        for (auto& Inst : Pending) {
+            Visiting = Inst;
+            break;
+        }
+        Pending.erase(Visiting);
+
+        std::size_t CurSize = 0;
+        if (ReachableMap.find(Visiting) != ReachableMap.end()) {
+            CurSize = ReachableMap[Visiting].size();
+        } else {
+            ReachableMap[Visiting] = std::unordered_set<BasicBlock*>();
+            for (BasicBlock *Succ : successors(Visiting)) {
+                ReachableMap[Visiting].insert(Succ);
+            }
+        }
+
+        // new node reachable, need update predesscor
+        if (CurSize != ReachableMap[Visiting].size()) {
+            for (BasicBlock *Pred : predessors(Visiting)) {
+                if (ReachableMap.find(Pred) != ReachableMap.end()) {
+                    Pending.insert(Pred);
+                }
+            }
+        }
+    }
+}
+
+// intruction -> BasicBlock -> Instruction set
+static void getInfluencedNodes( Instruction* PhiInstruction, 
+                                std::unordered_map<Instruction*, std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>>& PhiInfluenceNodes) {
+    
+    // get the influenced nodes for a destructive merges
+    std::unordered_set<Instruction*> Pending;
+    std::unordered_set<Instruction*> Visited;
+
+    Pending.insert(PhiInstruction);
+    while (!Pending.empty()) {
+
+        Instruction* Visiting;
+        for (auto& Inst : Pending) {
+            Visiting = Inst;
+            break;
+        }
+        Pending.erase(Visiting);
+        Visited.insert(Visiting);
+
+        for (auto *U : Inst->users()) {
+            if (!isa<Instruction>(&*U)) {
+                continue;
+            }
+            Instruction* Usage = cast<Instruction>(&*U);
+            if (Visited.find(Usage) != Visited.end()) {
+                continue;
+            }
+
+            bool whetherUpdateInfluence = false;
+
+            if (!isa<PHINode>(Usage)) {
+                if (Usage->isUnaryOp()) {
+                    whetherUpdateInfluence = true;
+                } else if (Usage->isBinaryOp()) {
+                    whetherUpdateInfluence = true;
+                } else {
+                    errs() << "Neith Unary Op Or Binary Op" << "\n";
+                    assert(false);
+                }
+            } else {
+                PHINode* PhiNode = cast<PHINode>(Usage);
+                
+                bool whetherAllVisited = false;
+                for (std::size_t i = 0; i < PhiNode->getNumIncomingValues(); i++) {
+                    Value* ComeValue = PhiNode->getIncomingValue(i);
+                    if (isa<ConstantInt>(ComeValue)) {
+                        continue;
+                    }
+                    
+                }
+            }
+
+            if (!whetherUpdateInfluence) {
+                continue;
+            }
+
+            // update PhiInfluenceNodes
+        }
+    }
+}
+
+// instruction -> BasicBlock -> 
+static void getRegionOfInfluence( Instruction* PhiInstruction, 
+                                  std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>>& ReachableMap, 
+                                  std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>>& PhiInfluenceNodes, 
+                                  std::unordered_map<Instruction*, std::unordered_set<BasicBlock*>>& RegionOfInfluence) {
+
+    // get the region of influence for a destructive merges
+
+}
+
+static double getFitNess( Instruction* PhiInstruction, 
+                          std::unordered_map<Instruction*, std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>>& PhiInfluenceNodes, 
+                          std::unordered_map<Instruction*, std::unordered_set<BasicBlock*>>& RegionOfInfluence) {
+    
+    // get the fitness of phi instruction
+
+}
+
+static void PrintStatisticForDM(  Instruction* PhiInstruction, 
+                                  std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>>& PhiInfluenceNodes, 
+                                  std::unordered_map<Instruction*, std::unordered_set<BasicBlock*>>& RegionOfInfluence) {
+    // print the statistics
+
+}
+
 namespace {
 // pass for collect information - function count, code length, etc.
 struct FuncPhiInfo : public ModulePass {
@@ -26,11 +157,44 @@ struct FuncPhiInfo : public ModulePass {
 
       outs() .write_escaped(F->getName()) << '\n';
 
+      // initial for print statistics
+
+
       for (Function::iterator BB = F->begin(), BBE = F->end(); BB != BBE; ++BB) {
 
         for (BasicBlock::iterator IN = BB->begin(), INE = BB->end(); IN != INE; ++IN) {
-            // check for phi node and constant before, at least one phi condition is constant
+            // check for phi node and constant before, both phi condition are constant
+            
+            Instruction* CurInst = &*IN;
+            if (!isa<PHINode>(CurInst)) {
+                continue;
+            }
+            
+            PHINode* PhiNode = cast<PHINode>(CurInst);
+            
+            std::size_t TotalValues = PhiNode->getNumIncomingValues();
+            if (TotalValues < 2) {
+                errs() << "Phi Node With Less Than 2 Incoming Value" << "\n";
+                assert(false);
+            }
+            
+            bool AllConstant = true;
+            for (std::size_t i = 0; i < TotalValues; i++) {
+                Value* ComeValue = PhiNode->getIncomingValue(i);
+                if (!isa<ConstantInt>(ComeValue)) {
+                    AllConstant = false;
+                    break;
+                }
+            }
 
+            if (AllConstant) {
+                // print
+
+
+                outs() << PhiNode->getParent()->getName() << " --- " << *PhiNode << "\n";
+                outs() << "\t" << "\n";
+                outs() << "\n\n";
+            }
         }
 
       }
@@ -173,6 +337,9 @@ struct ModuleSplitMerge : public ModulePass {
         for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
             errs().write_escaped((&*F)->getName()) << '\n';
         }
+
+        // delete the original generated function
+
         return false;
     }
 };
