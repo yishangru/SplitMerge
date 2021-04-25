@@ -29,7 +29,7 @@ struct FuncPhiInfo : public ModulePass {
       for (Function::iterator BB = F->begin(), BBE = F->end(); BB != BBE; ++BB) {
 
         for (BasicBlock::iterator IN = BB->begin(), INE = BB->end(); IN != INE; ++IN) {
-
+            // check for phi node and constant before, at least one phi condition is constant
 
         }
 

@@ -4,7 +4,7 @@ https://stackoverflow.com/questions/11485531/what-exactly-phi-instruction-does-a
 
 ## Command
 ### Build
-cmake -DLLVM_ENABLE_PROJECTS=clang -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=On -DLLVM_TARGETS_TO_BUILD=host -DLLVM_ENABLE_STATS ../llvm
+cmake -DLLVM_FORCE_ENABLE_STATS=1 -DLLVM_ENABLE_PROJECTS=clang -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=On -DLLVM_TARGETS_TO_BUILD=host ../llvm
 
 Use `-disable-llvm-passes` for generating IR.
 

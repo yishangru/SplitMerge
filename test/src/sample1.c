@@ -2,6 +2,9 @@
 // sample test for destructive merge - simple
 int dm_sample_cond_3 (int condition1, int condition2, int condition3) {
 	int x = 10;
+
+	// for test
+	int h = x;
 	
 	if (condition1 > 20) {
 		x = 15;
@@ -26,7 +29,7 @@ int dm_sample_cond_3 (int condition1, int condition2, int condition3) {
 	}
 
 	// final return
-	int retval = x + y + m;
+	int retval = h + x + y + m;
 	printf("result was %d\n", retval);
 	return retval;
 }
