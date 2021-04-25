@@ -294,7 +294,6 @@ struct FuncPhiInfo : public ModulePass {
                 errs() << "\n";
             }
         }
-
       }
 
     }
