@@ -150,7 +150,7 @@ struct FuncSplitMerge : public FunctionPass {
 
   bool runOnFunction(Function &F) override {
 
-    errs() << "Module Split Merge Pass:" << "\n";
+    errs() << "Function Split Merge Pass:" << "\n";
 
     for (Function::iterator BB = F.begin(), BBE = F.end(); BB != BBE; ++BB) {
 
