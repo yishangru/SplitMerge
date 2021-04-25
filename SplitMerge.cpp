@@ -302,7 +302,7 @@ static void generateSplitCFG(Instruction* PhiInstruction,
     std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
 
     // associate data fact with edge
-    
+
 
     // kill edges
     std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> KillEdges;
