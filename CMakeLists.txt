@@ -1,5 +1,5 @@
-add_llvm_library( LLVMInfeasiblePath MODULE
-  InfeasiblePass.cpp
+add_llvm_library( LLVMSplitMerge MODULE
+  SplitMerge.cpp
 
   PLUGIN_TOOL
   opt
