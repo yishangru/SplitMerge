@@ -1,0 +1,26 @@
+digraph "CFG for 'dm_sample_cond_3' function" {
+	label="CFG for 'dm_sample_cond_3' function";
+
+	Node0x55f4b679c500 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{entry:\l  %cmp = icmp sgt i32 %condition1, 20\l  br i1 %cmp, label %if.then, label %if.else\l|{<s0>T|<s1>F}}"];
+	Node0x55f4b679c500:s0 -> Node0x55f4b679cc50;
+	Node0x55f4b679c500:s1 -> Node0x55f4b679ccc0;
+	Node0x55f4b679cc50 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#f59c7d70",label="{if.then:                                          \l  br label %if.end\l}"];
+	Node0x55f4b679cc50 -> Node0x55f4b679ce40;
+	Node0x55f4b679ccc0 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#f59c7d70",label="{if.else:                                          \l  br label %if.end\l}"];
+	Node0x55f4b679ccc0 -> Node0x55f4b679ce40;
+	Node0x55f4b679ce40 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{if.end:                                           \l  %x.0 = phi i32 [ 15, %if.then ], [ 5, %if.else ]\l  %cmp1 = icmp sgt i32 %condition2, 20\l  br i1 %cmp1, label %if.then2, label %if.else3\l|{<s0>T|<s1>F}}"];
+	Node0x55f4b679ce40:s0 -> Node0x55f4b679d0e0;
+	Node0x55f4b679ce40:s1 -> Node0x55f4b679d160;
+	Node0x55f4b679d0e0 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#f59c7d70",label="{if.then2:                                         \l  br label %if.end4\l}"];
+	Node0x55f4b679d0e0 -> Node0x55f4b679d2f0;
+	Node0x55f4b679d160 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#f59c7d70",label="{if.else3:                                         \l  br label %if.end4\l}"];
+	Node0x55f4b679d160 -> Node0x55f4b679d2f0;
+	Node0x55f4b679d2f0 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{if.end4:                                          \l  %y.0 = phi i32 [ 30, %if.then2 ], [ 10, %if.else3 ]\l  %cmp5 = icmp sgt i32 %condition3, 20\l  br i1 %cmp5, label %if.then6, label %if.else8\l|{<s0>T|<s1>F}}"];
+	Node0x55f4b679d2f0:s0 -> Node0x55f4b679d760;
+	Node0x55f4b679d2f0:s1 -> Node0x55f4b679d7e0;
+	Node0x55f4b679d760 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#f59c7d70",label="{if.then6:                                         \l  %add7 = add nsw i32 %x.0, 30\l  br label %if.end10\l}"];
+	Node0x55f4b679d760 -> Node0x55f4b679da20;
+	Node0x55f4b679d7e0 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#f59c7d70",label="{if.else8:                                         \l  %sub9 = sub nsw i32 %x.0, 30\l  br label %if.end10\l}"];
+	Node0x55f4b679d7e0 -> Node0x55f4b679da20;
+	Node0x55f4b679da20 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{if.end10:                                         \l  %m.0 = phi i32 [ %add7, %if.then6 ], [ %sub9, %if.else8 ]\l  %add12 = add nsw i32 10, %x.0\l  %add13 = add nsw i32 %add12, %y.0\l  %add14 = add nsw i32 %add13, %m.0\l  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8],\l... [15 x i8]* @.str, i64 0, i64 0), i32 %add14)\l  ret i32 %add14\l}"];
+}

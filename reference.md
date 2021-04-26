@@ -52,6 +52,12 @@ bin/opt -load lib/LLVMSplitMerge.so -FuncPhiInfo -disable-output ../llvm/lib/Tra
 bin/opt -load lib/LLVMSplitMerge.so -FuncPhiInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll
 bin/opt -load lib/LLVMSplitMerge.so -FuncPhiInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample3-ssa-sccp.ll
 
+### Generate CFG
+bin/opt -dot-callgraph ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp.ll
+bin/opt -dot-callgraph ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll
+dot sample1-ssa-sccp.ll.callgraph.dot -Tpng -o sample1.png
+dot sample2-ssa-sccp.ll.callgraph.dot -Tpng -o sample2.png
+
 ## Notions
 - Undecidable problem
 

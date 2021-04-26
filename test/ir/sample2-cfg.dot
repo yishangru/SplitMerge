@@ -1,0 +1,30 @@
+digraph "CFG for 'dm_sample_cond_loop' function" {
+	label="CFG for 'dm_sample_cond_loop' function";
+
+	Node0x55c9aa589730 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#c32e3170",label="{entry:\l  br label %while.cond\l}"];
+	Node0x55c9aa589730 -> Node0x55c9aa5897e0;
+	Node0x55c9aa5897e0 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{while.cond:                                       \l  %loop.0 = phi i32 [ 0, %entry ], [ %loop.1, %cleanup.cont ]\l  %a.0 = phi i32 [ 0, %entry ], [ %a.1, %cleanup.cont ]\l  br label %while.body\l}"];
+	Node0x55c9aa5897e0 -> Node0x55c9aa58a240;
+	Node0x55c9aa58a240 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{while.body:                                       \l  %cmp = icmp sgt i32 %condition, 10\l  br i1 %cmp, label %if.then, label %if.else\l|{<s0>T|<s1>F}}"];
+	Node0x55c9aa58a240:s0 -> Node0x55c9aa58a470;
+	Node0x55c9aa58a240:s1 -> Node0x55c9aa58a4e0;
+	Node0x55c9aa58a470 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#c32e3170",label="{if.then:                                          \l  %add = add nsw i32 %loop.0, 1\l  br label %if.end\l}"];
+	Node0x55c9aa58a470 -> Node0x55c9aa58a740;
+	Node0x55c9aa58a4e0 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#c32e3170",label="{if.else:                                          \l  %add1 = add nsw i32 %loop.0, 2\l  br label %if.end\l}"];
+	Node0x55c9aa58a4e0 -> Node0x55c9aa58a740;
+	Node0x55c9aa58a740 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{if.end:                                           \l  %loop.1 = phi i32 [ %add, %if.then ], [ %add1, %if.else ]\l  %a.1 = phi i32 [ 1, %if.then ], [ 2, %if.else ]\l  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([9 x i8], [9\l... x i8]* @.str, i64 0, i64 0), i32 %a.0)\l  %cmp2 = icmp sgt i32 %loop.1, 10\l  br i1 %cmp2, label %if.then3, label %if.end4\l|{<s0>T|<s1>F}}"];
+	Node0x55c9aa58a740:s0 -> Node0x55c9aa58b0e0;
+	Node0x55c9aa58a740:s1 -> Node0x55c9aa58b160;
+	Node0x55c9aa58b0e0 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#c32e3170",label="{if.then3:                                         \l  br label %cleanup\l}"];
+	Node0x55c9aa58b0e0 -> Node0x55c9aa58b2e0;
+	Node0x55c9aa58b160 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#c32e3170",label="{if.end4:                                          \l  br label %cleanup\l}"];
+	Node0x55c9aa58b160 -> Node0x55c9aa58b2e0;
+	Node0x55c9aa58b2e0 [shape=record,color="#b70d28ff", style=filled, fillcolor="#b70d2870",label="{cleanup:                                          \l  %cleanup.dest.slot.0 = phi i32 [ 3, %if.then3 ], [ 0, %if.end4 ]\l  switch i32 %cleanup.dest.slot.0, label %unreachable [\l    i32 0, label %cleanup.cont\l    i32 3, label %while.end\l  ]\l|{<s0>def|<s1>0|<s2>3}}"];
+	Node0x55c9aa58b2e0:s0 -> Node0x55c9aa5a34d0;
+	Node0x55c9aa58b2e0:s1 -> Node0x55c9aa589f10;
+	Node0x55c9aa58b2e0:s2 -> Node0x55c9aa5a3520;
+	Node0x55c9aa589f10 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#c32e3170",label="{cleanup.cont:                                     \l  br label %while.cond, !llvm.loop !2\l}"];
+	Node0x55c9aa589f10 -> Node0x55c9aa5897e0;
+	Node0x55c9aa5a3520 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#c32e3170",label="{while.end:                                        \l  %add6 = add nsw i32 %a.1, %loop.1\l  %call7 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8],\l... [15 x i8]* @.str.1, i64 0, i64 0), i32 %add6)\l  ret i32 %add6\l}"];
+	Node0x55c9aa5a34d0 [shape=record,color="#3d50c3ff", style=filled, fillcolor="#5977e370",label="{unreachable:                                      \l  unreachable\l}"];
+}

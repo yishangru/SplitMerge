@@ -1,0 +1,9 @@
+digraph "Call graph: ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll" {
+	label="Call graph: ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll";
+
+	Node0x55cb0bea4cf0 [shape=record,label="{dm_sample_cond_loop}"];
+	Node0x55cb0bea4cf0 -> Node0x55cb0bea4da0;
+	Node0x55cb0bea4da0 [shape=record,label="{printf}"];
+	Node0x55cb0bea52c0 [shape=record,label="{llvm.lifetime.start.p0i8}"];
+	Node0x55cb0bea5450 [shape=record,label="{llvm.lifetime.end.p0i8}"];
+}

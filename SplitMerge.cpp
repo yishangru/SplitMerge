@@ -33,6 +33,7 @@ static void getReachableNodes(Instruction* PhiInstruction, std::unordered_map<Ba
     ReachableMap[PhiBB] = std::unordered_set<BasicBlock*>();
     
     // initial
+    ReachableMap[PhiBB].insert(PhiBB);
     for (BasicBlock *Succ : successors(PhiBB)) {
         ReachableMap[PhiBB].insert(Succ);
         Pending.insert(Succ);
@@ -63,6 +64,7 @@ static void getReachableNodes(Instruction* PhiInstruction, std::unordered_map<Ba
 
         } else {
             ReachableMap[Visiting] = std::unordered_set<BasicBlock*>();
+            ReachableMap[Visiting].insert(Visiting);
             for (BasicBlock *Succ : successors(Visiting)) {
                 ReachableMap[Visiting].insert(Succ);
                 Pending.insert(Succ);
@@ -254,16 +256,15 @@ static void printStatisticForDm(  Instruction* PhiInstruction,
     errs() << "\tTotal Influence Blocks: " << TotalBBInfluence << "\n";
     errs() << "\tTotal Influence Insts: " << TotalInstInfluence << "\n";
     errs() << "\tFitness: " << getFitNess(PhiInfluenceNodes, RegionOfInfluence) << "\n";
-    //outs() << "\tReachable BB: " << ReachBBString << "\n";
-    //outs() << "\tInfluence BB: " << InfluenceBBString << "\n";
-    //outs() << "\tROI: " << ROIString << "\n";
+    outs() << "\tReachable BB: " << ReachBBString << "\n";
+    outs() << "\tInfluence BB: " << InfluenceBBString << "\n";
+    outs() << "\tROI: " << ROIString << "\n";
 }
 
 namespace SplitMergeSpace {
   struct Edge {
     BasicBlock* Start;
     BasicBlock* End;
-    int64_t ExactValue;
 
     struct EdgeHashFunction {
       std::size_t operator()(const Edge& E) const {
@@ -279,10 +280,9 @@ namespace SplitMergeSpace {
       }
     };
 
-    Edge(BasicBlock* Start, BasicBlock* End, int64_t Value) {
+    Edge(BasicBlock* Start, BasicBlock* End) {
         this->Start = Start;
         this->End = End;
-        this->ExactValue = Value;
     }
 
     Edge(const Edge& E) {
@@ -308,15 +308,108 @@ namespace SplitMergeSpace {
     static std::string edgeString(const Edge& E)  {
       std::string EdgeS = "( " + E.Start->getName().str() + " --- ";
       EdgeS += (E.End->getName().str() + " )");
-      EdgeS += ("  :  " + std::to_string(E.ExactValue));
       return EdgeS;
     }
   };
+
+  struct BlockState {
+      std::size_t State;
+      BasicBlock* BB;
+
+      struct BlockStateHashFunction {
+        std::size_t operator()(const BlockState& BS) const {
+
+          std::stringstream Strm;
+          Strm << BS.BB;
+
+          std::string HashString = std::to_string(BS.State) + Strm.str(); //+ std::to_string(E.ExactValue);
+          return std::hash<std::string>{}(HashString);
+        }
+      };
+
+      BlockState(std::size_t State, BasicBlock* BB) {
+        this->State = State;
+        this->BB = BB;
+      }
+
+      BlockState(const BlockState& BS) {
+        this->State = BS.State;
+        this->BB = BS.BB;
+      }
+
+      bool operator==(const BlockState& BS) const {
+        if (BS.State != this->State) {
+            return false;
+        }
+        if (BS.BB != this->BB) {
+            return false;
+        }
+        return true;
+      }
+
+      static std::string bsString(const BlockState& BS)  {
+        std::string BsS = BS.BB->getName().str() + "-";
+        BsS += std::to_string(BS.State);
+        return BsS;
+      }
+  };
 } // namespace SplitMergeSpace
 
-static void generateSplitCFG(Instruction* PhiInstruction,
-                             std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>& PhiInfluenceNodes,
-                             std::unordered_set<BasicBlock*>& RegionOfInfluence) {
+static void printCFGSplit (std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph) {
+  for (auto& BSSourcePair: CFGSplitGraph) {
+    SplitMergeSpace::BlockState BSSource = BSSourcePair.first;
+    for (auto& BSEND: CFGSplitGraph[BSSource]) {
+      errs() << SplitMergeSpace::BlockState::bsString(BSSource) << " -> " << SplitMergeSpace::BlockState::bsString(BSEND) << "\n";
+    }
+  }
+}
+
+static void stateTransition(  std::size_t CurState, BasicBlock* CurBlock, bool WhetherTrans,
+                              std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction>& RevivalEdges,
+                              std::unordered_map<SplitMergeSpace::Edge, int64_t, SplitMergeSpace::Edge::EdgeHashFunction>& EdgeValueMap,
+                              std::unordered_map<int64_t, std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction>>& ValueEdgesMap,
+                              std::unordered_map<int64_t , std::size_t>& StateMap, std::unordered_map<std::size_t, int64_t>& StateReverseMap,
+                              std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction>& KillEdges,
+                              std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph) {
+
+    SplitMergeSpace::BlockState BS{CurState, CurBlock};
+
+    if (CFGSplitGraph.find(BS) != CFGSplitGraph.end()) {
+        return;
+    }
+
+    CFGSplitGraph[BS] = std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>();
+    for (BasicBlock *Succ : successors(CurBlock)) {
+        SplitMergeSpace::Edge CurEdge{CurBlock, Succ};
+
+        std::size_t NextState = CurState;
+        if (WhetherTrans) {
+          if (RevivalEdges.find(CurEdge) != RevivalEdges.end()) {
+            // get next state
+            NextState = StateMap[EdgeValueMap[CurEdge]];
+          } else if (KillEdges.find(CurEdge) != KillEdges.end()) {
+            NextState = 0;
+          }
+        }
+
+        SplitMergeSpace::BlockState GenBS{NextState, Succ};
+        CFGSplitGraph[BS].insert(GenBS);
+        stateTransition(NextState, Succ, WhetherTrans, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGSplitGraph);
+    }
+}
+
+static void generateNewFunction(Module* M,
+                                Function* Func,
+                                Instruction* PhiInstruction,
+                                std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>& PhiInfluenceNodes,
+                                std::unordered_set<BasicBlock*>& RegionOfInfluence) {
+
+}
+
+static void generateSplitCFG( Function* Func,
+                              Instruction* PhiInstruction,
+                              std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>& PhiInfluenceNodes,
+                              std::unordered_set<BasicBlock*>& RegionOfInfluence) {
 
     assert(isa<PHINode>(PhiInstruction));
     PHINode* PhiInst = cast<PHINode>(PhiInstruction);
@@ -344,7 +437,7 @@ static void generateSplitCFG(Instruction* PhiInstruction,
             ConstantInt* ConsInst = cast<ConstantInt>(ComeValue);
             int64_t ActualValue = ConsInst->getSExtValue();
 
-            SplitMergeSpace::Edge RevivalEdge{ComeBB, PhiBB, ActualValue};
+            SplitMergeSpace::Edge RevivalEdge{ComeBB, PhiBB};
 
             if (RevivalEdges.find(RevivalEdge) != RevivalEdges.end()) {
                 errs() << "Edge Already Present In Revival Edge:  " << SplitMergeSpace::Edge::edgeString(RevivalEdge) << "\n";
@@ -356,7 +449,7 @@ static void generateSplitCFG(Instruction* PhiInstruction,
                 assert(false);
             }
 
-            int64_t StoreValue = RevivalEdge.ExactValue;
+            int64_t StoreValue = ActualValue;
 
             RevivalEdges.insert(RevivalEdge);
             EdgeValueMap[RevivalEdge] = StoreValue;
@@ -379,36 +472,65 @@ static void generateSplitCFG(Instruction* PhiInstruction,
         }
     }
 
+    /*
     outs() << "Revival Edges:" << "\n";
     for (auto& E : RevivalEdges) {
-        assert(EdgeValueMap.find(E) != EdgeValueMap.end());
-        assert(EdgeValueMap[E] == E.ExactValue);
-        assert(ValueEdgesMap.find(E.ExactValue) != ValueEdgesMap.end());
-        assert(ValueEdgesMap[E.ExactValue].find(E) != ValueEdgesMap[E.ExactValue].end());
-
         outs() << "\t" << SplitMergeSpace::Edge::edgeString(E) << "\n";
+        assert(EdgeValueMap.find(E) != EdgeValueMap.end());
+        int64_t ActualValue = EdgeValueMap[E];
+        outs() << ActualValue << "\n";
+        assert(ValueEdgesMap.find(ActualValue) != ValueEdgesMap.end());
+        assert(ValueEdgesMap[ActualValue].find(E) != ValueEdgesMap[ActualValue].end());
     }
 
     outs() << "\n";
     outs() << "Value - State" << "\n";
     for (auto& VSPair : StateMap) {
+        outs() << "\t" << VSPair.first << " -- " << VSPair.second;
         assert(StateReverseMap.find(VSPair.second) != StateReverseMap.end());
         assert(StateReverseMap[VSPair.second] == VSPair.first);
-
-        outs() << "\t" << VSPair.first << " -- " << VSPair.second;
     }
-
-    // associate data fact with edge
-
+    */
 
     // kill edges
     std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> KillEdges;
+    for (BasicBlock* BB : RegionOfInfluence) {
+        for (BasicBlock *Succ : successors(BB)) {
+            if (RegionOfInfluence.find(Succ) == RegionOfInfluence.end()) {
+                SplitMergeSpace::Edge KillEdge{BB, Succ};
+                KillEdges.insert(KillEdge);
+            }
+        }
+    }
 
-    // data flow fact
+    /*
+    outs() << "\n";
+    outs() << "Kill Edges:" << "\n";
+    for (auto& E : KillEdges) {
+        outs() << "\t" << SplitMergeSpace::Edge::edgeString(E) << "\n";
+    }
+    */
 
-}
+    // check different edge for kill and revival
+    for (auto& E : RevivalEdges) {
+        if (KillEdges.find(E) != KillEdges.end()) {
+            outs() << "Same Edge in Kill and Revival" << "\n";
+            assert(false);
+        }
+    }
 
-static void generateNewFunction() {
+    // generate fake CFG graph - start from entry
+    BasicBlock* EntryBlock = &Func->getEntryBlock();
+
+    // dfs check
+    std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGOriGraph;
+    stateTransition(0, EntryBlock, false, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGOriGraph);
+    printCFGSplit(CFGOriGraph);
+
+    //std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGSplitGraph;
+    //stateTransition(0, EntryBlock, true, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGSplitGraph);
+    //printCFGSplit(CFGSplitGraph);
+    // print cfg generated
 
 }
 
@@ -527,7 +649,7 @@ struct FuncCFGSplitInfo : public ModulePass {
             getRegionOfInfluence(PhiNode, ReachableMap, PhiInfluenceNodes, RegionOfInfluence);
 
             // generate cfg for test
-
+            generateSplitCFG(&*F, PhiNode, PhiInfluenceNodes, RegionOfInfluence);
             errs() << "\n";
           }
         }
