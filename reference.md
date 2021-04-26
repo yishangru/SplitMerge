@@ -68,8 +68,17 @@ dot sample2-cfg.dot -Tpng -o sample2-cfg.png
 
 ### Output
 1. CFG Symbol
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp.ll
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample3-ssa-sccp.ll
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa-sccp.ll
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa-sccp.ll
+
 bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp.ll > ../llvm/lib/Transforms/SplitMerge/sample1-cfg-split-symbol.out 2>&1
 bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll > ../llvm/lib/Transforms/SplitMerge/sample2-cfg-split-symbol.out 2>&1
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample3-ssa-sccp.ll > ../llvm/lib/Transforms/SplitMerge/sample3-cfg-split-symbol.out 2>&1
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa-sccp.ll > ../llvm/lib/Transforms/SplitMerge/lulesh-cfg-split-symbol.out 2>&1
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa-sccp.ll > ../llvm/lib/Transforms/SplitMerge/spec-bzip-cfg-split-symbol.out 2>&1
 
 2. Actual CFG
 

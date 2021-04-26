@@ -11,6 +11,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
+
 using namespace llvm;
 
 static std::string instInfo(Instruction* CurInst) {
@@ -281,6 +282,8 @@ namespace SplitMergeSpace {
       }
     };
 
+    Edge(){}
+
     Edge(BasicBlock* Start, BasicBlock* End) {
         this->Start = Start;
         this->End = End;
@@ -298,11 +301,6 @@ namespace SplitMergeSpace {
       if (E.End != this->End) {
           return false;
       }
-      /*
-      if (E.ExactValue != this->ExactValue) {
-          return false;
-      }
-      */
       return true;
     }
 
@@ -327,6 +325,8 @@ namespace SplitMergeSpace {
           return std::hash<std::string>{}(HashString);
         }
       };
+
+      BlockState(){}
 
       BlockState(std::size_t State, BasicBlock* BB) {
         this->State = State;
@@ -360,6 +360,54 @@ namespace SplitMergeSpace {
         }
         return BsS;
       }
+  };
+
+  struct StatisticFunc {
+      double FitNess;
+      std::size_t AddBlockNum;
+      std::size_t AddInstNum;
+      std::size_t RemoveInstNum;
+
+    StatisticFunc(){}
+
+    StatisticFunc(double Fit, std::size_t ABN, std::size_t AIN, std::size_t RIN) {
+        this->FitNess = Fit;
+        this->AddBlockNum = ABN;
+        this->AddInstNum = AIN;
+        this->RemoveInstNum = RIN;
+    }
+
+    StatisticFunc(const StatisticFunc& SF) {
+       this->FitNess = SF.FitNess;
+       this->AddBlockNum = SF.AddBlockNum;
+       this->AddInstNum = SF.AddInstNum;
+       this->RemoveInstNum = SF.RemoveInstNum;
+    }
+
+    bool operator==(const StatisticFunc& SF) const {
+      if (SF.AddBlockNum != this->AddBlockNum) {
+        return false;
+      }
+      if (SF.AddInstNum != this->AddInstNum) {
+        return false;
+      }
+      if (SF.RemoveInstNum != this->RemoveInstNum) {
+        return false;
+      }
+      if (std::abs(SF.FitNess - this->FitNess) > 0.0001) {
+        return false;
+      }
+      return true;
+    }
+
+    static std::string sFString(const StatisticFunc& SF, std::string PreFix)  {
+        std::string SFStr = "";
+        SFStr += (PreFix + "FitNess: " + std::to_string(SF.FitNess) + "\n");
+        SFStr += (PreFix + "Add Blocks: " + std::to_string(SF.AddBlockNum) + "\n");
+        SFStr += (PreFix + "Add Insts: " + std::to_string(SF.AddInstNum) + "\n");
+        SFStr += (PreFix + "Remove Insts: " + std::to_string(SF.RemoveInstNum) + "\n");
+        return SFStr;
+    }
   };
 } // namespace SplitMergeSpace
 
@@ -510,7 +558,7 @@ static void generateSymbolSplitCFG( Function* Func,
     // check different edge for kill and revival
     for (auto& E : RevivalEdges) {
         if (KillEdges.find(E) != KillEdges.end()) {
-            outs() << "Same Edge in Kill and Revival" << "\n";
+            errs() << "Same Edge in Kill and Revival" << "\n";
             assert(false);
         }
     }
@@ -531,6 +579,12 @@ static void generateSymbolSplitCFG( Function* Func,
             }
             ReverseCFGSplitGraph[BSEND].insert(BSSource);
         }
+    }
+
+    SplitMergeSpace::BlockState BS{0, EntryBlock};
+    if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
+        errs() << "Entry Block Has Predecessor" << "\n";
+        assert(false);
     }
 }
 
@@ -607,6 +661,8 @@ struct FuncCFGSplitInfo : public ModulePass {
     errs() << "Function CFG Symbol Generate Pass: " << "\n";
 
     // get all predicate
+    std::unordered_map<Function*, SplitMergeSpace::StatisticFunc> ModuleSta;
+
     for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
 
       errs().write_escaped(F->getName()) << '\n';
@@ -648,6 +704,9 @@ struct FuncCFGSplitInfo : public ModulePass {
             getInfluencedNodes(PhiNode, PhiInfluenceNodes);
             getRegionOfInfluence(PhiNode, ReachableMap, PhiInfluenceNodes, RegionOfInfluence);
 
+            // fitness
+            double FitNess = getFitNess(PhiInfluenceNodes, RegionOfInfluence);
+
             // revival edges
             std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
 
@@ -676,6 +735,37 @@ struct FuncCFGSplitInfo : public ModulePass {
             // generate cfg for test
             generateSymbolSplitCFG(&*F, PhiNode, PhiInfluenceNodes, RegionOfInfluence, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
 
+            // approximate profile
+            std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction> TotalBlocks;
+            for (auto& BSPair : CFGSplitGraph) {
+                auto& BSStart = BSPair.first;
+                for (auto& BS : CFGSplitGraph[BSStart]) {
+                    TotalBlocks.insert(BS);
+                }
+                TotalBlocks.insert(BSStart);
+            }
+
+            std::size_t AddBlockNum = 0;
+            std::size_t AddInstNum = 0;
+            std::size_t RemoveInstNum = 0;
+
+            for (auto& BS : TotalBlocks) {
+                //outs() << SplitMergeSpace::BlockState::bsString(BS) << " , ";
+                if (BS.State == 0) {
+                    continue;
+                }
+                AddBlockNum++;
+                AddInstNum += ((BS.BB)->sizeWithoutDebug());
+                if (PhiInfluenceNodes.find(BS.BB) != PhiInfluenceNodes.end()) {
+                    RemoveInstNum += (PhiInfluenceNodes[BS.BB].size());
+                }
+            }
+
+            assert(AddInstNum >= RemoveInstNum);
+            AddInstNum -= RemoveInstNum;
+
+            SplitMergeSpace::StatisticFunc SF{FitNess, AddBlockNum, AddInstNum, RemoveInstNum};
+
             errs() << "\t" << instInfo(PhiNode) << "\n\n";
             errs() << "\t\tOriginal CFG" << "\n";
             printCFGSplit(CFGOriGraph);
@@ -683,11 +773,35 @@ struct FuncCFGSplitInfo : public ModulePass {
             errs() << "\t\tSplit CFG" << "\n";
             printCFGSplit(CFGSplitGraph);
             errs() << "\n";
+            errs() << "\t\tStatistics:" << "\n";
+            errs() << SplitMergeSpace::StatisticFunc::sFString(SF, "\t\t\t") << "\n";
+            errs() << "\n";
+
+            if (ModuleSta.find(&*F) == ModuleSta.end() || ModuleSta[&*F].FitNess < FitNess) {
+                ModuleSta[&*F] = std::move(SF);
+            }
           }
         }
       }
-
     }
+
+    std::size_t ModuleAddBlocks = 0;
+    std::size_t ModuleAddInsts = 0;
+    std::size_t ModuleRemoveInsts = 0;
+
+    for (auto& SFPair : ModuleSta) {
+        auto& CurFunc = SFPair.first;
+        ModuleAddBlocks += (ModuleSta[CurFunc].AddBlockNum);
+        ModuleAddInsts += (ModuleSta[CurFunc].AddInstNum);
+        ModuleRemoveInsts += (ModuleSta[CurFunc].RemoveInstNum);
+    }
+
+    errs() << "\n";
+    errs() << "Summary:" << "\n";
+    errs() << "\t" << "Total Add Blocks: " << std::to_string(ModuleAddBlocks) << "\n";
+    errs() << "\t" << "Total Add Insts: " << std::to_string(ModuleAddInsts) << "\n";
+    errs() << "\t" << "Total Remove Insts: " << std::to_string(ModuleRemoveInsts) << "\n";
+
     return false;
   }
 };
