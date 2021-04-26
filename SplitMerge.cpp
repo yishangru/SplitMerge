@@ -359,7 +359,7 @@ static void printCFGSplit (std::unordered_map<SplitMergeSpace::BlockState, std::
   for (auto& BSSourcePair: CFGSplitGraph) {
     SplitMergeSpace::BlockState BSSource = BSSourcePair.first;
     for (auto& BSEND: CFGSplitGraph[BSSource]) {
-      errs() << SplitMergeSpace::BlockState::bsString(BSSource) << " -> " << SplitMergeSpace::BlockState::bsString(BSEND) << "\n";
+      errs() << "\t" << SplitMergeSpace::BlockState::bsString(BSSource) << " -> " << SplitMergeSpace::BlockState::bsString(BSEND) << "\n";
     }
   }
 }
@@ -523,15 +523,17 @@ static void generateSplitCFG( Function* Func,
     BasicBlock* EntryBlock = &Func->getEntryBlock();
 
     // dfs check
+    errs() << "Original CFG" << "\n";
     std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGOriGraph;
     stateTransition(0, EntryBlock, false, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGOriGraph);
     printCFGSplit(CFGOriGraph);
 
-    //std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGSplitGraph;
-    //stateTransition(0, EntryBlock, true, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGSplitGraph);
-    //printCFGSplit(CFGSplitGraph);
-    // print cfg generated
+    errs() << "\n";
 
+    errs() << "Split CFG" << "\n";
+    std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGSplitGraph;
+    stateTransition(0, EntryBlock, true, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGSplitGraph);
+    printCFGSplit(CFGSplitGraph);
 }
 
 namespace {
@@ -649,6 +651,7 @@ struct FuncCFGSplitInfo : public ModulePass {
             getRegionOfInfluence(PhiNode, ReachableMap, PhiInfluenceNodes, RegionOfInfluence);
 
             // generate cfg for test
+            errs() << instInfo(PhiNode) << "\n\n";
             generateSplitCFG(&*F, PhiNode, PhiInfluenceNodes, RegionOfInfluence);
             errs() << "\n";
           }
