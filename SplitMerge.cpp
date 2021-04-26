@@ -835,12 +835,43 @@ struct ModuleSplitMerge : public ModulePass {
     static char ID; // Pass identification, replacement for typeid
     ModuleSplitMerge() : ModulePass(ID) {}
 
-    static void generateSplitCFGCode(Module* M, Function* F, std::size_t Tag) {
+    static void generateSplitCFGCode(Module* M, Function* F,
+                                     std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGOriGraph,
+                                     std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph,
+                                     std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& ReverseCFGSplitGraph
+  ) {
         ValueToValueMapTy VMap;
         Function* DupFunc = CloneFunction(F, VMap);
-        DupFunc->setName(F->getName() + "_dup_" + std::to_string(Tag));
+        DupFunc->setName(F->getName() + "_dup");
 
-        
+        std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction> TotalBlocks;
+        for (auto& BSPair : CFGSplitGraph) {
+            auto& BSStart = BSPair.first;
+            for (auto& BS : CFGSplitGraph[BSStart]) {
+                TotalBlocks.insert(BS);
+            }
+            TotalBlocks.insert(BSStart);
+        }
+
+        std::unordered_map<BasicBlock*, std::unordered_set<std::size_t>> BBStates;
+        for (auto& BS : TotalBlocks) {
+            BasicBlock* OriBB = BS.BB;
+            if (BBStates.find(OriBB) == BBStates.end()) {
+                BBStates[OriBB] = std::unordered_set<std::size_t>();
+            }
+            BBStates[OriBB].insert(BS.State);
+        }
+
+        for (auto& BBPair : BBStates) {
+            BasicBlock* BB = BBPair.first;
+            std::string States = "";
+            for (auto& State : BBStates[BB]) {
+                States += (std::to_string(State) + " , ");
+            }
+            States += "\n";
+            outs() << BB->getName() << " -- [ " << States << " ]" << "\n";
+        }
+
     }
 
     bool runOnModule(Module &M) override {
@@ -935,7 +966,7 @@ struct ModuleSplitMerge : public ModulePass {
           // generate cfg for test
           generateSymbolSplitCFG(F, PhiNode, PhiInfluenceNodes, RegionOfInfluence, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
 
-          generateSplitCFGCode(&M, F, 1);
+          generateSplitCFGCode(&M, F, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
       }
       return true;
     }

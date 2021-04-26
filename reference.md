@@ -39,12 +39,16 @@ bin/opt -S -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/sample3-ssa.ll -o ../
 ~/cs6241/llvm-project/build/bin/clang++ -S -emit-llvm -O1 -Xclang -disable-llvm-passes -DUSE_MPI=0 *.cc
 ~/cs6241/llvm-project/build/bin/llvm-link *.ll -o ~/cs6241/llvm-project/llvm/lib/Transforms/SplitMerge/test/ir/lulesh-single.ll
 bin/opt -S -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-single.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa.ll
-bin/opt -S -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa-sccp.ll
+bin/opt -S -stats -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa-sccp.ll
+
+bin/clang++ -DUSE_MPI=0 -O3 -o ../llvm/lib/Transforms/SplitMerge/test/binary/lulesh ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa-sccp.ll
 
 ~/cs6241/llvm-project/build/bin/clang -S -emit-llvm *.c
 ~/cs6241/llvm-project/build/bin/llvm-link *.ll -o ~/cs6241/llvm-project/llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-single.ll
 bin/opt -S -mem2reg ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-single.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa.ll
-bin/opt -S -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa-sccp.ll
+bin/opt -S -stats -sccp ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa-sccp.ll
+
+bin/clang -O3 -o ../llvm/lib/Transforms/SplitMerge/test/binary/spec ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa-sccp.ll
 
 ### Generate CFG
 bin/opt -dot-callgraph ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp.ll
@@ -88,6 +92,11 @@ bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/li
 bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa-sccp.ll > ../llvm/lib/Transforms/SplitMerge/cfg/spec-bzip-cfg-split-symbol.out 2>&1
 
 3. Actual CFG
+bin/opt -S -load lib/LLVMSplitMerge.so -ModuleSplitMerge ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp-gen.ll
+bin/opt -S -load lib/LLVMSplitMerge.so -ModuleSplitMerge ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp-gen.ll
+bin/opt -S -load lib/LLVMSplitMerge.so -ModuleSplitMerge ../llvm/lib/Transforms/SplitMerge/test/ir/sample3-ssa-sccp.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/sample3-ssa-sccp-gen.ll
+bin/opt -S -load lib/LLVMSplitMerge.so -ModuleSplitMerge ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa-sccp.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa-sccp-gen.ll
+bin/opt -S -load lib/LLVMSplitMerge.so -ModuleSplitMerge ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa-sccp.ll -o ../llvm/lib/Transforms/SplitMerge/test/ir/spec-bzip-ssa-sccp-gen.ll
 
 ## Notions
 - Undecidable problem
