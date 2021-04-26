@@ -1,0 +1,77 @@
+Function CFG Generate Pass: 
+dm_sample_cond_3
+	if.end --- [   %x.0 = phi i32 [ 15, %if.then ], [ 5, %if.else ] ]
+
+		Original CFG
+			if.else-0 -> if.end-0
+			if.else3-0 -> if.end4-0
+			if.else8-0 -> if.end10-0
+			if.then-0 -> if.end-0
+			entry-0 -> if.else-0
+			entry-0 -> if.then-0
+			if.end-0 -> if.else3-0
+			if.end-0 -> if.then2-0
+			if.then2-0 -> if.end4-0
+			if.end4-0 -> if.else8-0
+			if.end4-0 -> if.then6-0
+			if.then6-0 -> if.end10-0
+
+		Split CFG
+			if.else3-2 -> if.end4-2
+			if.then6-1 -> if.end10-1
+			if.end4-1 -> if.else8-1
+			if.end4-1 -> if.then6-1
+			if.then2-1 -> if.end4-1
+			if.end-1 -> if.else3-1
+			if.end-1 -> if.then2-1
+			if.else3-1 -> if.end4-1
+			entry-0 -> if.else-0
+			entry-0 -> if.then-0
+			if.then2-2 -> if.end4-2
+			if.else8-1 -> if.end10-1
+			if.else-0 -> if.end-2
+			if.end-2 -> if.else3-2
+			if.end-2 -> if.then2-2
+			if.end4-2 -> if.else8-2
+			if.end4-2 -> if.then6-2
+			if.then6-2 -> if.end10-2
+			if.then-0 -> if.end-1
+			if.else8-2 -> if.end10-2
+
+	if.end4 --- [   %y.0 = phi i32 [ 30, %if.then2 ], [ 10, %if.else3 ] ]
+
+		Original CFG
+			if.else-0 -> if.end-0
+			if.else3-0 -> if.end4-0
+			if.else8-0 -> if.end10-0
+			if.then-0 -> if.end-0
+			entry-0 -> if.else-0
+			entry-0 -> if.then-0
+			if.end-0 -> if.else3-0
+			if.end-0 -> if.then2-0
+			if.then2-0 -> if.end4-0
+			if.end4-0 -> if.else8-0
+			if.end4-0 -> if.then6-0
+			if.then6-0 -> if.end10-0
+
+		Split CFG
+			if.else-0 -> if.end-0
+			if.else8-2 -> if.end10-2
+			if.then6-2 -> if.end10-2
+			if.end4-2 -> if.else8-2
+			if.end4-2 -> if.then6-2
+			if.else3-0 -> if.end4-2
+			if.else8-1 -> if.end10-1
+			if.then-0 -> if.end-0
+			entry-0 -> if.else-0
+			entry-0 -> if.then-0
+			if.end-0 -> if.else3-0
+			if.end-0 -> if.then2-0
+			if.then6-1 -> if.end10-1
+			if.then2-0 -> if.end4-1
+			if.end4-1 -> if.else8-1
+			if.end4-1 -> if.then6-1
+
+llvm.lifetime.start.p0i8
+printf
+llvm.lifetime.end.p0i8

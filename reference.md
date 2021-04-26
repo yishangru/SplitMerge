@@ -58,6 +58,14 @@ bin/opt -dot-callgraph ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-scc
 dot sample1-ssa-sccp.ll.callgraph.dot -Tpng -o sample1.png
 dot sample2-ssa-sccp.ll.callgraph.dot -Tpng -o sample2.png
 
+bin/opt -dot-cfg ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp.ll
+mv .dm_sample_cond_3.dot ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-cfg.dot
+dot sample1-cfg.dot -Tpng -o sample1-cfg.png
+
+bin/opt -dot-callgraph ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll
+mv .dm_sample_cond_loop.dot ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-cfg.dot
+dot sample2-cfg.dot -Tpng -o sample2-cfg.png
+
 ## Notions
 - Undecidable problem
 
