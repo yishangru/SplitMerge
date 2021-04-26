@@ -4,6 +4,7 @@
 #include "llvm/IR/Instruction.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Pass.h"
+#include "llvm/Transforms/Utils/Cloning.h"
 #include "llvm/Support/Casting.h"
 #include "llvm/Support/raw_ostream.h"
 #include <llvm/IR/Instructions.h>
@@ -693,96 +694,133 @@ struct FuncCFGSplitInfo : public ModulePass {
 } // namespace
 
 namespace {
+
+struct GenTarget {
+    Function* Func;
+    PHINode* Phi;
+
+    GenTarget() {}
+
+    GenTarget(Function* F, PHINode* P) {
+        this->Func = F;
+        this->Phi = P;
+    }
+
+    GenTarget(const GenTarget& GT) {
+      this->Func = GT.Func;
+      this->Phi = GT.Phi;
+    }
+};
+
 // Module Split Merge Pass - The first implementation, without getAnalysisUsage.
 struct ModuleSplitMerge : public ModulePass {
     static char ID; // Pass identification, replacement for typeid
     ModuleSplitMerge() : ModulePass(ID) {}
 
-    static void generateSplitCFGCode() {
+    static void generateSplitCFGCode(Module* M, Function* F, std::size_t Tag) {
+        ValueToValueMapTy VMap;
+        Function* DupFunc = CloneFunction(F, VMap);
+        DupFunc->setName(F->getName() + "_dup_" + std::to_string(Tag));
+
         
     }
 
     bool runOnModule(Module &M) override {
-    errs() << "Function CFG Code Generate Pass: " << "\n";
+      errs() << "Function CFG Code Generate Pass: " << "\n";
 
-    // get all predicate
-    for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
+      std::vector<GenTarget> GenTargets;
+      GenTargets.reserve(20);
 
-      errs().write_escaped(F->getName()) << '\n';
+      for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
 
-      for (Function::iterator BB = F->begin(), BBE = F->end(); BB != BBE; ++BB) {
+        errs().write_escaped(F->getName()) << '\n';
 
-        for (BasicBlock::iterator IN = BB->begin(), INE = BB->end(); IN != INE; ++IN) {
-          // check for phi node and constant before, both phi condition are constant
+        bool Added = false;
+        for (Function::iterator BB = F->begin(), BBE = F->end(); BB != BBE; ++BB) {
 
-          Instruction* CurInst = &*IN;
-          if (!isa<PHINode>(CurInst)) {
-            continue;
-          }
+          for (BasicBlock::iterator IN = BB->begin(), INE = BB->end(); IN != INE; ++IN) {
+            // check for phi node and constant before, both phi condition are constant
 
-          PHINode* PhiNode = cast<PHINode>(CurInst);
+            Instruction* CurInst = &*IN;
+            if (!isa<PHINode>(CurInst)) {
+              continue;
+            }
 
-          std::size_t TotalValues = PhiNode->getNumIncomingValues();
-          if (TotalValues < 2) {
-            errs() << "Phi Node With Less Than 2 Incoming Value" << "\n";
-            assert(false);
-          }
+            PHINode* PhiNode = cast<PHINode>(CurInst);
 
-          bool AllNonConstant = true;
-          for (std::size_t I = 0; I < TotalValues; I++) {
-            Value* ComeValue = PhiNode->getIncomingValue(I);
-            if (isa<ConstantInt>(ComeValue)) {
-              AllNonConstant = false;
-              break;
+            std::size_t TotalValues = PhiNode->getNumIncomingValues();
+            if (TotalValues < 2) {
+              errs() << "Phi Node With Less Than 2 Incoming Value" << "\n";
+              assert(false);
+            }
+
+            bool AllConstant = true;
+            for (std::size_t I = 0; I < TotalValues; I++) {
+              Value* ComeValue = PhiNode->getIncomingValue(I);
+              if (!isa<ConstantInt>(ComeValue)) {
+                AllConstant = false;
+                break;
+              }
+            }
+
+            if (AllConstant) {
+                GenTarget GT{&*F, PhiNode};
+                GenTargets.push_back(GT);
+                Added = true;
+                break;
             }
           }
 
-          if (!AllNonConstant) {
-            // print
-            std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>> ReachableMap = std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>>();
-            std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>> PhiInfluenceNodes = std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>();
-            std::unordered_set<BasicBlock*> RegionOfInfluence = std::unordered_set<BasicBlock*>();
-
-            getReachableNodes(PhiNode, ReachableMap);
-            getInfluencedNodes(PhiNode, PhiInfluenceNodes);
-            getRegionOfInfluence(PhiNode, ReachableMap, PhiInfluenceNodes, RegionOfInfluence);
-
-            // revival edges
-            std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
-
-            // Edge -> Value
-            std::unordered_map<SplitMergeSpace::Edge, int64_t, SplitMergeSpace::Edge::EdgeHashFunction> EdgeValueMap;
-            // Value -> Edges
-            std::unordered_map<int64_t, std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction>> ValueEdgesMap;
-
-            // Value -> State
-            std::unordered_map<int64_t , std::size_t> StateMap;
-            // State -> Value
-            std::unordered_map<std::size_t, int64_t> StateReverseMap;
-
-            // Kill Edges
-            std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> KillEdges;
-
-            // Original CFG
-            std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGOriGraph;
-
-            // Generate CFG
-            std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGSplitGraph;
-
-            // Reverse CFG
-            std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> ReverseCFGSplitGraph;
-
-            // generate cfg for test
-            generateSymbolSplitCFG(&*F, PhiNode, PhiInfluenceNodes, RegionOfInfluence, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
-
-
+          if (Added) {
+              break;
           }
         }
       }
 
+      for (auto& GT : GenTargets) {
+          Function* F = GT.Func;
+          PHINode* PhiNode = GT.Phi;
+
+          std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>> ReachableMap = std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>>();
+          std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>> PhiInfluenceNodes = std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>();
+          std::unordered_set<BasicBlock*> RegionOfInfluence = std::unordered_set<BasicBlock*>();
+
+          getReachableNodes(PhiNode, ReachableMap);
+          getInfluencedNodes(PhiNode, PhiInfluenceNodes);
+          getRegionOfInfluence(PhiNode, ReachableMap, PhiInfluenceNodes, RegionOfInfluence);
+
+          // revival edges
+          std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
+
+          // Edge -> Value
+          std::unordered_map<SplitMergeSpace::Edge, int64_t, SplitMergeSpace::Edge::EdgeHashFunction> EdgeValueMap;
+          // Value -> Edges
+          std::unordered_map<int64_t, std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction>> ValueEdgesMap;
+
+          // Value -> State
+          std::unordered_map<int64_t , std::size_t> StateMap;
+          // State -> Value
+          std::unordered_map<std::size_t, int64_t> StateReverseMap;
+
+          // Kill Edges
+          std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> KillEdges;
+
+          // Original CFG
+          std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGOriGraph;
+
+          // Generate CFG
+          std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGSplitGraph;
+
+          // Reverse CFG
+          std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> ReverseCFGSplitGraph;
+
+          // generate cfg for test
+          generateSymbolSplitCFG(F, PhiNode, PhiInfluenceNodes, RegionOfInfluence, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+
+          generateSplitCFGCode(&M, F, 1);
+      }
+      return true;
     }
-    return false;
-  }
 };
 } // namespace
 
