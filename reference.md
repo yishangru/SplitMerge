@@ -66,6 +66,13 @@ bin/opt -dot-callgraph ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-scc
 mv .dm_sample_cond_loop.dot ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-cfg.dot
 dot sample2-cfg.dot -Tpng -o sample2-cfg.png
 
+### Output
+1. CFG Symbol
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample1-ssa-sccp.ll > ../llvm/lib/Transforms/SplitMerge/sample1-cfg-split-symbol.out 2>&1
+bin/opt -load lib/LLVMSplitMerge.so -FuncCFGSplitInfo -disable-output ../llvm/lib/Transforms/SplitMerge/test/ir/sample2-ssa-sccp.ll > ../llvm/lib/Transforms/SplitMerge/sample2-cfg-split-symbol.out 2>&1
+
+2. Actual CFG
+
 ## Notions
 - Undecidable problem
 
