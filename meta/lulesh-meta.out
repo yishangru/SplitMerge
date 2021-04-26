@@ -1,0 +1,842 @@
+Function Phi Info Pass: 
+_ZN6DomainC2Eiiiiiiiii
+for.cond --- [   %i.0 = phi i32 [ 0, %invoke.cont16 ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 2.500000e-01
+
+for.cond29 --- [   %i28.0 = phi i32 [ 0, %for.end ], [ %inc39, %for.inc38 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 4.000000e-01
+
+for.cond42 --- [   %i41.0 = phi i32 [ 0, %for.end40 ], [ %inc56, %for.inc55 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 2.857143e-01
+
+for.cond59 --- [   %i58.0 = phi i32 [ 0, %for.end57 ], [ %inc73, %for.inc72 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 2.857143e-01
+
+for.cond76 --- [   %i75.0 = phi i32 [ 0, %for.end74 ], [ %inc86, %for.inc85 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 4.000000e-01
+
+for.cond112 --- [   %i111.0 = phi i32 [ 0, %invoke.cont109 ], [ %inc169, %for.inc168 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 9.090909e-02
+
+for.cond122 --- [   %lnode.0 = phi i32 [ 0, %invoke.cont120 ], [ %inc140, %for.inc139 ] ]
+	Total Influence Blocks: 6
+	Total Influence Insts: 6
+	Fitness: 2.727273e-01
+
+for.cond151 --- [   %j.0 = phi i32 [ 0, %invoke.cont149 ], [ %inc162, %for.inc161 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 1.764706e-01
+
+__gxx_personality_v0
+_ZNSt6vectorIdSaIdEEC2Ev
+_ZNSt6vectorIiSaIiEEC2Ev
+llvm.lifetime.start.p0i8
+_ZN6Domain4costEv
+_ZN6Domain7numElemEv
+llvm.umul.with.overflow.i64
+_Znam
+_ZN6Domain22AllocateElemPersistentEi
+_ZN6Domain7numNodeEv
+_ZN6Domain22AllocateNodePersistentEi
+_ZN6Domain16SetupCommBuffersEi
+llvm.lifetime.end.p0i8
+_ZN6Domain1eEi
+_ZN6Domain1pEi
+_ZN6Domain1qEi
+_ZN6Domain2ssEi
+_ZN6Domain1vEi
+_ZN6Domain2xdEi
+_ZN6Domain2ydEi
+_ZN6Domain2zdEi
+_ZN6Domain3xddEi
+_ZN6Domain3yddEi
+_ZN6Domain3zddEi
+_ZN6Domain9nodalMassEi
+_ZN6Domain9BuildMeshEiii
+for.cond --- [   %plane.0 = phi i32 [ 0, %entry ], [ %inc53, %for.inc52 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 2.307692e-01
+
+for.cond --- [   %nidx.0 = phi i32 [ 0, %entry ], [ %nidx.1, %for.inc52 ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+for.cond10 --- [   %row.0 = phi i32 [ 0, %for.body ], [ %inc42, %for.inc41 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 2.307692e-01
+
+for.cond19 --- [   %col.0 = phi i32 [ 0, %for.body13 ], [ %inc32, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 2.307692e-01
+
+for.cond56 --- [   %nidx.3 = phi i32 [ 0, %for.end54 ], [ %add103, %for.inc104 ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+for.cond56 --- [   %zidx.0 = phi i32 [ 0, %for.end54 ], [ %zidx.1, %for.inc104 ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+for.cond56 --- [   %plane55.0 = phi i32 [ 0, %for.end54 ], [ %inc105, %for.inc104 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 1.538462e-01
+
+for.cond61 --- [   %row60.0 = phi i32 [ 0, %for.body59 ], [ %inc101, %for.inc100 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 1.538462e-01
+
+for.cond66 --- [   %col65.0 = phi i32 [ 0, %for.body64 ], [ %inc97, %for.inc96 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 1.538462e-01
+
+_ZN6Domain21CreateRegionIndexSetsEii
+while.cond --- [   %nextIndex.0 = phi i32 [ 0, %if.then ], [ %inc, %while.body ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 1.000000e+00
+
+for.cond --- [   %costDenominator.0 = phi i32 [ 0, %if.else ], [ %conv21, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 1.333333e-01
+
+for.cond --- [   %i.0 = phi i32 [ 0, %if.else ], [ %inc22, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 4
+	Fitness: 1.000000e+00
+
+while.cond23 --- [   %lastReg.0 = phi i32 [ -1, %for.end ], [ %regionNum.0, %while.end111 ] ]
+	Total Influence Blocks: 1
+	Total Influence Insts: 1
+	Fitness: 5.000000e-02
+
+while.cond23 --- [   %nextIndex.1 = phi i32 [ 0, %for.end ], [ %nextIndex.2, %while.end111 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 9.523810e-02
+
+while.cond29 --- [   %i28.0 = phi i32 [ 0, %while.body26 ], [ %inc34, %while.body33 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 9.090909e-02
+
+while.cond45 --- [   %i28.1 = phi i32 [ 0, %while.body42 ], [ %inc50, %while.body49 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 9.090909e-02
+
+land.end --- [   %27 = phi i1 [ false, %while.cond104 ], [ %cmp107, %land.rhs ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+for.cond115 --- [   %i114.0 = phi i32 [ 0, %if.end113 ], [ %inc124, %for.inc123 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+for.cond127 --- [   %i126.0 = phi i32 [ 0, %for.end125 ], [ %inc140, %for.inc139 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 1.000000e+00
+
+for.cond143 --- [   %i142.0 = phi i32 [ 0, %for.end141 ], [ %inc155, %for.inc154 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+_ZN6Domain19SetupSymmetryPlanesEi
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc24, %for.inc23 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 4
+	Fitness: 2.142857e-01
+
+for.cond --- [   %nidx.0 = phi i32 [ 0, %entry ], [ %nidx.1, %for.inc23 ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+for.cond4 --- [   %j.0 = phi i32 [ 0, %for.body ], [ %inc22, %for.inc ] ]
+	Total Influence Blocks: 5
+	Total Influence Insts: 5
+	Fitness: 3.571429e-01
+
+_ZN6Domain26SetupElementConnectivitiesEi
+for.cond --- [   %i.0 = phi i32 [ 1, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 4
+	Fitness: 1.000000e+00
+
+for.cond12 --- [   %i11.0 = phi i32 [ 0, %for.end ], [ %inc24, %for.inc23 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 4
+	Fitness: 1.000000e+00
+
+for.cond40 --- [   %i39.0 = phi i32 [ 0, %for.end38 ], [ %inc55, %for.inc54 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 4
+	Fitness: 1.000000e+00
+
+_ZN6Domain23SetupBoundaryConditionsEi
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+for.cond4 --- [   %i3.0 = phi i32 [ 0, %for.end ], [ %inc9, %for.inc8 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 1.000000e+00
+
+for.cond53 --- [   %i52.0 = phi i32 [ 0, %if.end51 ], [ %inc196, %for.inc195 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 4
+	Fitness: 1.200000e-01
+
+for.cond60 --- [   %j.0 = phi i32 [ 0, %for.body56 ], [ %inc193, %for.inc192 ] ]
+	Total Influence Blocks: 14
+	Total Influence Insts: 26
+	Fitness: 5.384615e-01
+
+_ZN6Domain7dtfixedEv
+_ZN6Domain8stoptimeEv
+_ZN6Domain15deltatimemultlbEv
+_ZN6Domain15deltatimemultubEv
+_ZN6Domain9dtcourantEv
+_ZN6Domain7dthydroEv
+_ZN6Domain5dtmaxEv
+_ZN6Domain4timeEv
+_ZN6Domain5cycleEv
+_ZN6Domain8nodelistEi
+_ZN6Domain1xEi
+_ZN6Domain1yEi
+_ZN6Domain1zEi
+_ZN6Domain4voloEi
+_ZN6Domain8elemMassEi
+cbrt
+sqrt
+_ZN6Domain9deltatimeEv
+_ZNSt6vectorIdSaIdEED2Ev
+_ZNSt6vectorIiSaIiEED2Ev
+_ZNSt12_Vector_baseIiSaIiEE19_M_get_Tp_allocatorEv
+_ZSt8_DestroyIPiiEvT_S1_RSaIT0_E
+_ZNSt12_Vector_baseIiSaIiEED2Ev
+__clang_call_terminate
+__cxa_begin_catch
+_ZSt9terminatev
+_ZNSt12_Vector_baseIiSaIiEE13_M_deallocateEPim
+_ZN9__gnu_cxx13new_allocatorIiED2Ev
+_ZNSt16allocator_traitsISaIiEE10deallocateERS0_Pim
+_ZN9__gnu_cxx13new_allocatorIiE10deallocateEPim
+_ZdlPv
+_ZSt8_DestroyIPiEvT_S1_
+_ZNSt12_Destroy_auxILb1EE9__destroyIPiEEvT_S3_
+_ZNSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+_ZSt8_DestroyIPddEvT_S1_RSaIT0_E
+_ZNSt12_Vector_baseIdSaIdEED2Ev
+_ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
+_ZN9__gnu_cxx13new_allocatorIdED2Ev
+_ZNSt16allocator_traitsISaIdEE10deallocateERS0_Pdm
+_ZN9__gnu_cxx13new_allocatorIdE10deallocateEPdm
+_ZSt8_DestroyIPdEvT_S1_
+_ZNSt12_Destroy_auxILb1EE9__destroyIPdEEvT_S3_
+_ZNSt6vectorIdSaIdEEixEm
+_ZNSt6vectorIiSaIiEEixEm
+_ZN6Domain6elemBCEi
+_ZN6Domain5sizeXEv
+_ZN6Domain5sizeYEv
+_ZN6Domain5sizeZEv
+_ZN6Domain6lzetamEi
+_ZN6Domain6lzetapEi
+_ZN6Domain5letamEi
+_ZN6Domain5letapEi
+_ZN6Domain4lximEi
+_ZN6Domain4lxipEi
+srand
+_ZN6Domain6numRegEv
+_ZN6Domain10regNumListEi
+_ZN6Domain11regElemSizeEi
+_ZSt3powIiiEN9__gnu_cxx11__promote_2IT_T0_NS0_9__promoteIS2_Xsr3std12__is_integerIS2_EE7__valueEE6__typeENS4_IS3_Xsr3std12__is_integerIS3_EE7__valueEE6__typeEE6__typeES2_S3_
+rand
+_ZdaPv
+_ZN6Domain11regElemlistEii
+pow
+_ZNSt6vectorIiSaIiEE6resizeEm
+_ZNKSt6vectorIiSaIiEE4sizeEv
+_ZNSt6vectorIiSaIiEE17_M_default_appendEm
+_ZNSt6vectorIiSaIiEE15_M_erase_at_endEPi
+_ZSt27__uninitialized_default_n_aIPimiET_S1_T0_RSaIT1_E
+_ZNKSt6vectorIiSaIiEE12_M_check_lenEmPKc
+_ZNSt12_Vector_baseIiSaIiEE11_M_allocateEm
+_ZSt34__uninitialized_move_if_noexcept_aIPiS0_SaIiEET0_T_S3_S2_RT1_
+__cxa_end_catch
+__cxa_rethrow
+_ZSt32__make_move_if_noexcept_iteratorIiSt13move_iteratorIPiEET0_PT_
+_ZSt22__uninitialized_copy_aISt13move_iteratorIPiES1_iET0_T_S4_S3_RSaIT1_E
+llvm.memcpy.p0i8.p0i8.i64
+_ZSt18uninitialized_copyISt13move_iteratorIPiES1_ET0_T_S4_S3_
+_ZNSt20__uninitialized_copyILb1EE13__uninit_copyISt13move_iteratorIPiES3_EET0_T_S6_S5_
+_ZSt4copyISt13move_iteratorIPiES1_ET0_T_S4_S3_
+_ZSt12__miter_baseIPiEDTcl12__miter_basecldtfp_4baseEEESt13move_iteratorIT_E
+_ZSt14__copy_move_a2ILb1EPiS0_ET1_T0_S2_S1_
+_ZSt12__niter_baseIPiET_S1_
+_ZSt13__copy_move_aILb1EPiS0_ET1_T0_S2_S1_
+_ZNSt11__copy_moveILb1ELb1ESt26random_access_iterator_tagE8__copy_mIiEEPT_PKS3_S6_S4_
+llvm.memmove.p0i8.p0i8.i64
+_ZNKSt13move_iteratorIPiE4baseEv
+_ZSt12__miter_baseIPiET_S1_
+_ZNSt13move_iteratorIPiEC2ES0_
+_ZNSt16allocator_traitsISaIiEE8allocateERS0_m
+_ZN9__gnu_cxx13new_allocatorIiE8allocateEmPKv
+_ZNK9__gnu_cxx13new_allocatorIiE8max_sizeEv
+_ZSt17__throw_bad_allocv
+_Znwm
+_ZNKSt6vectorIiSaIiEE8max_sizeEv
+_ZSt20__throw_length_errorPKc
+_ZSt3maxImERKT_S2_S2_
+_ZNKSt12_Vector_baseIiSaIiEE19_M_get_Tp_allocatorEv
+_ZNSt16allocator_traitsISaIiEE8max_sizeERKS0_
+_ZSt25__uninitialized_default_nIPimET_S1_T0_
+_ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPimEET_S3_T0_
+_ZSt6fill_nIPimiET_S1_T0_RKT1_
+_ZSt10__fill_n_aIPimiEN9__gnu_cxx11__enable_ifIXsr11__is_scalarIT1_EE7__valueET_E6__typeES4_T0_RKS3_
+_ZNSt6vectorIdSaIdEE6resizeEm
+_ZNKSt6vectorIdSaIdEE4sizeEv
+_ZNSt6vectorIdSaIdEE17_M_default_appendEm
+_ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+_ZSt27__uninitialized_default_n_aIPdmdET_S1_T0_RSaIT1_E
+_ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+_ZNSt12_Vector_baseIdSaIdEE11_M_allocateEm
+_ZSt34__uninitialized_move_if_noexcept_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+_ZSt32__make_move_if_noexcept_iteratorIdSt13move_iteratorIPdEET0_PT_
+_ZSt22__uninitialized_copy_aISt13move_iteratorIPdES1_dET0_T_S4_S3_RSaIT1_E
+_ZSt18uninitialized_copyISt13move_iteratorIPdES1_ET0_T_S4_S3_
+_ZNSt20__uninitialized_copyILb1EE13__uninit_copyISt13move_iteratorIPdES3_EET0_T_S6_S5_
+_ZSt4copyISt13move_iteratorIPdES1_ET0_T_S4_S3_
+_ZSt12__miter_baseIPdEDTcl12__miter_basecldtfp_4baseEEESt13move_iteratorIT_E
+_ZSt14__copy_move_a2ILb1EPdS0_ET1_T0_S2_S1_
+_ZSt12__niter_baseIPdET_S1_
+_ZSt13__copy_move_aILb1EPdS0_ET1_T0_S2_S1_
+_ZNSt11__copy_moveILb1ELb1ESt26random_access_iterator_tagE8__copy_mIdEEPT_PKS3_S6_S4_
+_ZNKSt13move_iteratorIPdE4baseEv
+_ZSt12__miter_baseIPdET_S1_
+_ZNSt13move_iteratorIPdEC2ES0_
+_ZNSt16allocator_traitsISaIdEE8allocateERS0_m
+_ZN9__gnu_cxx13new_allocatorIdE8allocateEmPKv
+_ZNK9__gnu_cxx13new_allocatorIdE8max_sizeEv
+_ZNKSt6vectorIdSaIdEE8max_sizeEv
+_ZNKSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+_ZNSt16allocator_traitsISaIdEE8max_sizeERKS0_
+_ZSt25__uninitialized_default_nIPdmET_S1_T0_
+_ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+_ZSt6fill_nIPdmdET_S1_T0_RKT1_
+_ZSt10__fill_n_aIPdmdEN9__gnu_cxx11__enable_ifIXsr11__is_scalarIT1_EE7__valueET_E6__typeES4_T0_RKS3_
+_ZNSt12_Vector_baseIiSaIiEEC2Ev
+_ZNSt12_Vector_baseIiSaIiEE12_Vector_implC2Ev
+_ZNSaIiEC2Ev
+_ZN9__gnu_cxx13new_allocatorIiEC2Ev
+_ZNSt12_Vector_baseIdSaIdEEC2Ev
+_ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2Ev
+_ZNSaIdEC2Ev
+_ZN9__gnu_cxx13new_allocatorIdEC2Ev
+_ZN6DomainD2Ev
+for.cond --- [   %i.0 = phi i32 [ 0, %delete.end10 ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 5.000000e-01
+
+_ZN6Domain28SetupThreadSupportStructuresEv
+fprintf
+exit
+_Z14InitMeshDecompiiPiS_S_S_
+printf
+_GLOBAL__sub_I_lulesh.cc
+__cxx_global_var_init
+_ZNSt8ios_base4InitC1Ev
+_ZNSt8ios_base4InitD1Ev
+__cxa_atexit
+_Z14CalcElemVolumePKdS0_S0_
+_ZL14CalcElemVolumedddddddddddddddddddddddd
+_Z22CalcKinematicsForElemsR6Domaindi
+for.cond --- [   %k.0 = phi i32 [ 0, %entry ], [ %inc70, %for.inc69 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 1.538462e-01
+
+for.cond16 --- [   %lnode.0 = phi i32 [ 0, %for.body ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 6
+	Fitness: 2.727273e-01
+
+for.cond29 --- [   %j.0 = phi i32 [ 0, %for.end ], [ %inc52, %for.inc51 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 8
+	Fitness: 2.727273e-01
+
+_ZL29CollectDomainNodesToElemNodesR6DomainPKiPdS3_S3_
+_ZN6Domain4vnewEi
+_ZN6Domain4delvEi
+_ZL28CalcElemCharacteristicLengthPKdS0_S0_d
+_ZN6Domain6arealgEi
+_ZL32CalcElemShapeFunctionDerivativesPKdS0_S0_PA8_dPd
+_ZL24CalcElemVelocityGradientPKdS0_S0_PA8_S_dPd
+_ZN6Domain3dxxEi
+_ZN6Domain3dyyEi
+_ZN6Domain3dzzEi
+_ZL8AreaFacedddddddddddd
+_ZSt3maxIdERKT_S2_S2_
+_Z4SQRTd
+main
+land.end --- [   %24 = phi i1 [ false, %while.cond ], [ %cmp38, %land.rhs ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+_ZNSolsEi
+_ZNSolsEl
+gettimeofday
+_ZL13TimeIncrementR6Domain
+_ZL16LagrangeLeapFrogR6Domain
+_ZSt10scientificRSt8ios_base
+_ZNSt8ios_base6unsetfESt13_Ios_Fmtflags
+_ZStcoSt13_Ios_Fmtflags
+_ZStaNRSt13_Ios_FmtflagsS_
+_ZStanSt13_Ios_FmtflagsS_
+_ZNSo9_M_insertIdEERSoT_
+_ZNSt8ios_base4setfESt13_Ios_FmtflagsS0_
+_ZStoRRSt13_Ios_FmtflagsS_
+_ZStorSt13_Ios_FmtflagsS_
+_ZL13LagrangeNodalR6Domain
+_ZL16LagrangeElementsR6Domaini
+_ZL27CalcTimeConstraintsForElemsR6Domain
+for.cond --- [   %r.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+_ZN6Domain11regElemlistEi
+_ZNK6Domain3qqcEv
+_ZL29CalcCourantConstraintForElemsR6DomainiPidRd
+for.cond --- [   %courant_elem.0 = phi i32 [ -1, %entry ], [ %courant_elem.2, %for.inc ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 3.333333e-01
+
+_ZNK6Domain7dvovmaxEv
+_ZL27CalcHydroConstraintForElemsR6DomainiPidRd
+for.cond --- [   %hydro_elem.0 = phi i32 [ -1, %entry ], [ %hydro_elem.2, %for.inc ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 4.285714e-01
+
+_ZN6Domain4vdovEi
+_Z4FABSd
+llvm.fabs.f64
+_ZL20CalcLagrangeElementsR6Domain
+for.cond --- [   %k.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 5.000000e-01
+
+_ZL13CalcQForElemsR6Domain
+for.cond --- [   %i.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 4.285714e-01
+
+cleanup --- [   %idx.0 = phi i32 [ %i.0, %if.then18 ], [ -1, %for.cond.cleanup ] ]
+	Total Influence Blocks: 1
+	Total Influence Insts: 1
+	Fitness: 5.000000e-01
+
+_ZL31ApplyMaterialPropertiesForElemsR6Domain
+for.cond --- [   %i.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 1.000000e+00
+
+for.cond9 --- [   %i8.0 = phi i32 [ 0, %if.then7 ], [ %inc20, %for.inc19 ] ]
+	Total Influence Blocks: 4
+	Total Influence Insts: 4
+	Fitness: 8.000000e-01
+
+for.cond26 --- [   %i25.0 = phi i32 [ 0, %if.then24 ], [ %inc38, %for.inc37 ] ]
+	Total Influence Blocks: 4
+	Total Influence Insts: 4
+	Fitness: 8.000000e-01
+
+for.cond42 --- [   %i41.0 = phi i32 [ 0, %if.end40 ], [ %inc63, %for.inc62 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 1.666667e-01
+
+for.cond65 --- [   %r.0 = phi i32 [ 0, %for.end64 ], [ %inc88, %for.inc87 ] ]
+	Total Influence Blocks: 4
+	Total Influence Insts: 4
+	Fitness: 4.444444e-01
+
+if.end86 --- [   %rep.1 = phi i32 [ 1, %if.then74 ], [ %rep.0, %if.end85 ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+_ZNK6Domain5v_cutEv
+_ZL21UpdateVolumesForElemsR6Domaindi
+for.cond --- [   %i.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 4.000000e-01
+
+_ZNK6Domain7eosvminEv
+_ZNK6Domain7eosvmaxEv
+_Z8AllocateIdEPT_m
+_ZL15EvalEOSForElemsR6DomainPdiPii
+for.cond --- [   %j.0 = phi i32 [ 0, %entry ], [ %inc139, %for.inc138 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 5.714286e-02
+
+for.cond36 --- [   %i.0 = phi i32 [ 0, %for.body ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 9
+	Fitness: 9.375000e-02
+
+for.cond59 --- [   %i58.0 = phi i32 [ 0, %for.end ], [ %inc80, %for.inc79 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 6
+	Fitness: 1.071429e-01
+
+for.cond84 --- [   %i83.0 = phi i32 [ 0, %if.then ], [ %inc100, %for.inc99 ] ]
+	Total Influence Blocks: 4
+	Total Influence Insts: 5
+	Fitness: 1.176471e-01
+
+for.cond106 --- [   %i105.0 = phi i32 [ 0, %if.then104 ], [ %inc125, %for.inc124 ] ]
+	Total Influence Blocks: 4
+	Total Influence Insts: 6
+	Fitness: 1.176471e-01
+
+for.cond129 --- [   %i128.0 = phi i32 [ 0, %if.end127 ], [ %inc136, %for.inc135 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 8.333333e-02
+
+for.cond142 --- [   %i141.0 = phi i32 [ 0, %for.end140 ], [ %inc159, %for.inc158 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 6
+	Fitness: 1.000000e+00
+
+_Z7ReleaseIdEvPPT_
+free
+_ZNK6Domain5e_cutEv
+_ZNK6Domain5p_cutEv
+_ZNK6Domain5ss4o3Ev
+_ZNK6Domain5q_cutEv
+_ZNK6Domain4pminEv
+_ZNK6Domain4eminEv
+_ZNK6Domain7refdensEv
+_ZN6Domain2qqEi
+_ZN6Domain2qlEi
+_ZL18CalcEnergyForElemsPdS_S_S_S_S_S_S_S_S_S_S_S_dddddS_S_ddiPi
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 4
+	Total Influence Insts: 10
+	Fitness: 8.000000e-01
+
+for.cond20 --- [   %i19.0 = phi i32 [ 0, %for.end ], [ %inc84, %for.inc83 ] ]
+	Total Influence Blocks: 7
+	Total Influence Insts: 19
+	Fitness: 7.777778e-01
+
+for.cond87 --- [   %i86.0 = phi i32 [ 0, %for.end85 ], [ %inc113, %for.inc112 ] ]
+	Total Influence Blocks: 6
+	Total Influence Insts: 8
+	Fitness: 8.571429e-01
+
+for.cond116 --- [   %i115.0 = phi i32 [ 0, %for.end114 ], [ %inc200, %for.inc199 ] ]
+	Total Influence Blocks: 9
+	Total Influence Insts: 22
+	Fitness: 6.923077e-01
+
+for.cond203 --- [   %i202.0 = phi i32 [ 0, %for.end201 ], [ %inc256, %for.inc255 ] ]
+	Total Influence Blocks: 6
+	Total Influence Insts: 13
+	Fitness: 6.666667e-01
+
+_ZL22CalcSoundSpeedForElemsR6DomainPddS1_S1_S1_S1_diPi
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 7
+	Fitness: 5.000000e-01
+
+_ZL20CalcPressureForElemsPdS_S_S_S_S_dddiPi
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 5
+	Fitness: 1.000000e+00
+
+for.cond6 --- [   %i5.0 = phi i32 [ 0, %for.end ], [ %inc39, %for.inc38 ] ]
+	Total Influence Blocks: 7
+	Total Influence Insts: 11
+	Fitness: 7.777778e-01
+
+malloc
+_ZN6Domain17AllocateGradientsEii
+_ZL31CalcMonotonicQGradientsForElemsR6Domain
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+_ZL22CalcMonotonicQForElemsR6Domain
+for.cond --- [   %r.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 5.000000e-01
+
+_ZN6Domain19DeallocateGradientsEv
+_ZNK6Domain5qstopEv
+_ZL28CalcMonotonicQRegionForElemsR6Domainid
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 3.225806e-02
+
+_ZNK6Domain18monoq_limiter_multEv
+_ZNK6Domain15monoq_max_slopeEv
+_ZNK6Domain9qlc_monoqEv
+_ZNK6Domain9qqc_monoqEv
+_ZN6Domain7delv_xiEi
+_ZN6Domain8delv_etaEi
+_ZN6Domain9delv_zetaEi
+_ZN6Domain7delx_xiEi
+_ZN6Domain8delx_etaEi
+_ZN6Domain9delx_zetaEi
+_ZN6Domain15AllocateStrainsEi
+_ZN6Domain17DeallocateStrainsEv
+_ZNK6Domain5u_cutEv
+_ZL17CalcForceForNodesR6Domain
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+_ZL24CalcAccelerationForNodesR6Domaini
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+_ZL43ApplyAccelerationBoundaryConditionsForNodesR6Domain
+for.cond --- [   %i.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+for.cond12 --- [   %i11.0 = phi i32 [ 0, %if.then10 ], [ %inc19, %for.inc18 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+for.cond28 --- [   %i27.0 = phi i32 [ 0, %if.then26 ], [ %inc35, %for.inc34 ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+_ZL20CalcVelocityForNodesR6Domainddi
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 2.500000e-01
+
+_ZL20CalcPositionForNodesR6Domaindi
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 2
+	Total Influence Insts: 2
+	Fitness: 6.666667e-01
+
+_ZN6Domain10symmXemptyEv
+_ZN6Domain5symmXEi
+_ZN6Domain10symmYemptyEv
+_ZN6Domain5symmYEi
+_ZN6Domain10symmZemptyEv
+_ZN6Domain5symmZEi
+_ZNKSt6vectorIiSaIiEE5emptyEv
+_ZNKSt6vectorIiSaIiEE5beginEv
+_ZNKSt6vectorIiSaIiEE3endEv
+_ZN9__gnu_cxxeqIPKiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESB_
+_ZNK9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEE4baseEv
+_ZN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEC2ERKS2_
+_ZN6Domain2fxEi
+_ZN6Domain2fyEi
+_ZN6Domain2fzEi
+_ZL23CalcVolumeForceForElemsR6Domain
+for.cond --- [   %k.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 7.500000e-01
+
+_ZNK6Domain6hgcoefEv
+_ZL23InitStressTermsForElemsR6DomainPdS1_S1_i
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 5
+	Fitness: 1.000000e+00
+
+_ZL23IntegrateStressForElemsR6DomainPdS1_S1_S1_ii
+for.cond --- [   %k.0 = phi i32 [ 0, %if.end ], [ %inc69, %for.inc68 ] ]
+	Total Influence Blocks: 4
+	Total Influence Insts: 6
+	Fitness: 3.636364e-01
+
+for.cond50 --- [   %lnode.0 = phi i32 [ 0, %if.else ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 6
+	Fitness: 3.000000e-01
+
+_ZL28CalcHourglassControlForElemsR6DomainPdd
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc56, %for.inc55 ] ]
+	Total Influence Blocks: 4
+	Total Influence Insts: 4
+	Fitness: 4.444444e-01
+
+for.cond21 --- [   %ii.0 = phi i32 [ 0, %for.body ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 9
+	Fitness: 3.333333e-01
+
+_ZL24CalcElemVolumeDerivativePdS_S_PKdS1_S1_
+_ZL28CalcFBHourglassForceForElemsR6DomainPdS1_S1_S1_S1_S1_S1_dii
+for.cond --- [   %i2.0 = phi i32 [ 0, %if.end ], [ %inc634, %for.inc633 ] ]
+	Total Influence Blocks: 4
+	Total Influence Insts: 5
+	Fitness: 4.000000e-01
+
+for.cond72 --- [   %i1.0 = phi i32 [ 0, %for.body ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 42
+	Fitness: 2.727273e-01
+
+_Z4CBRTd
+_ZL24CalcElemFBHourglassForcePdS_S_PA4_ddS_S_S_
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 11
+	Fitness: 1.000000e+00
+
+for.cond47 --- [   %i46.0 = phi i32 [ 0, %for.end ], [ %inc78, %for.inc77 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 7
+	Fitness: 1.000000e+00
+
+for.cond81 --- [   %i80.0 = phi i32 [ 0, %for.end79 ], [ %inc135, %for.inc134 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 11
+	Fitness: 1.000000e+00
+
+for.cond138 --- [   %i137.0 = phi i32 [ 0, %for.end136 ], [ %inc169, %for.inc168 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 7
+	Fitness: 1.000000e+00
+
+for.cond172 --- [   %i171.0 = phi i32 [ 0, %for.end170 ], [ %inc226, %for.inc225 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 11
+	Fitness: 1.000000e+00
+
+for.cond229 --- [   %i228.0 = phi i32 [ 0, %for.end227 ], [ %inc260, %for.inc259 ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 7
+	Fitness: 1.000000e+00
+
+_ZN6Domain13nodeElemCountEi
+_ZN6Domain18nodeElemCornerListEi
+_ZL7VoluDerddddddddddddddddddPdS_S_
+_ZL19CalcElemNodeNormalsPdS_S_PKdS1_S1_
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 5
+	Fitness: 1.000000e+00
+
+_ZL27SumElemStressesToNodeForcesPA8_KddddPdS2_S2_
+for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 8
+	Fitness: 1.000000e+00
+
+_ZL17SumElemFaceNormalPdS_S_S_S_S_S_S_S_S_S_S_dddddddddddd
+_ZNSo9_M_insertIlEERSoT_
+_ZNSt11char_traitsIcE6lengthEPKc
+_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l
+strlen
+_ZStorSt12_Ios_IostateS_
+_ZNSt9basic_iosIcSt11char_traitsIcEE5clearESt12_Ios_Iostate
+_GLOBAL__sub_I_lulesh_util.cc
+__cxx_global_var_init.10
+_Z23ParseCommandLineOptionsiPPciP11cmdLineOpts
+while.cond --- [   %i.0 = phi i32 [ 1, %if.then ], [ %i.9, %if.end144 ] ]
+	Total Influence Blocks: 34
+	Total Influence Insts: 34
+	Fitness: 6.181818e-01
+
+strcmp
+_ZL10ParseErrorPKci
+_Z8StrToIntIiEiPKcPT_
+cleanup --- [   %retval.0 = phi i32 [ 0, %if.then ], [ 1, %if.then6 ], [ 0, %if.else ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+_ZL23PrintCommandLineOptionsPci
+sprintf
+strtol
+_Z25VerifyAndWriteFinalOutputdR6Domainii
+for.cond --- [   %j.0 = phi i32 [ 0, %entry ], [ %inc61, %for.inc60 ] ]
+	Total Influence Blocks: 5
+	Total Influence Insts: 6
+	Fitness: 5.555556e-01
+
+_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+_ZNSolsEPFRSt8ios_baseS0_E
+_ZSt12setprecisioni
+_ZStlsIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_St13_Setprecision
+_ZSt4setwi
+_ZStlsIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_St5_Setw
+_ZNSolsEd
+_ZNSt8ios_base5widthEl
+_ZNSt8ios_base9precisionEl
+_ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+_ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
+_Z11DumpToVisitR6Domainiii

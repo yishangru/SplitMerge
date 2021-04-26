@@ -1,0 +1,212 @@
+Function Phi Info Pass: 
+BZ2_blockSort
+cond.end --- [   %cond = phi i32 [ 1, %cond.true ], [ %45, %cond.false ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+fallbackSort
+land.end --- [   %93 = phi i1 [ false, %while.cond132 ], [ %tobool141, %land.rhs ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+land.end189 --- [   %116 = phi i1 [ false, %while.cond178 ], [ %tobool188, %land.rhs186 ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+mainSort
+fprintf
+mainQSort3
+mainSimpleSort
+mmed3
+mainGtU
+fallbackQSort3
+fallbackSimpleSort
+land.end --- [   %22 = phi i1 [ false, %for.cond7 ], [ %cmp13, %land.rhs ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+land.end44 --- [   %51 = phi i1 [ false, %for.cond36 ], [ %cmp43, %land.rhs38 ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+fopen_output_safely
+open
+fdopen
+close
+main
+mySIGSEGVorSIGBUScatcher
+signal
+copyFileName
+addFlagsFromEnvVar
+land.end --- [   %21 = phi i1 [ false, %while.cond12 ], [ %lnot, %land.rhs ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+snocString
+strcmp
+strlen
+strstr
+license
+usage
+exit
+redundant
+strncmp
+mySignalCatcher
+compress
+uncompress
+setExit
+testf
+free
+panic
+containsDubiousChars
+fileExists
+__errno_location
+strerror
+stat
+fileno
+isatty
+fopen
+pad
+fflush
+testStream
+ferror
+myfeof
+fclose
+configError
+ioError
+outOfMemory
+showFileNames
+cleanUpAndFail
+remove
+perror
+fgetc
+ungetc
+mapSuffix
+strcat
+notAStandardFile
+countHardLinks
+saveInputFileMetaInfo
+uncompressStream
+applySavedMetaInfoToOutputFile
+chmod
+utime
+chown
+fwrite
+rewind
+fread
+crcError
+compressedStreamEOF
+cadvise
+lstat
+hasSuffix
+compressStream
+uInt64_from_UInt32s
+uInt64_to_double
+uInt64_toAscii
+llvm.memcpy.p0i8.p0i8.i64
+uInt64_qrm10
+uInt64_isZero
+mkCell
+myMalloc
+strcpy
+malloc
+getenv
+__ctype_b_loc
+strncpy
+BZ2_bz__AssertH__fail
+BZ2_bzlibVersion
+BZ2_bzCompressInit
+bz_config_ok
+default_bzalloc
+default_bzfree
+init_RL
+prepare_new_block
+BZ2_bzCompress
+handle_compress
+lor.end --- [   %47 = phi i1 [ true, %while.end ], [ %tobool69, %lor.rhs ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+isempty_RL
+copy_output_until_stop
+copy_input_until_stop
+flush_RL
+add_pair_to_block
+BZ2_bzCompressEnd
+BZ2_bzDecompressInit
+BZ2_indexIntoF
+BZ2_bzDecompress
+unRLE_obuf_to_output_SMALL
+unRLE_obuf_to_output_FAST
+BZ2_bzDecompressEnd
+BZ2_bzWriteOpen
+BZ2_bzWrite
+BZ2_bzWriteClose
+BZ2_bzWriteClose64
+BZ2_bzReadOpen
+BZ2_bzReadClose
+BZ2_bzRead
+myfeof.123
+BZ2_bzReadGetUnused
+BZ2_bzBuffToBuffCompress
+BZ2_bzBuffToBuffDecompress
+BZ2_bzopen
+bzopen_or_bzdopen
+llvm.memset.p0i8.i64
+BZ2_bzdopen
+BZ2_bzread
+BZ2_bzwrite
+BZ2_bzflush
+BZ2_bzclose
+BZ2_bzerror
+BZ2_bsInitWrite
+BZ2_compressBlock
+bsPutUChar
+bsPutUInt32
+bsW
+generateMTFValues
+sendMTFValues
+land.end --- [   %42 = phi i1 [ false, %while.cond37 ], [ %cmp40, %land.rhs ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+bsFinishWrite
+makeMaps_e
+BZ2_decompress
+lor.end --- [   %1517 = phi i1 [ true, %do.cond ], [ %cmp2114, %lor.rhs ] ]
+	Total Influence Blocks: 0
+	Total Influence Insts: 0
+	Fitness: 0.000000e+00
+
+makeMaps_d
+BZ2_hbMakeCodeLengths
+cond.end --- [   %cond = phi i32 [ 1, %cond.true ], [ %7, %cond.false ] ]
+	Total Influence Blocks: 1
+	Total Influence Insts: 1
+	Fitness: 1.666667e-01
+
+BZ2_hbAssignCodes
+BZ2_hbCreateDecodeTables
+ran
+spec_init
+printf
+spec_random_load
+spec_load
+read
+spec_read
+spec_fread
+spec_getc
+spec_ungetc
+spec_rewind
+spec_reset
+spec_write
+spec_fwrite
+spec_putc

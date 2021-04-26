@@ -1,0 +1,15 @@
+Function Phi Info Pass: 
+dm_sample_cond_3
+if.end --- [   %x.0 = phi i32 [ 15, %if.then ], [ 5, %if.else ] ]
+	Total Influence Blocks: 3
+	Total Influence Insts: 3
+	Fitness: 4.285714e-01
+
+if.end4 --- [   %y.0 = phi i32 [ 30, %if.then2 ], [ 10, %if.else3 ] ]
+	Total Influence Blocks: 1
+	Total Influence Insts: 1
+	Fitness: 2.500000e-01
+
+llvm.lifetime.start.p0i8
+printf
+llvm.lifetime.end.p0i8

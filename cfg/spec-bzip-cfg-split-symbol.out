@@ -1,0 +1,356 @@
+Function CFG Symbol Generate Pass: 
+BZ2_blockSort
+fallbackSort
+mainSort
+fprintf
+mainQSort3
+mainSimpleSort
+mmed3
+mainGtU
+fallbackQSort3
+fallbackSimpleSort
+fopen_output_safely
+open
+fdopen
+close
+main
+mySIGSEGVorSIGBUScatcher
+signal
+copyFileName
+addFlagsFromEnvVar
+snocString
+strcmp
+strlen
+strstr
+license
+usage
+exit
+redundant
+strncmp
+mySignalCatcher
+compress
+uncompress
+setExit
+testf
+free
+panic
+containsDubiousChars
+fileExists
+__errno_location
+strerror
+stat
+fileno
+isatty
+fopen
+pad
+fflush
+testStream
+ferror
+myfeof
+fclose
+configError
+ioError
+outOfMemory
+showFileNames
+cleanUpAndFail
+remove
+perror
+fgetc
+ungetc
+mapSuffix
+strcat
+notAStandardFile
+countHardLinks
+saveInputFileMetaInfo
+uncompressStream
+applySavedMetaInfoToOutputFile
+chmod
+utime
+chown
+fwrite
+rewind
+fread
+crcError
+compressedStreamEOF
+cadvise
+lstat
+hasSuffix
+compressStream
+uInt64_from_UInt32s
+uInt64_to_double
+uInt64_toAscii
+llvm.memcpy.p0i8.p0i8.i64
+uInt64_qrm10
+uInt64_isZero
+mkCell
+myMalloc
+strcpy
+malloc
+getenv
+__ctype_b_loc
+strncpy
+BZ2_bz__AssertH__fail
+BZ2_bzlibVersion
+BZ2_bzCompressInit
+bz_config_ok
+default_bzalloc
+default_bzfree
+init_RL
+prepare_new_block
+BZ2_bzCompress
+handle_compress
+isempty_RL
+copy_output_until_stop
+copy_input_until_stop
+flush_RL
+add_pair_to_block
+BZ2_bzCompressEnd
+BZ2_bzDecompressInit
+BZ2_indexIntoF
+BZ2_bzDecompress
+unRLE_obuf_to_output_SMALL
+unRLE_obuf_to_output_FAST
+BZ2_bzDecompressEnd
+BZ2_bzWriteOpen
+BZ2_bzWrite
+BZ2_bzWriteClose
+BZ2_bzWriteClose64
+BZ2_bzReadOpen
+BZ2_bzReadClose
+BZ2_bzRead
+myfeof.123
+BZ2_bzReadGetUnused
+BZ2_bzBuffToBuffCompress
+BZ2_bzBuffToBuffDecompress
+BZ2_bzopen
+bzopen_or_bzdopen
+llvm.memset.p0i8.i64
+BZ2_bzdopen
+BZ2_bzread
+BZ2_bzwrite
+BZ2_bzflush
+BZ2_bzclose
+BZ2_bzerror
+BZ2_bsInitWrite
+BZ2_compressBlock
+bsPutUChar
+bsPutUInt32
+bsW
+generateMTFValues
+sendMTFValues
+bsFinishWrite
+makeMaps_e
+BZ2_decompress
+makeMaps_d
+BZ2_hbMakeCodeLengths
+	cond.end --- [   %cond = phi i32 [ 1, %cond.true ], [ %7, %cond.false ] ]
+
+		Original CFG
+			if_then_S0 -> if_end_S0
+			if_then195_S0 -> if_end196_S0
+			if_then218_S0 -> while_end234_S0
+			for_cond220_S0 -> for_end233_S0
+			for_cond220_S0 -> for_body223_S0
+			for_inc215_S0 -> for_cond197_S0
+			if_then213_S0 -> if_end214_S0
+			while_end208_S0 -> if_end214_S0
+			while_end208_S0 -> if_then213_S0
+			for_inc231_S0 -> for_cond220_S0
+			for_end217_S0 -> if_then218_S0
+			for_end217_S0 -> if_end219_S0
+			while_body204_S0 -> while_cond200_S0
+			if_then78_S0 -> while_end84_S0
+			if_end70_S0 -> if_end79_S0
+			if_end70_S0 -> if_then78_S0
+			if_then68_S0 -> if_end70_S0
+			if_end126_S0 -> while_body98_S0
+			for_end_S0 -> while_body_S0
+			for_inc36_S0 -> for_cond9_S0
+			while_cond200_S0 -> while_end208_S0
+			while_cond200_S0 -> while_body204_S0
+			for_body11_S0 -> while_cond19_S0
+			cond_true_S0 -> cond_end_S0
+			cond_false_S0 -> cond_end_S0
+			while_cond19_S0 -> while_end_S0
+			while_cond19_S0 -> while_body27_S0
+			for_cond_S0 -> for_end_S0
+			for_cond_S0 -> for_body_S0
+			for_cond197_S0 -> for_end217_S0
+			for_cond197_S0 -> for_body199_S0
+			cond_true152_S0 -> cond_end160_S0
+			for_end233_S0 -> while_body_S0
+			entry_S0 -> for_cond_S0
+			if_end219_S0 -> for_cond220_S0
+			if_end214_S0 -> for_inc215_S0
+			for_cond9_S0 -> for_end38_S0
+			for_cond9_S0 -> for_body11_S0
+			for_body_S0 -> cond_false_S0
+			for_body_S0 -> cond_true_S0
+			for_end38_S0 -> if_then_S0
+			for_end38_S0 -> if_end_S0
+			for_inc_S0 -> for_cond_S0
+			while_end_S0 -> for_inc36_S0
+			cond_end_S0 -> for_inc_S0
+			if_end_S0 -> while_cond40_S0
+			while_cond40_S0 -> while_end193_S0
+			while_cond40_S0 -> while_body42_S0
+			while_body27_S0 -> while_cond19_S0
+			if_end79_S0 -> while_body52_S0
+			if_end117_S0 -> if_end126_S0
+			if_end117_S0 -> if_then125_S0
+			while_end190_S0 -> while_cond40_S0
+			for_body223_S0 -> for_inc231_S0
+			while_body42_S0 -> while_body52_S0
+			if_end102_S0 -> if_end117_S0
+			if_end102_S0 -> land_lhs_true104_S0
+			if_then55_S0 -> while_end84_S0
+			if_end196_S0 -> for_cond197_S0
+			while_body98_S0 -> if_end102_S0
+			while_body98_S0 -> if_then101_S0
+			while_end193_S0 -> if_then195_S0
+			while_end193_S0 -> if_end196_S0
+			land_lhs_true_S0 -> if_end70_S0
+			land_lhs_true_S0 -> if_then68_S0
+			while_body52_S0 -> if_end56_S0
+			while_body52_S0 -> if_then55_S0
+			while_end84_S0 -> while_body98_S0
+			while_body_S0 -> for_cond9_S0
+			while_end131_S0 -> cond_false156_S0
+			while_end131_S0 -> cond_true152_S0
+			if_end56_S0 -> if_end70_S0
+			if_end56_S0 -> land_lhs_true_S0
+			if_then101_S0 -> while_end131_S0
+			cond_end160_S0 -> while_cond174_S0
+			while_cond174_S0 -> while_end190_S0
+			while_cond174_S0 -> while_body183_S0
+			cond_false156_S0 -> cond_end160_S0
+			if_then125_S0 -> while_end131_S0
+			while_body183_S0 -> while_cond174_S0
+			land_lhs_true104_S0 -> if_end117_S0
+			land_lhs_true104_S0 -> if_then115_S0
+			for_body199_S0 -> while_cond200_S0
+			if_then115_S0 -> if_end117_S0
+
+		Split CFG
+			for_inc_S0 -> for_cond_S0
+			cond_false_S0 -> cond_end_S0
+			if_then_S0 -> if_end_S0
+			if_then195_S0 -> if_end196_S0
+			if_then218_S0 -> while_end234_S0
+			for_cond220_S0 -> for_end233_S0
+			for_cond220_S0 -> for_body223_S0
+			for_inc215_S0 -> for_cond197_S0
+			if_then213_S0 -> if_end214_S0
+			while_end208_S0 -> if_end214_S0
+			while_end208_S0 -> if_then213_S0
+			if_then78_S0 -> while_end84_S0
+			if_then68_S0 -> if_end70_S0
+			if_end126_S0 -> while_body98_S0
+			if_end79_S0 -> while_body52_S0
+			if_end117_S0 -> if_end126_S0
+			if_end117_S0 -> if_then125_S0
+			for_body199_S0 -> while_cond200_S0
+			if_then115_S0 -> if_end117_S0
+			for_end_S0 -> while_body_S0
+			cond_false_S1 -> cond_end_S1
+			cond_end_S0 -> for_inc_S0
+			cond_true_S1 -> cond_end_S1
+			if_end_S0 -> while_cond40_S0
+			while_cond40_S0 -> while_end193_S0
+			while_cond40_S0 -> while_body42_S0
+			while_cond19_S0 -> while_end_S0
+			while_cond19_S0 -> while_body27_S0
+			for_cond_S0 -> for_end_S0
+			for_cond_S0 -> for_body_S0
+			for_cond197_S0 -> for_end217_S0
+			for_cond197_S0 -> for_body199_S0
+			cond_true152_S0 -> cond_end160_S0
+			while_cond174_S0 -> while_end190_S0
+			while_cond174_S0 -> while_body183_S0
+			cond_false156_S0 -> cond_end160_S0
+			for_end233_S0 -> while_body_S0
+			entry_S0 -> for_cond_S0
+			while_cond200_S0 -> while_end208_S0
+			while_cond200_S0 -> while_body204_S0
+			cond_end_S1 -> for_inc_S1
+			for_body11_S0 -> while_cond19_S0
+			cond_true_S0 -> cond_end_S1
+			for_inc36_S0 -> for_cond9_S0
+			while_body27_S0 -> while_cond19_S0
+			while_end190_S0 -> while_cond40_S0
+			if_end70_S0 -> if_end79_S0
+			if_end70_S0 -> if_then78_S0
+			for_cond_S1 -> for_end_S0
+			for_cond_S1 -> for_body_S1
+			for_inc231_S0 -> for_cond220_S0
+			for_end217_S0 -> if_then218_S0
+			for_end217_S0 -> if_end219_S0
+			while_body204_S0 -> while_cond200_S0
+			for_inc_S1 -> for_cond_S1
+			if_end56_S0 -> if_end70_S0
+			if_end56_S0 -> land_lhs_true_S0
+			if_then101_S0 -> while_end131_S0
+			for_body_S1 -> cond_false_S1
+			for_body_S1 -> cond_true_S1
+			while_end_S0 -> for_inc36_S0
+			if_end219_S0 -> for_cond220_S0
+			if_end214_S0 -> for_inc215_S0
+			for_cond9_S0 -> for_end38_S0
+			for_cond9_S0 -> for_body11_S0
+			for_body_S0 -> cond_false_S0
+			for_body_S0 -> cond_true_S0
+			for_end38_S0 -> if_then_S0
+			for_end38_S0 -> if_end_S0
+			for_body223_S0 -> for_inc231_S0
+			while_body42_S0 -> while_body52_S0
+			if_end102_S0 -> if_end117_S0
+			if_end102_S0 -> land_lhs_true104_S0
+			if_then55_S0 -> while_end84_S0
+			if_end196_S0 -> for_cond197_S0
+			while_body98_S0 -> if_end102_S0
+			while_body98_S0 -> if_then101_S0
+			while_end193_S0 -> if_then195_S0
+			while_end193_S0 -> if_end196_S0
+			land_lhs_true_S0 -> if_end70_S0
+			land_lhs_true_S0 -> if_then68_S0
+			while_body52_S0 -> if_end56_S0
+			while_body52_S0 -> if_then55_S0
+			while_end84_S0 -> while_body98_S0
+			while_body_S0 -> for_cond9_S0
+			while_end131_S0 -> cond_false156_S0
+			while_end131_S0 -> cond_true152_S0
+			cond_end160_S0 -> while_cond174_S0
+			if_then125_S0 -> while_end131_S0
+			while_body183_S0 -> while_cond174_S0
+			land_lhs_true104_S0 -> if_end117_S0
+			land_lhs_true104_S0 -> if_then115_S0
+
+		Statistics:
+			FitNess: 0.166667
+			Add Blocks: 6
+			Add Insts: 29
+			Remove Insts: 1
+
+
+BZ2_hbAssignCodes
+BZ2_hbCreateDecodeTables
+ran
+spec_init
+printf
+spec_random_load
+spec_load
+read
+spec_read
+spec_fread
+spec_getc
+spec_ungetc
+spec_rewind
+spec_reset
+spec_write
+spec_fwrite
+spec_putc
+
+Summary:
+	Total Add Blocks: 6
+	Total Add Insts: 29
+	Total Remove Insts: 1
