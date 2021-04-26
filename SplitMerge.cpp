@@ -258,9 +258,9 @@ static void printStatisticForDm(  Instruction* PhiInstruction,
     errs() << "\tTotal Influence Blocks: " << TotalBBInfluence << "\n";
     errs() << "\tTotal Influence Insts: " << TotalInstInfluence << "\n";
     errs() << "\tFitness: " << getFitNess(PhiInfluenceNodes, RegionOfInfluence) << "\n";
-    outs() << "\tReachable BB: " << ReachBBString << "\n";
-    outs() << "\tInfluence BB: " << InfluenceBBString << "\n";
-    outs() << "\tROI: " << ROIString << "\n";
+    //outs() << "\tReachable BB: " << ReachBBString << "\n";
+    //outs() << "\tInfluence BB: " << InfluenceBBString << "\n";
+    //outs() << "\tROI: " << ROIString << "\n";
 }
 
 namespace SplitMergeSpace {
@@ -707,7 +707,7 @@ struct FuncCFGSplitInfo : public ModulePass {
             // fitness
             double FitNess = getFitNess(PhiInfluenceNodes, RegionOfInfluence);
 
-            if (std::abs(FitNess - double(0)) > 0.005) {
+            if (std::abs(FitNess - double(0)) < 0.005) {
                 continue;
             }
 
