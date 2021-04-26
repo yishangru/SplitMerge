@@ -707,6 +707,10 @@ struct FuncCFGSplitInfo : public ModulePass {
             // fitness
             double FitNess = getFitNess(PhiInfluenceNodes, RegionOfInfluence);
 
+            if (std::abs(FitNess - double(0)) > 0.005) {
+                continue;
+            }
+
             // revival edges
             std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
 
@@ -868,16 +872,16 @@ struct ModuleSplitMerge : public ModulePass {
               assert(false);
             }
 
-            bool AllConstant = true;
+            bool AllNonConstant = true;
             for (std::size_t I = 0; I < TotalValues; I++) {
               Value* ComeValue = PhiNode->getIncomingValue(I);
-              if (!isa<ConstantInt>(ComeValue)) {
-                AllConstant = false;
+              if (isa<ConstantInt>(ComeValue)) {
+                AllNonConstant = false;
                 break;
               }
             }
 
-            if (AllConstant) {
+            if (!AllNonConstant) {
                 GenTarget GT{&*F, PhiNode};
                 GenTargets.push_back(GT);
                 Added = true;
