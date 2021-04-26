@@ -3,74 +3,74 @@ dm_sample_cond_3
 	if.end --- [   %x.0 = phi i32 [ 15, %if.then ], [ 5, %if.else ] ]
 
 		Original CFG
-			if_else3_S0 -> if_end4_S0
-			if_else8_S0 -> if_end10_S0
-			if_then_S0 -> if_end_S0
 			if_else_S0 -> if_end_S0
+			if_else3_S0 -> if_end4_S0
+			if_then_S0 -> if_end_S0
 			entry_S0 -> if_else_S0
 			entry_S0 -> if_then_S0
-			if_end4_S0 -> if_else8_S0
-			if_end4_S0 -> if_then6_S0
+			if_else8_S0 -> if_end10_S0
 			if_end_S0 -> if_else3_S0
 			if_end_S0 -> if_then2_S0
 			if_then2_S0 -> if_end4_S0
+			if_end4_S0 -> if_else8_S0
+			if_end4_S0 -> if_then6_S0
 			if_then6_S0 -> if_end10_S0
 
 		Split CFG
-			if_else3_S2 -> if_end4_S2
+			if_then6_S1 -> if_end10_S1
 			if_end4_S1 -> if_else8_S1
 			if_end4_S1 -> if_then6_S1
-			if_then6_S1 -> if_end10_S1
-			entry_S0 -> if_else_S0
-			entry_S0 -> if_then_S0
-			if_else_S0 -> if_end_S2
+			if_then2_S1 -> if_end4_S1
 			if_end_S1 -> if_else3_S1
 			if_end_S1 -> if_then2_S1
-			if_then_S0 -> if_end_S1
 			if_end4_S2 -> if_else8_S2
 			if_end4_S2 -> if_then6_S2
+			entry_S0 -> if_else_S0
+			entry_S0 -> if_then_S0
 			if_else8_S1 -> if_end10_S1
-			if_then2_S1 -> if_end4_S1
+			if_then2_S2 -> if_end4_S2
+			if_else3_S2 -> if_end4_S2
+			if_else8_S2 -> if_end10_S2
+			if_else3_S1 -> if_end4_S1
 			if_end_S2 -> if_else3_S2
 			if_end_S2 -> if_then2_S2
-			if_else3_S1 -> if_end4_S1
-			if_then2_S2 -> if_end4_S2
+			if_else_S0 -> if_end_S2
+			if_then_S0 -> if_end_S1
 			if_then6_S2 -> if_end10_S2
-			if_else8_S2 -> if_end10_S2
 
 	if.end4 --- [   %y.0 = phi i32 [ 30, %if.then2 ], [ 10, %if.else3 ] ]
 
 		Original CFG
-			if_else3_S0 -> if_end4_S0
-			if_else8_S0 -> if_end10_S0
-			if_then_S0 -> if_end_S0
 			if_else_S0 -> if_end_S0
+			if_else3_S0 -> if_end4_S0
+			if_then_S0 -> if_end_S0
 			entry_S0 -> if_else_S0
 			entry_S0 -> if_then_S0
-			if_end4_S0 -> if_else8_S0
-			if_end4_S0 -> if_then6_S0
+			if_else8_S0 -> if_end10_S0
 			if_end_S0 -> if_else3_S0
 			if_end_S0 -> if_then2_S0
 			if_then2_S0 -> if_end4_S0
+			if_end4_S0 -> if_else8_S0
+			if_end4_S0 -> if_then6_S0
 			if_then6_S0 -> if_end10_S0
 
 		Split CFG
+			if_else_S0 -> if_end_S0
 			if_then6_S2 -> if_end10_S2
-			if_else8_S2 -> if_end10_S2
-			if_else3_S0 -> if_end4_S2
 			if_end4_S2 -> if_else8_S2
 			if_end4_S2 -> if_then6_S2
-			if_then_S0 -> if_end_S0
+			if_else3_S0 -> if_end4_S2
 			if_else8_S1 -> if_end10_S1
+			if_then_S0 -> if_end_S0
+			entry_S0 -> if_else_S0
+			entry_S0 -> if_then_S0
 			if_end_S0 -> if_else3_S0
 			if_end_S0 -> if_then2_S0
 			if_then2_S0 -> if_end4_S1
+			if_then6_S1 -> if_end10_S1
+			if_else8_S2 -> if_end10_S2
 			if_end4_S1 -> if_else8_S1
 			if_end4_S1 -> if_then6_S1
-			if_else_S0 -> if_end_S0
-			entry_S0 -> if_else_S0
-			entry_S0 -> if_then_S0
-			if_then6_S1 -> if_end10_S1
 
 llvm.lifetime.start.p0i8
 printf
