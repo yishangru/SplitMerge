@@ -348,8 +348,15 @@ namespace SplitMergeSpace {
       }
 
       static std::string bsString(const BlockState& BS)  {
-        std::string BsS = BS.BB->getName().str() + "-";
+        std::string BsS = BS.BB->getName().str() + "_S";
         BsS += std::to_string(BS.State);
+        //std::replace(BsS.begin(), BsS.end(), ".", "_");
+        // stupid replace "." to "_"
+        std::size_t Pos = BsS.find(".");
+        while (Pos != std::string::npos) {
+          BsS.replace(Pos, 1, "_");
+          Pos = BsS.find(".");
+        }
         return BsS;
       }
   };
@@ -534,6 +541,8 @@ static void generateSplitCFG( Function* Func,
     std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGSplitGraph;
     stateTransition(0, EntryBlock, true, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGSplitGraph);
     printCFGSplit(CFGSplitGraph);
+
+    // actual generate function replace
 }
 
 namespace {
