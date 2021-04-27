@@ -847,6 +847,8 @@ struct ModuleSplitMerge : public ModulePass {
             return;
         }
 
+        outs() << "\n" << SplitMergeSpace::BlockState::bsString(BS) << "\n";
+
         ValueToValueMapTy* ValueMapTyPoint = new ValueToValueMapTy;
         BasicBlock* BB = CloneBasicBlock(BS.BB, *ValueMapTyPoint, ".dup" + std::to_string(BS.State), F);
         BSGenBlockMap[BS] = BB;
@@ -863,7 +865,29 @@ struct ModuleSplitMerge : public ModulePass {
         // predecessor all generated
         BasicBlock* OriBB = BS.BB;
 
-        // update current phi
+        std::unordered_set<BasicBlock*> UpdatedPre;
+        if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
+            for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
+                UpdatedPre.insert(PreBS.BB);
+            }
+        }
+
+        // remove some current phi
+        std::unordered_set<Instruction*> PhiInsts;
+        for (BasicBlock::iterator IN = OriBB->begin(), INE = BB->end(); IN != INE; ++IN) {
+            Instruction* Inst = &*IN;
+            if (isa<PHINode>(Inst)) {
+                PhiInsts.insert(Inst);
+            }
+        }
+        for (auto& PhiInst : PhiInsts) {
+            PHINode* PhiNode = cast<PHINode>(PhiInst);
+
+            std::size_t TotalValues = PhiNode->getNumIncomingValues();
+            for (std::size_t I = 0; I < TotalValues; I++) {
+                BasicBlock* PreBB = PhiNode->getIncomingBlock(I);
+            }
+        }
 
         // generate phi and replace usage
 
@@ -876,8 +900,9 @@ struct ModuleSplitMerge : public ModulePass {
 
         // replace terminator
         Instruction* Inst = OriBB->getTerminator();
-        if (isa<BranchInst>(Inst)) {
-            BranchInst* BrInst = cast<BranchInst>(Inst);
+        Instruction* TemCur = cast<Instruction>((*BSValueMap[BS])[Inst]);
+        if (isa<BranchInst>(TemCur)) {
+            BranchInst* BrInst = cast<BranchInst>(TemCur);
             assert(CFGSplitGraph.find(BS) != CFGSplitGraph.end());
 
             std::unordered_map<BasicBlock*, SplitMergeSpace::BlockState> SuccMapping;
@@ -897,10 +922,12 @@ struct ModuleSplitMerge : public ModulePass {
 
             std::size_t NumSuccessor = BrInst->getNumSuccessors();
             assert(CFGSplitGraph[BS].size() == NumSuccessor);
-
+            // std::string ChangeSucc = "";
             for (std::size_t I = 0; I < NumSuccessor; I++) {
+                //ChangeSucc += (SplitMergeSpace::BlockState::bsString(SuccMapping[BrInst->getSuccessor(I)]) + " , ");
                 BrInst->setSuccessor(I, BSGenBlockMap[SuccMapping[BrInst->getSuccessor(I)]]);
             }
+            // outs() << ChangeSucc << "\n";
         }
     }
 
@@ -927,6 +954,8 @@ struct ModuleSplitMerge : public ModulePass {
             }
             BBStates[OriBB].insert(BS.State);
         }
+
+        printCFGSplit(CFGSplitGraph);
 
         for (auto& BBPair : BBStates) {
             BasicBlock* BB = BBPair.first;
@@ -955,6 +984,11 @@ struct ModuleSplitMerge : public ModulePass {
             delete BSValuePair.second;
         }
         BSValueMap.clear();
+        for (auto& BBPair : BBStates) {
+            BasicBlock* BB = BBPair.first;
+            BB->dropAllReferences();
+            BB->removeFromParent();
+        }
     }
 
     bool runOnModule(Module &M) override {
