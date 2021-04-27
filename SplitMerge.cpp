@@ -850,6 +850,24 @@ struct ModuleSplitMerge : public ModulePass {
             GenBlockBSMap[BB] = BS;
             BSValueMap[BS] = ValueMapTyPoint;
         }
+
+        // check whether all predecessors all generate
+        if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
+            for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
+                replaceUsage(PreBS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+            }
+        }
+
+        // predecessor all generated
+        BasicBlock* OriBB = BS.BB;
+
+        // update current phi
+
+        // generate phi and replace usage
+
+        // generate all successors
+
+        // replace terminator
     }
 
     static void generateSplitCFGCode(Function* F,
