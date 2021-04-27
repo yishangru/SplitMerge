@@ -1015,7 +1015,6 @@ struct ModuleSplitMerge : public ModulePass {
                 // generate phi node
                 Instruction* FirstNonPhi = BSGenBlockMap[BS]->getFirstNonPHI();
                 outs() << "\nGenerate Phi At: " << SplitMergeSpace::BlockState::bsString(BS) << " - " << *Inst << " -- " << Inst->getName() << "\n";
-                assert(Inst->getName().str() != "");
 
                 PHINode* CreatePhi = PHINode::Create(Inst->getType(), InstructionChecks[Inst].size(), Inst->getName().str() + ".dup" + std::to_string(BS.State), FirstNonPhi);
                 for (auto& PreBS : InstructionChecks[Inst]) {
