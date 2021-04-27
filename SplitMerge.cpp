@@ -849,10 +849,8 @@ struct ModuleSplitMerge : public ModulePass {
 
             if ((InstU->getParent()) == OriBB) {
 
-                // phi node already take care
                 if (isa<PHINode>(InstU)) {
-                  //outs() << "Used In Phi Node, Ignore - " << *InstU << "\n";
-                  continue;
+                    continue;
                 }
 
                 std::size_t TotalUseOps = CurU->getNumOperands();
@@ -931,100 +929,6 @@ struct ModuleSplitMerge : public ModulePass {
         if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
             for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
                 replaceUsage(PreBS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
-            }
-        }
-
-        // predecessor all generated
-        //outs() << SplitMergeSpace::BlockState::bsString(BS) << " Added" << "\n";
-
-        // remove some current phi
-        std::unordered_set<Instruction*> PhiInsts;
-        for (BasicBlock::iterator IN = OriBB->begin(), INE = OriBB->end(); IN != INE; ++IN) {
-            Instruction* Inst = &*IN;
-            if (isa<PHINode>(Inst)) {
-                PhiInsts.insert(Inst);
-            }
-        }
-
-        //outs() << "\n" << SplitMergeSpace::BlockState::bsString(BS) << "\n";
-
-        std::unordered_map<BasicBlock*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>> UpdatedPreBS;
-        if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
-          for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
-              BasicBlock* PreBB = PreBS.BB;
-              if (UpdatedPreBS.find(PreBB) == UpdatedPreBS.end()) {
-                  UpdatedPreBS[PreBB] = std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>();
-              }
-              UpdatedPreBS[PreBB].insert(PreBS);
-          }
-        }
-
-        for (auto& PhiInst : PhiInsts) {
-            PHINode* PhiNode = cast<PHINode>(PhiInst);
-            //outs() << "Cur Phi " << *PhiNode << "\n";
-            PHINode* RealPhiNode = cast<PHINode>((*BSValueMap[BS])[PhiNode]);
-
-            std::unordered_set<BasicBlock*> CurBlocks;
-            std::size_t TotalValuesOld = PhiNode->getNumIncomingValues();
-            for (std::size_t I = 0; I < TotalValuesOld; I++) {
-                CurBlocks.insert(PhiNode->getIncomingBlock(I));
-            }
-
-            /*
-            std::unordered_set<BasicBlock*> RealCurBlocks;
-            std::size_t TotalValuesNew = RealPhiNode->getNumIncomingValues();
-            for (std::size_t I = 0; I < TotalValuesNew; I++) {
-                RealCurBlocks.insert(RealPhiNode->getIncomingBlock(I));
-            }
-
-            //outs() << "Phi Node BB:" << "\n";
-            for (auto& CurB : CurBlocks) {
-                //outs() << CurB->getName() << " , ";
-            }
-            //outs() << "\n";
-            for (auto& NewB : RealCurBlocks) {
-              //outs() << NewB->getName() << " , ";
-            }
-            //outs() << "\n";
-            */
-
-            for (auto& CurBlock : CurBlocks) {
-                if (UpdatedPreBS.find(CurBlock) == UpdatedPreBS.end()) {
-                    RealPhiNode->removeIncomingValue(CurBlock, false);
-                }
-            }
-            assert(RealPhiNode->getNumIncomingValues() > 0);
-
-            if (RealPhiNode->getNumIncomingValues() < PhiNode->getNumIncomingValues()) {
-                //outs() << SplitMergeSpace::BlockState::bsString(BS) << " --- " << *RealPhiNode << "\n";
-            }
-
-            // get actual instruction for generation
-            for (auto& PreBlockPair : UpdatedPreBS) {
-                BasicBlock* CurPreBlock = PreBlockPair.first;
-
-                // check whether constant, no worry about constant
-                Value* CurValue = RealPhiNode->getIncomingValueForBlock(CurPreBlock);
-                std::unordered_map<BasicBlock*, Value*> ValueMaps;
-                if (isa<Instruction>(CurValue)) {
-                    Instruction* Inst = cast<Instruction>(CurValue);
-                    for (auto& BSPhi : UpdatedPreBS[CurPreBlock]) {
-                        assert(BSPhiValueMap[BSPhi].find(Inst) != BSPhiValueMap[BSPhi].end());
-                        ValueMaps[BSGenBlockMap[BSPhi]] = BSPhiValueMap[BSPhi][Inst];
-                    }
-                } else if (isa<Constant>(CurValue) || isa<Argument>(CurValue)) {
-                    for (auto& BSPhi : UpdatedPreBS[CurPreBlock]) {
-                        ValueMaps[BSGenBlockMap[BSPhi]] = CurValue;
-                    }
-                } else {
-                    //outs() << "Phi Node - " << *CurValue << "\n";
-                    assert(false);
-                }
-
-                RealPhiNode->removeIncomingValue(CurPreBlock, false);
-                for (auto& BBPhiPair : ValueMaps) {
-                    RealPhiNode->addIncoming(BBPhiPair.second, BBPhiPair.first);
-                }
             }
         }
 
@@ -1169,59 +1073,170 @@ struct ModuleSplitMerge : public ModulePass {
             }
 
             // collect all inst from precessors
-            for (auto& SuccBS : CFGSplitGraph[CurBS]) {
+            std::unordered_map<Instruction*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>> InstructionChecks;
+            for (auto& PreBS : ReverseCFGSplitGraph[CurBS]) {
+              for (auto& InstPair : BSPhiValueMap[PreBS]) {
+                Instruction* Inst = InstPair.first;
+                if (InstructionChecks.find(Inst) == InstructionChecks.end()) {
+                    InstructionChecks[Inst] = std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>();
+                }
+                InstructionChecks[Inst].insert(PreBS);
+              }
+            }
 
+            for (auto& InstBSPair : InstructionChecks) {
+              Instruction* Inst = InstBSPair.first;
 
+              if (Inst->getParent() == CurBS.BB) {
+                assert(isa<Instruction>((*BSValueMap[CurBS])[Inst]));
+                //assert(BSPhiValueMap[BS].find(Inst) != BSPhiValueMap[BS].end());
+                continue;
+              }
+
+              if (BSPhiValueMap.find(CurBS) == BSPhiValueMap.end()) {
+                  BSPhiValueMap[CurBS] = std::unordered_map<Instruction*, Instruction*>();
+              }
+
+              if (BSPhiValueMap[CurBS].find(Inst) == BSPhiValueMap[CurBS].end()) {
+                  outs() << "\nGenerate Phi At: " << SplitMergeSpace::BlockState::bsString(CurBS) << " - " << *Inst << " -- " << Inst->getName() << "\n";
+                  if (BSAllPhiValueMap.find(CurBS) == BSAllPhiValueMap.end()) {
+                      BSAllPhiValueMap[CurBS] = std::unordered_map<Instruction*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>>();
+                  }
+
+                  if (BSAllPhiValueMap[CurBS].find(Inst) == BSAllPhiValueMap[CurBS].end()) {
+                      outs() << "BS Phi Value Already There - " << SplitMergeSpace::BlockState::bsString(CurBS) << " - " << *Inst << " -- " << Inst->getName() << "\n";
+                      assert(false);
+                  }
+
+                  PHINode* CreatePhi = PHINode::Create(Inst->getType(), InstructionChecks[Inst].size(), Inst->getName().str() + ".dup" + std::to_string(CurBS.State), BSGenBlockMap[CurBS]->getFirstNonPHI());
+                  BSPhiValueMap[CurBS][Inst] = CreatePhi;
+                  BSAllPhiValueMap[CurBS][Inst] = std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>();
+                  updateLocalUsage(Inst, BSPhiValueMap[CurBS][Inst], CurBS.BB, BSValueMap[CurBS]);
+              }
+
+              assert(isa<PHINode>(BSPhiValueMap[CurBS][Inst]));
+              assert(BSAllPhiValueMap.find(CurBS) != BSAllPhiValueMap.end());
+              assert(BSAllPhiValueMap[CurBS].find(Inst) != BSAllPhiValueMap[CurBS].end());
+
+              PHINode* CurPhi = cast<PHINode>(BSPhiValueMap[CurBS][Inst]);
+              for (auto& PreBS : InstructionChecks[Inst]) {
+                if (BSAllPhiValueMap[CurBS][Inst].find(PreBS) == BSAllPhiValueMap[CurBS][Inst].end()) {
+                    Instruction* MapInst = BSPhiValueMap[PreBS][Inst];
+                    CurPhi->addIncoming(MapInst, BSGenBlockMap[PreBS]);
+                    BSAllPhiValueMap[CurBS][Inst].insert(PreBS);
+                } else {
+                    Value* CurPhiValue = CurPhi->getIncomingValueForBlock(BSGenBlockMap[PreBS]);
+                    assert(isa<Instruction>(CurPhiValue));
+                    Instruction* InstCheck = cast<Instruction>(CurPhiValue);
+                    assert(InstCheck == BSPhiValueMap[PreBS][Inst]);
+                }
+              }
+            }
+
+            // add all successors to working set once there is change
+            if ((BSAllPhiValueMap.find(CurBS) != BSAllPhiValueMap.end()) && (CurInstSize != BSAllPhiValueMap.size())) {
+              for (auto& SuccBS : CFGSplitGraph[CurBS]) {
                 WorkingSet.insert(SuccBS);
+              }
             }
         }
 
-      // generate new phi
-      std::unordered_map<Instruction*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>> InstructionChecks;
-      if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
-        for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
-          for (auto& InstPair : BSPhiValueMap[PreBS]) {
-            Instruction* Inst = InstPair.first;
-            if (InstructionChecks.find(Inst) == InstructionChecks.end()) {
-              InstructionChecks[Inst] = std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>();
+        // update existing phi
+        for (auto& CurBS : TotalBlocks) {
+            std::unordered_map<BasicBlock*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>> UpdatedPreBS;
+            if (ReverseCFGSplitGraph.find(CurBS) != ReverseCFGSplitGraph.end()) {
+              for (auto& PreBS : ReverseCFGSplitGraph[CurBS]) {
+                BasicBlock* PreBB = PreBS.BB;
+                if (UpdatedPreBS.find(PreBB) == UpdatedPreBS.end()) {
+                  UpdatedPreBS[PreBB] = std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>();
+                }
+                UpdatedPreBS[PreBB].insert(PreBS);
+              }
             }
-            InstructionChecks[Inst].insert(PreBS);
-          }
+
+            //outs() << SplitMergeSpace::BlockState::bsString(BS) << " Added" << "\n";
+            std::unordered_set<Instruction*> PhiInsts;
+            for (BasicBlock::iterator IN = CurBS.BB->begin(), INE = CurBS.BB->end(); IN != INE; ++IN) {
+              Instruction* Inst = &*IN;
+              if (isa<PHINode>(Inst)) {
+                PhiInsts.insert(Inst);
+              }
+            }
+            //outs() << "\n" << SplitMergeSpace::BlockState::bsString(BS) << "\n";
+
+            for (auto& PhiInst : PhiInsts) {
+              PHINode* PhiNode = cast<PHINode>(PhiInst);
+              //outs() << "Cur Phi " << *PhiNode << "\n";
+              PHINode* RealPhiNode = cast<PHINode>((*BSValueMap[CurBS])[PhiNode]);
+
+              std::unordered_set<BasicBlock*> CurBlocks;
+              std::size_t TotalValuesOld = PhiNode->getNumIncomingValues();
+              for (std::size_t I = 0; I < TotalValuesOld; I++) {
+                CurBlocks.insert(PhiNode->getIncomingBlock(I));
+              }
+
+              /*
+              std::unordered_set<BasicBlock*> RealCurBlocks;
+              std::size_t TotalValuesNew = RealPhiNode->getNumIncomingValues();
+              for (std::size_t I = 0; I < TotalValuesNew; I++) {
+                  RealCurBlocks.insert(RealPhiNode->getIncomingBlock(I));
+              }
+
+              //outs() << "Phi Node BB:" << "\n";
+              for (auto& CurB : CurBlocks) {
+                  //outs() << CurB->getName() << " , ";
+              }
+              //outs() << "\n";
+              for (auto& NewB : RealCurBlocks) {
+                //outs() << NewB->getName() << " , ";
+              }
+              //outs() << "\n";
+              */
+
+              for (auto& CurBlock : CurBlocks) {
+                if (UpdatedPreBS.find(CurBlock) == UpdatedPreBS.end()) {
+                  RealPhiNode->removeIncomingValue(CurBlock, false);
+                }
+              }
+              assert(RealPhiNode->getNumIncomingValues() > 0);
+
+              if (RealPhiNode->getNumIncomingValues() < PhiNode->getNumIncomingValues()) {
+                //outs() << SplitMergeSpace::BlockState::bsString(BS) << " --- " << *RealPhiNode << "\n";
+              }
+
+              // get actual instruction for generation
+              for (auto& PreBlockPair : UpdatedPreBS) {
+                BasicBlock* CurPreBlock = PreBlockPair.first;
+
+                // check whether constant, no worry about constant
+                Value* CurValue = RealPhiNode->getIncomingValueForBlock(CurPreBlock);
+                std::unordered_map<BasicBlock*, Value*> ValueMaps;
+                if (isa<Instruction>(CurValue)) {
+
+                  Instruction* Inst = cast<Instruction>(CurValue);
+                  for (auto& BSPhi : UpdatedPreBS[CurPreBlock]) {
+                    assert(BSPhiValueMap[BSPhi].find(Inst) != BSPhiValueMap[BSPhi].end());
+                    ValueMaps[BSGenBlockMap[BSPhi]] = BSPhiValueMap[BSPhi][Inst];
+                  }
+
+                } else if (isa<Constant>(CurValue) || isa<Argument>(CurValue)) {
+
+                  for (auto& BSPhi : UpdatedPreBS[CurPreBlock]) {
+                    ValueMaps[BSGenBlockMap[BSPhi]] = CurValue;
+                  }
+
+                } else {
+                  //outs() << "Phi Node - " << *CurValue << "\n";
+                  assert(false);
+                }
+
+                RealPhiNode->removeIncomingValue(CurPreBlock, false);
+                for (auto& BBPhiPair : ValueMaps) {
+                  RealPhiNode->addIncoming(BBPhiPair.second, BBPhiPair.first);
+                }
+              }
+            }
         }
-      }
-
-      for (auto& InstBSPair : InstructionChecks) {
-        Instruction* Inst = InstBSPair.first;
-
-        if (Inst->getParent() == OriBB) {
-          assert(isa<Instruction>((*BSValueMap[BS])[Inst]));
-          //assert(BSPhiValueMap[BS].find(Inst) != BSPhiValueMap[BS].end());
-          continue;
-        }
-
-        if (InstructionChecks[Inst].size() > 1) {
-
-          // generate phi node
-          Instruction* FirstNonPhi = BSGenBlockMap[BS]->getFirstNonPHI();
-          //outs() << "\nGenerate Phi At: " << SplitMergeSpace::BlockState::bsString(BS) << " - " << *Inst << " -- " << Inst->getName() << "\n";
-
-          PHINode* CreatePhi = PHINode::Create(Inst->getType(), InstructionChecks[Inst].size(), Inst->getName().str() + ".dup" + std::to_string(BS.State), FirstNonPhi);
-          for (auto& PreBS : InstructionChecks[Inst]) {
-            Instruction* MapInst = BSPhiValueMap[PreBS][Inst];
-            CreatePhi->addIncoming(MapInst, BSGenBlockMap[PreBS]);
-          }
-          BSPhiValueMap[BS][Inst] = CreatePhi;
-        } else {
-          Instruction* MapInst;
-          for (auto& PreBS : InstructionChecks[Inst]) {
-            MapInst = BSPhiValueMap[PreBS][Inst];
-          }
-          BSPhiValueMap[BS][Inst] = MapInst;
-        }
-
-        updateLocalUsage(Inst, BSPhiValueMap[BS][Inst], OriBB, BSValueMap[BS]);
-      }
-
 
         /*
         for (BasicBlock::iterator IN = BS.BB->begin(), INE = BS.BB->end(); IN != INE; ++IN) {
