@@ -839,6 +839,7 @@ struct ModuleSplitMerge : public ModulePass {
                              std::unordered_map<BasicBlock*, SplitMergeSpace::BlockState>& GenBlockBSMap,
                              std::unordered_map<SplitMergeSpace::BlockState, BasicBlock*, SplitMergeSpace::BlockState::BlockStateHashFunction>& BSGenBlockMap,
                              std::unordered_map<SplitMergeSpace::BlockState, ValueToValueMapTy*, SplitMergeSpace::BlockState::BlockStateHashFunction>& BSValueMap,
+                             std::unordered_map<SplitMergeSpace::BlockState, std::unordered_map<Instruction*, Instruction*>, SplitMergeSpace::BlockState::BlockStateHashFunction>& BSPhiValueMap,
                              std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGOriGraph,
                              std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph,
                              std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& ReverseCFGSplitGraph) {
@@ -847,18 +848,17 @@ struct ModuleSplitMerge : public ModulePass {
             return;
         }
 
-        outs() << "\n" << SplitMergeSpace::BlockState::bsString(BS) << "\n";
-
         ValueToValueMapTy* ValueMapTyPoint = new ValueToValueMapTy;
         BasicBlock* BB = CloneBasicBlock(BS.BB, *ValueMapTyPoint, ".dup" + std::to_string(BS.State), F);
         BSGenBlockMap[BS] = BB;
         GenBlockBSMap[BB] = BS;
         BSValueMap[BS] = ValueMapTyPoint;
+        BSPhiValueMap[BS] = std::unordered_map<Instruction*, Instruction*>();
 
         // check whether all predecessors all generate
         if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
             for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
-                replaceUsage(PreBS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+                replaceUsage(PreBS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
             }
         }
 
@@ -880,8 +880,12 @@ struct ModuleSplitMerge : public ModulePass {
                 PhiInsts.insert(Inst);
             }
         }
+
+        outs() << "\n" << SplitMergeSpace::BlockState::bsString(BS) << "\n";
+
         for (auto& PhiInst : PhiInsts) {
             PHINode* PhiNode = cast<PHINode>(PhiInst);
+            outs() << "Cur Phi " << *PhiNode << "\n";
             PHINode* RealPhiNode = cast<PHINode>((*BSValueMap[BS])[PhiNode]);
 
             std::unordered_set<BasicBlock*> CurBlocks;
@@ -914,18 +918,57 @@ struct ModuleSplitMerge : public ModulePass {
                 }
             }
             assert(RealPhiNode->getNumIncomingValues() > 0);
+
             if (RealPhiNode->getNumIncomingValues() < PhiNode->getNumIncomingValues()) {
                 outs() << SplitMergeSpace::BlockState::bsString(BS) << " --- " << *RealPhiNode << "\n";
+            }
+
+            std::unordered_map<BasicBlock*, SplitMergeSpace::BlockState> PreBlockStates;
+            for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
+                if (UpdatedPre.find(PreBS.BB) != UpdatedPre.end()) {
+                    assert(PreBlockStates.find(PreBS.BB) == PreBlockStates.end());
+                    PreBlockStates[PreBS.BB] = PreBS;
+                }
+            }
+
+            assert(UpdatedPre.size() == PreBlockStates.size());
+
+            for (auto& PreBlock : UpdatedPre) {
+                SplitMergeSpace::BlockState CurBS = PreBlockStates[PreBlock];
+                // check whether constant, no worry about constant
+                Value* CurValue = RealPhiNode->getIncomingValueForBlock(PreBlock);
+                BasicBlock* ActualBlock = BSGenBlockMap[CurBS];
+                RealPhiNode->replaceIncomingBlockWith(PreBlock, ActualBlock);
+
+                outs() << "\tCur BS " << SplitMergeSpace::BlockState::bsString(CurBS) << "\n";
+                outs() << "\tCur Value " << *CurValue << "\n";
+                if (isa<Instruction>(CurValue)) {
+                    Value* ActualValue = (*BSValueMap[CurBS])[CurValue];
+                    RealPhiNode->setIncomingValueForBlock(ActualBlock, ActualValue);
+                }
             }
         }
 
         // generate new phi
-        
+        /*
+        if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
+            std::unordered_map<BasicBlock*, std::unordered_set<std::size_t>> BBStates;
+            for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
+                BasicBlock* PreBB = BS.BB;
+                if (BBStates.find(PreBB) == BBStates.end()) {
+                    BBStates[PreBB] = std::unordered_set<std::size_t>();
+                }
+                BBStates[PreBB].insert(BS.State);
+            }
+        }
+
+        for
+        */
 
         // generate all successors
         if (CFGSplitGraph.find(BS) != CFGSplitGraph.end()) {
             for (auto& SucBS : CFGSplitGraph[BS]) {
-                replaceUsage(SucBS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+                replaceUsage(SucBS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
             }
         }
 
@@ -942,7 +985,7 @@ struct ModuleSplitMerge : public ModulePass {
                 if (SuccMapping.find(BSCFG.BB) != SuccMapping.end()) {
                     std::string CheckStr = "";
                     for (auto& BSChecks : CFGSplitGraph[BS]) {
-                        CheckStr += (SplitMergeSpace::BlockState::bsString(BS) + " , ");
+                        CheckStr += (SplitMergeSpace::BlockState::bsString(BSChecks) + " , ");
                     }
                     errs() << "CFG generated with two same block but different states - " << BS.BB->getName() << ", " << SplitMergeSpace::BlockState::bsString(BS) << "\n";
                     errs() << CheckStr << "\n";
@@ -965,8 +1008,7 @@ struct ModuleSplitMerge : public ModulePass {
     static void generateSplitCFGCode(Function* F,
                                      std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGOriGraph,
                                      std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph,
-                                     std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& ReverseCFGSplitGraph
-  ) {
+                                     std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& ReverseCFGSplitGraph) {
 
         std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction> TotalBlocks;
         for (auto& BSPair : CFGSplitGraph) {
@@ -1000,10 +1042,11 @@ struct ModuleSplitMerge : public ModulePass {
         std::unordered_map<BasicBlock*, SplitMergeSpace::BlockState> GenBlockBSMap;
         std::unordered_map<SplitMergeSpace::BlockState, BasicBlock*, SplitMergeSpace::BlockState::BlockStateHashFunction> BSGenBlockMap;
         std::unordered_map<SplitMergeSpace::BlockState, ValueToValueMapTy*, SplitMergeSpace::BlockState::BlockStateHashFunction> BSValueMap;
+        std::unordered_map<SplitMergeSpace::BlockState, std::unordered_map<Instruction*, Instruction*>, SplitMergeSpace::BlockState::BlockStateHashFunction> BSPhiValueMap;
 
         // start from entry node
         SplitMergeSpace::BlockState BS = {0, &(F->getEntryBlock())};
-        replaceUsage(BS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+        replaceUsage(BS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
 
         /*
         for (BasicBlock::iterator IN = BS.BB->begin(), INE = BS.BB->end(); IN != INE; ++IN) {
