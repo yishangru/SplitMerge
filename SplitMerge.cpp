@@ -863,7 +863,33 @@ struct ModuleSplitMerge : public ModulePass {
         }
 
         // predecessor all generated
+        outs() << SplitMergeSpace::BlockState::bsString(BS) << " Added" << "\n";
         BasicBlock* OriBB = BS.BB;
+        for (BasicBlock::iterator IN = OriBB->begin(), INE = OriBB->end(); IN != INE; ++IN) {
+            Instruction* Inst = &*IN;
+
+            bool Add = false;
+            for (auto *U : Inst->users()) {
+                assert(isa<Instruction>(U));
+                BasicBlock* UsingBB = cast<Instruction>(U)->getParent();
+
+                if (UsingBB == OriBB) {
+                    continue;
+                }
+                if (GenBlockBSMap.find(UsingBB) != GenBlockBSMap.end()) {
+                    BasicBlock* UsingOriBB = GenBlockBSMap[UsingBB].BB;
+                    if (UsingOriBB == OriBB) {
+                        continue;
+                    }
+                }
+                Add = true;
+                break;
+            }
+            if (Add) {
+                outs() << "\t" << *Inst << "\n";
+                BSPhiValueMap[BS][Inst] = cast<Instruction>((*BSValueMap[BS])[Inst]);
+            }
+        }
 
         std::unordered_set<BasicBlock*> UpdatedPre;
         if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
@@ -933,6 +959,7 @@ struct ModuleSplitMerge : public ModulePass {
 
             assert(UpdatedPre.size() == PreBlockStates.size());
 
+            // get actual instruction for generation
             for (auto& PreBlock : UpdatedPre) {
                 SplitMergeSpace::BlockState CurBS = PreBlockStates[PreBlock];
                 // check whether constant, no worry about constant
@@ -942,28 +969,110 @@ struct ModuleSplitMerge : public ModulePass {
 
                 outs() << "\tCur BS " << SplitMergeSpace::BlockState::bsString(CurBS) << "\n";
                 outs() << "\tCur Value " << *CurValue << "\n";
+
                 if (isa<Instruction>(CurValue)) {
-                    Value* ActualValue = (*BSValueMap[CurBS])[CurValue];
+                    Instruction* Inst = cast<Instruction>(CurValue);
+                    Value* ActualValue;
+                    if (Inst->getParent() == PreBlock) {
+                        ActualValue = (*BSValueMap[CurBS])[CurValue];
+                    } else {
+                        // TODO: update SSA form
+                        outs() << "Skip, Since Not From Previous" << "\n";
+                        continue;
+                    }
                     RealPhiNode->setIncomingValueForBlock(ActualBlock, ActualValue);
                 }
             }
         }
 
+        outs() << "\n" << "End" << "\n";
+
         // generate new phi
-        /*
+        std::unordered_map<Instruction*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>> InstructionChecks;
         if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
-            std::unordered_map<BasicBlock*, std::unordered_set<std::size_t>> BBStates;
             for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
-                BasicBlock* PreBB = BS.BB;
-                if (BBStates.find(PreBB) == BBStates.end()) {
-                    BBStates[PreBB] = std::unordered_set<std::size_t>();
+                for (auto& InstPair : BSPhiValueMap[PreBS]) {
+                    Instruction* Inst = InstPair.first;
+                    if (InstructionChecks.find(Inst) == InstructionChecks.end()) {
+                        InstructionChecks[Inst] = std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>();
+                    }
+                    InstructionChecks[Inst].insert(PreBS);
                 }
-                BBStates[PreBB].insert(BS.State);
             }
         }
 
-        for
-        */
+        for (auto& InstBSPair : InstructionChecks) {
+            Instruction* Inst = InstBSPair.first;
+
+            if (Inst->getParent() == OriBB) {
+                assert(isa<Instruction>((*BSValueMap[BS])[Inst]));
+                assert(BSPhiValueMap[BS].find(Inst) != BSPhiValueMap[BS].end());
+                continue;
+            }
+
+            if (InstructionChecks[Inst].size() > 1) {
+
+                // generate phi node
+                Instruction* FirstNonPhi = BSGenBlockMap[BS]->getFirstNonPHI();
+                outs() << "\nGenerate Phi At: " << SplitMergeSpace::BlockState::bsString(BS) << " - " << *Inst << " -- " << Inst->getName() << "\n";
+                assert(Inst->getName().str() != "");
+
+                PHINode* CreatePhi = PHINode::Create(Inst->getType(), InstructionChecks[Inst].size(), Inst->getName().str() + ".dup" + std::to_string(BS.State), FirstNonPhi);
+                for (auto& PreBS : InstructionChecks[Inst]) {
+                    Instruction* MapInst = BSPhiValueMap[PreBS][Inst];
+                    CreatePhi->addIncoming(MapInst, BSGenBlockMap[PreBS]);
+                }
+                BSPhiValueMap[BS][Inst] = CreatePhi;
+            } else {
+                Instruction* MapInst;
+                for (auto& PreBS : InstructionChecks[Inst]) {
+                    MapInst = BSPhiValueMap[PreBS][Inst];
+                }
+                BSPhiValueMap[BS][Inst] = MapInst;
+            }
+
+            for (auto *U : Inst->users()) {
+
+              User* CurU = &*U;
+              if (!isa<Instruction>(CurU)) {
+                outs() << "Usage Not As Inst - " << *CurU << "\n";
+                assert(false);
+              }
+
+              // replace usage inside block
+              Instruction* InstU = cast<Instruction>(CurU);
+
+              if ((InstU->getParent()) == OriBB) {
+
+                // phi node already take care
+                if (isa<PHINode>(InstU)) {
+                    outs() << "Used In Phi Node, Ignore - " << *InstU << "\n";
+                    continue;
+                }
+
+                std::size_t TotalUseOps = CurU->getNumOperands();
+                bool Found = false;
+                for (std::size_t I = 0; I < TotalUseOps; I++) {
+                  if (Inst == CurU->getOperand(I)) {
+
+                    Value* UserValueInBS = (*BSValueMap[BS])[CurU];
+                    if (!isa<User>(UserValueInBS)) {
+                      outs() << "Not As User - " << *UserValueInBS << "\n";
+                    }
+                    User* UserInBS = cast<User>(UserValueInBS);
+                    UserInBS->setOperand(I, BSPhiValueMap[BS][Inst]);
+                    Found = true;
+                    break;
+                  }
+                }
+
+                if (!Found) {
+                  outs() << "Not Found Usage" << "\n";
+                  assert(false);
+                }
+              }
+            }
+        }
 
         // generate all successors
         if (CFGSplitGraph.find(BS) != CFGSplitGraph.end()) {
@@ -987,7 +1096,7 @@ struct ModuleSplitMerge : public ModulePass {
                     for (auto& BSChecks : CFGSplitGraph[BS]) {
                         CheckStr += (SplitMergeSpace::BlockState::bsString(BSChecks) + " , ");
                     }
-                    errs() << "CFG generated with two same block but different states - " << BS.BB->getName() << ", " << SplitMergeSpace::BlockState::bsString(BS) << "\n";
+                    errs() << "CFG generated with two same block but different states - " << OriBB->getName() << ", " << SplitMergeSpace::BlockState::bsString(BS) << "\n";
                     errs() << CheckStr << "\n";
                     assert(false);
                 }
@@ -997,11 +1106,13 @@ struct ModuleSplitMerge : public ModulePass {
             std::size_t NumSuccessor = BrInst->getNumSuccessors();
             assert(CFGSplitGraph[BS].size() == NumSuccessor);
             // std::string ChangeSucc = "";
+            outs() << "Update Successor - " << Inst->getName() << "  -- " << *Inst << "\n";
             for (std::size_t I = 0; I < NumSuccessor; I++) {
                 //ChangeSucc += (SplitMergeSpace::BlockState::bsString(SuccMapping[BrInst->getSuccessor(I)]) + " , ");
+                outs() << "\t" << *(BrInst->getSuccessor(I)) << "\n";
                 BrInst->setSuccessor(I, BSGenBlockMap[SuccMapping[BrInst->getSuccessor(I)]]);
             }
-            // outs() << ChangeSucc << "\n";
+            outs() << "Update Successor End"<< "\n";
         }
     }
 
@@ -1053,16 +1164,22 @@ struct ModuleSplitMerge : public ModulePass {
             outs() << (*BSValueMap[BS])[&*IN]->getName() << "\n";
         }
         */
+        outs() << "End Replacement" << "\n";
 
+        /* there is meta data leak when removing all original basic blocks
+         *
+         */
         for (auto& BSValuePair : BSValueMap) {
             delete BSValuePair.second;
         }
         BSValueMap.clear();
+
         for (auto& BBPair : BBStates) {
             BasicBlock* BB = BBPair.first;
             BB->dropAllReferences();
             BB->removeFromParent();
         }
+        outs() << "End Remove" << "\n";
     }
 
     bool runOnModule(Module &M) override {
