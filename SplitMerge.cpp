@@ -1131,8 +1131,50 @@ struct ModuleSplitMerge : public ModulePass {
         SplitMergeSpace::BlockState BS = {0, &(F->getEntryBlock())};
         replaceUsage(BS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
 
-        // update dataflow
-        
+        // update dataflow BS -> Inst -> BS
+        std::unordered_map<SplitMergeSpace::BlockState, std::unordered_map<Instruction*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>>, SplitMergeSpace::BlockState::BlockStateHashFunction> BSAllPhiValueMap;
+        std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction> WorkingSet;
+
+        for (auto& BSPair : BSPhiValueMap) {
+            SplitMergeSpace::BlockState CurBS = BSPair.first;
+            if (CFGSplitGraph.find(CurBS) == CFGSplitGraph.end()) {
+                continue;
+            }
+            if (BSPhiValueMap.find(CurBS) == BSPhiValueMap.end()) {
+                continue;
+            }
+            BSAllPhiValueMap[CurBS] = std::unordered_map<Instruction*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>>();
+            for (auto& InstPair : BSPhiValueMap[CurBS]) {
+                BSAllPhiValueMap[CurBS][InstPair.first] = std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>();
+                BSAllPhiValueMap[CurBS][InstPair.first].insert(CurBS);
+            }
+            for (auto& SuccBS : CFGSplitGraph[CurBS]) {
+                WorkingSet.insert(SuccBS);
+            }
+        }
+
+        while(!WorkingSet.empty()) {
+            SplitMergeSpace::BlockState CurBS;
+            for (auto& BSPending : WorkingSet) {
+                CurBS = BSPending;
+                break;
+            }
+            ////outs() << Visiting->getName() << "\n";
+            WorkingSet.erase(CurBS);
+            assert(ReverseCFGSplitGraph.find(CurBS) != ReverseCFGSplitGraph.end());
+
+            std::size_t CurInstSize = 0;
+            if (BSAllPhiValueMap.find(CurBS) != BSAllPhiValueMap.end()) {
+                CurInstSize = BSAllPhiValueMap[CurBS].size();
+            }
+
+            // collect all inst from precessors
+            for (auto& SuccBS : CFGSplitGraph[CurBS]) {
+
+
+                WorkingSet.insert(SuccBS);
+            }
+        }
 
       // generate new phi
       std::unordered_map<Instruction*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>> InstructionChecks;
@@ -1181,11 +1223,11 @@ struct ModuleSplitMerge : public ModulePass {
       }
 
 
-      /*
-      for (BasicBlock::iterator IN = BS.BB->begin(), INE = BS.BB->end(); IN != INE; ++IN) {
-          //outs() << (*BSValueMap[BS])[&*IN]->getName() << "\n";
-      }
-      */
+        /*
+        for (BasicBlock::iterator IN = BS.BB->begin(), INE = BS.BB->end(); IN != INE; ++IN) {
+            //outs() << (*BSValueMap[BS])[&*IN]->getName() << "\n";
+        }
+        */
         //outs() << "End Replacement" << "\n";
 
         /* there is meta data leak when removing all original basic blocks
