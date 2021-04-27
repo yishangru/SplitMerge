@@ -874,7 +874,7 @@ struct ModuleSplitMerge : public ModulePass {
 
         // remove some current phi
         std::unordered_set<Instruction*> PhiInsts;
-        for (BasicBlock::iterator IN = OriBB->begin(), INE = BB->end(); IN != INE; ++IN) {
+        for (BasicBlock::iterator IN = OriBB->begin(), INE = OriBB->end(); IN != INE; ++IN) {
             Instruction* Inst = &*IN;
             if (isa<PHINode>(Inst)) {
                 PhiInsts.insert(Inst);
@@ -882,14 +882,45 @@ struct ModuleSplitMerge : public ModulePass {
         }
         for (auto& PhiInst : PhiInsts) {
             PHINode* PhiNode = cast<PHINode>(PhiInst);
+            PHINode* RealPhiNode = cast<PHINode>((*BSValueMap[BS])[PhiNode]);
 
-            std::size_t TotalValues = PhiNode->getNumIncomingValues();
-            for (std::size_t I = 0; I < TotalValues; I++) {
-                BasicBlock* PreBB = PhiNode->getIncomingBlock(I);
+            std::unordered_set<BasicBlock*> CurBlocks;
+            std::size_t TotalValuesOld = PhiNode->getNumIncomingValues();
+            for (std::size_t I = 0; I < TotalValuesOld; I++) {
+                CurBlocks.insert(PhiNode->getIncomingBlock(I));
+            }
+
+            /*
+            std::unordered_set<BasicBlock*> RealCurBlocks;
+            std::size_t TotalValuesNew = RealPhiNode->getNumIncomingValues();
+            for (std::size_t I = 0; I < TotalValuesNew; I++) {
+                RealCurBlocks.insert(RealPhiNode->getIncomingBlock(I));
+            }
+
+            outs() << "Phi Node BB:" << "\n";
+            for (auto& CurB : CurBlocks) {
+                outs() << CurB->getName() << " , ";
+            }
+            outs() << "\n";
+            for (auto& NewB : RealCurBlocks) {
+              outs() << NewB->getName() << " , ";
+            }
+            outs() << "\n";
+            */
+
+            for (auto& CurBlock : CurBlocks) {
+                if (UpdatedPre.find(CurBlock) == UpdatedPre.end()) {
+                    RealPhiNode->removeIncomingValue(CurBlock, false);
+                }
+            }
+            assert(RealPhiNode->getNumIncomingValues() > 0);
+            if (RealPhiNode->getNumIncomingValues() < PhiNode->getNumIncomingValues()) {
+                outs() << SplitMergeSpace::BlockState::bsString(BS) << " --- " << *RealPhiNode << "\n";
             }
         }
 
-        // generate phi and replace usage
+        // generate new phi
+        
 
         // generate all successors
         if (CFGSplitGraph.find(BS) != CFGSplitGraph.end()) {
