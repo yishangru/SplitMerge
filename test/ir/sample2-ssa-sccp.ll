@@ -49,7 +49,7 @@ cleanup:                                          ; preds = %if.end4, %if.then3
   ]
 
 cleanup.cont:                                     ; preds = %cleanup
-  br label %while.cond, !llvm.loop !2
+  br label %while.cond
 
 while.end:                                        ; preds = %cleanup
   %add6 = add nsw i32 %a.1, %loop.1
