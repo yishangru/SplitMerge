@@ -835,14 +835,28 @@ struct ModuleSplitMerge : public ModulePass {
     static char ID; // Pass identification, replacement for typeid
     ModuleSplitMerge() : ModulePass(ID) {}
 
-    static void generateSplitCFGCode(Module* M, Function* F,
+    static void replaceUsage(SplitMergeSpace::BlockState BS, Function* F,
+                             std::unordered_map<BasicBlock*, SplitMergeSpace::BlockState>& GenBlockBSMap,
+                             std::unordered_map<SplitMergeSpace::BlockState, BasicBlock*, SplitMergeSpace::BlockState::BlockStateHashFunction>& BSGenBlockMap,
+                             std::unordered_map<SplitMergeSpace::BlockState, ValueToValueMapTy*, SplitMergeSpace::BlockState::BlockStateHashFunction>& BSValueMap,
+                             std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGOriGraph,
+                             std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph,
+                             std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& ReverseCFGSplitGraph) {
+
+        if (BSGenBlockMap.find(BS) == BSGenBlockMap.end()) {
+            ValueToValueMapTy* ValueMapTyPoint = new ValueToValueMapTy;
+            BasicBlock* BB = CloneBasicBlock(BS.BB, *ValueMapTyPoint, ".dup" + std::to_string(BS.State), F);
+            BSGenBlockMap[BS] = BB;
+            GenBlockBSMap[BB] = BS;
+            BSValueMap[BS] = ValueMapTyPoint;
+        }
+    }
+
+    static void generateSplitCFGCode(Function* F,
                                      std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGOriGraph,
                                      std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph,
                                      std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& ReverseCFGSplitGraph
   ) {
-        ValueToValueMapTy VMap;
-        Function* DupFunc = CloneFunction(F, VMap);
-        DupFunc->setName(F->getName() + "_dup");
 
         std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction> TotalBlocks;
         for (auto& BSPair : CFGSplitGraph) {
@@ -868,10 +882,27 @@ struct ModuleSplitMerge : public ModulePass {
             for (auto& State : BBStates[BB]) {
                 States += (std::to_string(State) + " , ");
             }
-            States += "\n";
             outs() << BB->getName() << " -- [ " << States << " ]" << "\n";
         }
 
+        std::unordered_map<BasicBlock*, SplitMergeSpace::BlockState> GenBlockBSMap;
+        std::unordered_map<SplitMergeSpace::BlockState, BasicBlock*, SplitMergeSpace::BlockState::BlockStateHashFunction> BSGenBlockMap;
+        std::unordered_map<SplitMergeSpace::BlockState, ValueToValueMapTy*, SplitMergeSpace::BlockState::BlockStateHashFunction> BSValueMap;
+
+        // start from entry node
+        SplitMergeSpace::BlockState BS = {0, &(F->getEntryBlock())};
+        replaceUsage(BS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+
+        /*
+        for (BasicBlock::iterator IN = BS.BB->begin(), INE = BS.BB->end(); IN != INE; ++IN) {
+            outs() << (*BSValueMap[BS])[&*IN]->getName() << "\n";
+        }
+        */
+
+        for (auto& BSValuePair : BSValueMap) {
+            delete BSValuePair.second;
+        }
+        BSValueMap.clear();
     }
 
     bool runOnModule(Module &M) override {
@@ -966,7 +997,7 @@ struct ModuleSplitMerge : public ModulePass {
           // generate cfg for test
           generateSymbolSplitCFG(F, PhiNode, PhiInfluenceNodes, RegionOfInfluence, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
 
-          generateSplitCFGCode(&M, F, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+          generateSplitCFGCode(F, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
       }
       return true;
     }
