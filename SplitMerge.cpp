@@ -843,13 +843,15 @@ struct ModuleSplitMerge : public ModulePass {
                              std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph,
                              std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& ReverseCFGSplitGraph) {
 
-        if (BSGenBlockMap.find(BS) == BSGenBlockMap.end()) {
-            ValueToValueMapTy* ValueMapTyPoint = new ValueToValueMapTy;
-            BasicBlock* BB = CloneBasicBlock(BS.BB, *ValueMapTyPoint, ".dup" + std::to_string(BS.State), F);
-            BSGenBlockMap[BS] = BB;
-            GenBlockBSMap[BB] = BS;
-            BSValueMap[BS] = ValueMapTyPoint;
+        if (BSGenBlockMap.find(BS) != BSGenBlockMap.end()) {
+            return;
         }
+
+        ValueToValueMapTy* ValueMapTyPoint = new ValueToValueMapTy;
+        BasicBlock* BB = CloneBasicBlock(BS.BB, *ValueMapTyPoint, ".dup" + std::to_string(BS.State), F);
+        BSGenBlockMap[BS] = BB;
+        GenBlockBSMap[BB] = BS;
+        BSValueMap[BS] = ValueMapTyPoint;
 
         // check whether all predecessors all generate
         if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
@@ -866,8 +868,40 @@ struct ModuleSplitMerge : public ModulePass {
         // generate phi and replace usage
 
         // generate all successors
+        if (CFGSplitGraph.find(BS) != CFGSplitGraph.end()) {
+            for (auto& SucBS : CFGSplitGraph[BS]) {
+                replaceUsage(SucBS, F, GenBlockBSMap, BSGenBlockMap, BSValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+            }
+        }
 
         // replace terminator
+        Instruction* Inst = OriBB->getTerminator();
+        if (isa<BranchInst>(Inst)) {
+            BranchInst* BrInst = cast<BranchInst>(Inst);
+            assert(CFGSplitGraph.find(BS) != CFGSplitGraph.end());
+
+            std::unordered_map<BasicBlock*, SplitMergeSpace::BlockState> SuccMapping;
+
+            for (auto& BSCFG : CFGSplitGraph[BS]) {
+                if (SuccMapping.find(BSCFG.BB) != SuccMapping.end()) {
+                    std::string CheckStr = "";
+                    for (auto& BSChecks : CFGSplitGraph[BS]) {
+                        CheckStr += (SplitMergeSpace::BlockState::bsString(BS) + " , ");
+                    }
+                    errs() << "CFG generated with two same block but different states - " << BS.BB->getName() << ", " << SplitMergeSpace::BlockState::bsString(BS) << "\n";
+                    errs() << CheckStr << "\n";
+                    assert(false);
+                }
+                SuccMapping[BSCFG.BB] = BSCFG;
+            }
+
+            std::size_t NumSuccessor = BrInst->getNumSuccessors();
+            assert(CFGSplitGraph[BS].size() == NumSuccessor);
+
+            for (std::size_t I = 0; I < NumSuccessor; I++) {
+                BrInst->setSuccessor(I, BSGenBlockMap[SuccMapping[BrInst->getSuccessor(I)]]);
+            }
+        }
     }
 
     static void generateSplitCFGCode(Function* F,
