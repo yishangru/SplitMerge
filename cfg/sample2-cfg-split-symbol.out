@@ -3,41 +3,41 @@ dm_sample_cond_loop
 	while.cond --- [   %loop.0 = phi i32 [ 0, %entry ], [ %loop.1, %cleanup.cont ] ]
 
 		Original CFG
-			if_else_S0 -> if_end_S0
 			if_end4_S0 -> cleanup_S0
-			cleanup_S0 -> unreachable_S0
+			cleanup_cont_S0 -> while_cond_S0
 			cleanup_S0 -> while_end_S0
+			cleanup_S0 -> unreachable_S0
 			cleanup_S0 -> cleanup_cont_S0
 			while_cond_S0 -> while_body_S0
-			entry_S0 -> while_cond_S0
+			if_else_S0 -> if_end_S0
 			if_then3_S0 -> cleanup_S0
-			if_then_S0 -> if_end_S0
-			cleanup_cont_S0 -> while_cond_S0
-			while_body_S0 -> if_else_S0
-			while_body_S0 -> if_then_S0
 			if_end_S0 -> if_end4_S0
 			if_end_S0 -> if_then3_S0
+			entry_S0 -> while_cond_S0
+			while_body_S0 -> if_else_S0
+			while_body_S0 -> if_then_S0
+			if_then_S0 -> if_end_S0
 
 		Split CFG
 			if_end4_S0 -> cleanup_S0
 			if_then_S0 -> if_end_S0
-			if_else_S1 -> if_end_S0
-			while_cond_S0 -> while_body_S0
-			cleanup_S0 -> unreachable_S0
-			cleanup_S0 -> while_end_S0
-			cleanup_S0 -> cleanup_cont_S0
-			if_else_S0 -> if_end_S0
-			while_cond_S1 -> while_body_S1
-			entry_S0 -> while_cond_S1
-			while_body_S1 -> if_else_S1
-			while_body_S1 -> if_then_S1
-			if_then3_S0 -> cleanup_S0
-			if_then_S1 -> if_end_S0
 			while_body_S0 -> if_else_S0
 			while_body_S0 -> if_then_S0
+			while_cond_S0 -> while_body_S0
+			cleanup_S0 -> while_end_S0
+			cleanup_S0 -> unreachable_S0
+			cleanup_S0 -> cleanup_cont_S0
+			while_cond_S1 -> while_body_S1
 			cleanup_cont_S0 -> while_cond_S0
+			while_body_S1 -> if_else_S1
+			while_body_S1 -> if_then_S1
+			if_then_S1 -> if_end_S0
+			entry_S0 -> while_cond_S1
 			if_end_S0 -> if_end4_S0
 			if_end_S0 -> if_then3_S0
+			if_else_S1 -> if_end_S0
+			if_else_S0 -> if_end_S0
+			if_then3_S0 -> cleanup_S0
 
 		Statistics:
 			FitNess: 0.500000
@@ -49,54 +49,54 @@ dm_sample_cond_loop
 	if.end --- [   %a.1 = phi i32 [ 1, %if.then ], [ 2, %if.else ] ]
 
 		Original CFG
-			if_else_S0 -> if_end_S0
 			if_end4_S0 -> cleanup_S0
-			cleanup_S0 -> unreachable_S0
+			cleanup_cont_S0 -> while_cond_S0
 			cleanup_S0 -> while_end_S0
+			cleanup_S0 -> unreachable_S0
 			cleanup_S0 -> cleanup_cont_S0
 			while_cond_S0 -> while_body_S0
-			entry_S0 -> while_cond_S0
+			if_else_S0 -> if_end_S0
 			if_then3_S0 -> cleanup_S0
-			if_then_S0 -> if_end_S0
-			cleanup_cont_S0 -> while_cond_S0
-			while_body_S0 -> if_else_S0
-			while_body_S0 -> if_then_S0
 			if_end_S0 -> if_end4_S0
 			if_end_S0 -> if_then3_S0
+			entry_S0 -> while_cond_S0
+			while_body_S0 -> if_else_S0
+			while_body_S0 -> if_then_S0
+			if_then_S0 -> if_end_S0
 
 		Split CFG
 			if_else_S0 -> if_end_S2
+			if_end4_S1 -> cleanup_S1
+			if_end4_S2 -> cleanup_S2
 			if_else_S2 -> if_end_S2
-			if_then_S2 -> if_end_S1
 			while_body_S2 -> if_else_S2
 			while_body_S2 -> if_then_S2
 			while_cond_S2 -> while_body_S2
-			if_end4_S1 -> cleanup_S1
-			cleanup_cont_S2 -> while_cond_S2
-			entry_S0 -> while_cond_S0
-			while_body_S0 -> if_else_S0
-			while_body_S0 -> if_then_S0
+			while_body_S1 -> if_else_S1
+			while_body_S1 -> if_then_S1
+			if_then_S2 -> if_end_S1
 			if_then3_S2 -> cleanup_S2
 			if_end_S1 -> if_end4_S1
 			if_end_S1 -> if_then3_S1
-			while_cond_S0 -> while_body_S0
-			if_then3_S1 -> cleanup_S1
-			if_else_S1 -> if_end_S2
 			cleanup_cont_S1 -> while_cond_S1
-			while_cond_S1 -> while_body_S1
-			if_then_S0 -> if_end_S1
-			cleanup_S2 -> while_end_S2
-			cleanup_S2 -> unreachable_S0
-			cleanup_S2 -> cleanup_cont_S2
-			if_end4_S2 -> cleanup_S2
-			while_body_S1 -> if_else_S1
-			while_body_S1 -> if_then_S1
-			if_then_S1 -> if_end_S1
+			while_body_S0 -> if_else_S0
+			while_body_S0 -> if_then_S0
+			entry_S0 -> while_cond_S0
+			if_end_S2 -> if_end4_S2
+			if_end_S2 -> if_then3_S2
+			while_cond_S0 -> while_body_S0
 			cleanup_S1 -> while_end_S1
 			cleanup_S1 -> unreachable_S0
 			cleanup_S1 -> cleanup_cont_S1
-			if_end_S2 -> if_end4_S2
-			if_end_S2 -> if_then3_S2
+			cleanup_cont_S2 -> while_cond_S2
+			while_cond_S1 -> while_body_S1
+			if_then_S0 -> if_end_S1
+			if_then_S1 -> if_end_S1
+			if_then3_S1 -> cleanup_S1
+			if_else_S1 -> if_end_S2
+			cleanup_S2 -> while_end_S2
+			cleanup_S2 -> unreachable_S0
+			cleanup_S2 -> cleanup_cont_S2
 
 		Statistics:
 			FitNess: 0.200000

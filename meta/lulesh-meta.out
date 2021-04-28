@@ -130,12 +130,12 @@ for.cond --- [   %i.0 = phi i32 [ 0, %if.else ], [ %inc22, %for.inc ] ]
 while.cond23 --- [   %lastReg.0 = phi i32 [ -1, %for.end ], [ %regionNum.0, %while.end111 ] ]
 	Total Influence Blocks: 1
 	Total Influence Insts: 1
-	Fitness: 5.000000e-02
+	Fitness: 5.555556e-02
 
 while.cond23 --- [   %nextIndex.1 = phi i32 [ 0, %for.end ], [ %nextIndex.2, %while.end111 ] ]
 	Total Influence Blocks: 2
 	Total Influence Insts: 2
-	Fitness: 9.523810e-02
+	Fitness: 1.052632e-01
 
 while.cond29 --- [   %i28.0 = phi i32 [ 0, %while.body26 ], [ %inc34, %while.body33 ] ]
 	Total Influence Blocks: 3
@@ -145,7 +145,7 @@ while.cond29 --- [   %i28.0 = phi i32 [ 0, %while.body26 ], [ %inc34, %while.bod
 while.cond45 --- [   %i28.1 = phi i32 [ 0, %while.body42 ], [ %inc50, %while.body49 ] ]
 	Total Influence Blocks: 3
 	Total Influence Insts: 3
-	Fitness: 9.090909e-02
+	Fitness: 6.000000e-01
 
 land.end --- [   %27 = phi i1 [ false, %while.cond104 ], [ %cmp107, %land.rhs ] ]
 	Total Influence Blocks: 0
@@ -171,7 +171,7 @@ _ZN6Domain19SetupSymmetryPlanesEi
 for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc24, %for.inc23 ] ]
 	Total Influence Blocks: 3
 	Total Influence Insts: 4
-	Fitness: 2.142857e-01
+	Fitness: 5.000000e-01
 
 for.cond --- [   %nidx.0 = phi i32 [ 0, %entry ], [ %nidx.1, %for.inc23 ] ]
 	Total Influence Blocks: 0
@@ -742,7 +742,7 @@ _ZL28CalcFBHourglassForceForElemsR6DomainPdS1_S1_S1_S1_S1_S1_dii
 for.cond --- [   %i2.0 = phi i32 [ 0, %if.end ], [ %inc634, %for.inc633 ] ]
 	Total Influence Blocks: 4
 	Total Influence Insts: 5
-	Fitness: 4.000000e-01
+	Fitness: 3.636364e-01
 
 for.cond72 --- [   %i1.0 = phi i32 [ 0, %for.body ], [ %inc, %for.inc ] ]
 	Total Influence Blocks: 3
