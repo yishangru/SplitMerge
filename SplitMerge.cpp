@@ -1399,7 +1399,6 @@ struct ModuleSplitMerge : public ModulePass {
               break;
           }
         }
-        break;
       }
       return true;
     }

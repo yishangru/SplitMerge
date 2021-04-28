@@ -111,6 +111,9 @@ bin/opt -S -stats -sccp ../llvm/lib/Transforms/SplitMerge/test/generate/lulesh-s
 bin/clang -O3 -o ../llvm/lib/Transforms/SplitMerge/test/binary/sample1 ../llvm/lib/Transforms/SplitMerge/test/generate/sample1-ssa-sccp-gen-sccp.ll
 bin/clang -O3 -o ../llvm/lib/Transforms/SplitMerge/test/binary/sample2 ../llvm/lib/Transforms/SplitMerge/test/generate/sample2-ssa-sccp-gen-sccp.ll
 bin/clang -O3 -o ../llvm/lib/Transforms/SplitMerge/test/binary/sample3 ../llvm/lib/Transforms/SplitMerge/test/generate/sample3-ssa-sccp-gen-sccp.ll
+bin/clang++ -DUSE_MPI=0 -O3 -o ../llvm/lib/Transforms/SplitMerge/test/binary/lulesh-ori ../llvm/lib/Transforms/SplitMerge/test/ir/lulesh-ssa-sccp.ll
+bin/clang++ -DUSE_MPI=0 -O3 -o ../llvm/lib/Transforms/SplitMerge/test/binary/lulesh-gen ../llvm/lib/Transforms/SplitMerge/test/generate/lulesh-ssa-sccp-gen.ll
+bin/clang++ -DUSE_MPI=0 -O3 -o ../llvm/lib/Transforms/SplitMerge/test/binary/lulesh-final ../llvm/lib/Transforms/SplitMerge/test/generate/lulesh-ssa-sccp-gen-sccp.ll
 
 ## Notions
 - Undecidable problem
