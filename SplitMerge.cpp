@@ -1162,7 +1162,12 @@ struct ModuleSplitMerge : public ModulePass {
               for (auto& PreBS : InstructionChecks[Inst]) {
                 if (BSAllPhiValueMap[CurBS][Inst].find(PreBS) == BSAllPhiValueMap[CurBS][Inst].end()) {
                     Instruction* MapInst = BSPhiValueMap[PreBS][Inst];
-                    // check for unwind behavior
+                    // check for unwind behavior  - invoke %reg = method label BB1, unwind label BB2
+                    /*
+                     * The revoke and unwind is for exception handling. The return %reg is not available
+                     * when there is exception and branch to BB2, thus, we need to set BB2 reg or PHI as
+                     * Undef, rather than passing the reg value
+                     */
                     Instruction* PreTInst = PreBS.BB->getTerminator();
                     if (!isa<InvokeInst>(PreTInst) || CurBS.BB != PreTInst->getSuccessor(1)) {
                         CurPhi->setIncomingValueForBlock(BSGenBlockMap[PreBS], MapInst);
