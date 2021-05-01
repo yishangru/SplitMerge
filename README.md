@@ -28,6 +28,7 @@ with constant at each branch and enable both `%m.0.dup1` and `%m.0.dup2` with co
 in phi.
 
 ---
+(Original CFG - Symbolic CFG Generated)
 <p>
     <img align="center" src="/graph/sample1-cfg.png" width="360" height="600" alt="Original CFG"/>
     <img align="center" src="/graph/sample1.if.end.png" width="450" height="600" alt="Symbolic CFG Generated"/>
