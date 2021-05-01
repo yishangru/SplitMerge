@@ -34,7 +34,7 @@ generated code with its CFG are shown in the third figure.
 
 --- 
 <p float="middle">
-    <img src="/graph/sample1-gen-sccp-cfg.png" width="600" height="600"/>
+    <img src="/graph/sample1-gen-sccp-cfg.png" width="680" height="650"/>
 </p>
 
 ### Directory Structure
