@@ -16,7 +16,7 @@ We generate some samples for illustrating the idea of block duplication. The gen
 CFG are shown in the first figure. It is clear that there are several destructive merges shown 
 in the CFG. For example, `%x.0 = phi i32 [ 15, %if.then ], [ 5, %if.else ]` in the `if.end` 
 block is a destructive merge. Before this merge, there are two constant value for `%x.0`, 
-i.e. 15 and 5. However, after the PHI merge, $\%x.0$ is no longer a constant and thus prevents 
+i.e. 15 and 5. However, after the PHI merge, `%x.0` is no longer a constant and thus prevents 
 some further optimization. We then perform the split and generate a symbolic representation 
 of blocks shown in second graph. The suffix represents the state of the constructed automata. 
 It is clear that the CFG is now a clear two branch with each branch representing an unified 
