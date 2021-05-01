@@ -22,8 +22,10 @@ state, i.e. a constant. Then, some further optimizations can be performed. Given
 clear that the split will recover some constants from the original destructive merges. Although 
 the code size is increased, we can still expect some optimizations available.
 
-<img src="/graph/sample1-cfg.png" width="800"/>
-<img src="/graph/sample1.if.end.png" width="800"/>
+<p float="left">
+    <img src="/graph/sample1-cfg.png" width="300"/>
+    <img src="/graph/sample1.if.end.png" width="300"/>
+</p>
 
 ### Directory Structure
 - cfg: generated symbolic cfg with block duplications
