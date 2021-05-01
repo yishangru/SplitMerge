@@ -22,13 +22,15 @@ of blocks shown in second graph. The suffix represents the state of the construc
 It is clear that the CFG is now a clear two branch with each branch representing an unified 
 state, i.e. a constant. Then, some further optimizations can be performed. Given this, it is 
 clear that the split will recover some constants from the original destructive merges. Although 
-the code size is increased, we can still expect some optimizations available.
+the code size is increased, we can still expect some optimizations available. The actual 
+generated code with its CFG are shown in the third figure.
 
 ---
 
-<p float="left">
+<p float="middle">
     <img src="/graph/sample1-cfg.png" width="360" height="600"/>
     <img src="/graph/sample1.if.end.png" width="450" height="600"/>
+    <img src="/graph/sample1-gen-sccp-cfg.png" width="600" height="600"/>
 </p>
 
 ### Directory Structure
