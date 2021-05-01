@@ -28,16 +28,14 @@ with constant at each branch and enable both `%m.0.dup1` and `%m.0.dup2` with co
 in phi.
 
 ---
-
-<p float="center">
-    <img src="/graph/sample1-cfg.png" width="360" height="600"/>
-    <img src="/graph/sample1.if.end.png" width="450" height="600"/>
+<p>
+    <img align="center" src="/graph/sample1-cfg.png" width="360" height="600" alt="Original CFG"/>
+    <img align="center" src="/graph/sample1.if.end.png" width="450" height="600" alt="Symbolic CFG Generated"/>
 </p>
 
 --- 
-<p float="center">
-    <img src="/graph/sample1-gen-sccp-cfg.png" width="680" height="650"/>
-</p>
+(Actual CFG Generated)
+<img align="center" src="/graph/sample1-gen-sccp-cfg.png" width="680" height="650" alt="Actual CFG Generated"/>
 
 ### Directory Structure
 - cfg: generated symbolic cfg with block duplications
