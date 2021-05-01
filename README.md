@@ -30,6 +30,10 @@ generated code with its CFG are shown in the third figure.
 <p float="middle">
     <img src="/graph/sample1-cfg.png" width="360" height="600"/>
     <img src="/graph/sample1.if.end.png" width="450" height="600"/>
+</p>
+
+--- 
+<p float="middle">
     <img src="/graph/sample1-gen-sccp-cfg.png" width="600" height="600"/>
 </p>
 
