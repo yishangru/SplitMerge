@@ -1,5 +1,7 @@
 ## CS6241 Compiler Design
+*Shangru Yi*
 
+This is the term project repo for **CS6241 Spring 2021** in ***Georgia Institution of Technology***.
 In this project, we implement a LLVM pass for the paper "Comprehensive path-sensitive 
 data-flow analysis". Within this paper, the idea of destructive merge, which prevents 
 further constant propagation or other dataflow analysis are explored. The key idea is 
@@ -21,6 +23,8 @@ It is clear that the CFG is now a clear two branch with each branch representing
 state, i.e. a constant. Then, some further optimizations can be performed. Given this, it is 
 clear that the split will recover some constants from the original destructive merges. Although 
 the code size is increased, we can still expect some optimizations available.
+
+---
 
 <p float="left">
     <img src="/graph/sample1-cfg.png" width="360" height="600"/>
