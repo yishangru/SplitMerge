@@ -1,0 +1,1029 @@
+Function CFG Code Generate Pass: 
+_ZN6DomainC2Eiiiiiiiii
+	Split Merge Summary:
+
+		for.cond29 --- [   %i28.0 = phi i32 [ 0, %for.end ], [ %inc39, %for.inc38 ] ]
+
+			FitNess: 0.400000
+			Add Blocks: 5
+			Add Phi Insts: 8483
+			Add Block Insts: 10
+			Update Phi Unreachable Count: 0
+
+
+__gxx_personality_v0
+	Split Merge Summary:
+_ZNSt6vectorIdSaIdEEC2Ev
+	Split Merge Summary:
+_ZNSt6vectorIiSaIiEEC2Ev
+	Split Merge Summary:
+llvm.lifetime.start.p0i8
+	Split Merge Summary:
+_ZN6Domain4costEv
+	Split Merge Summary:
+_ZN6Domain7numElemEv
+	Split Merge Summary:
+llvm.umul.with.overflow.i64
+	Split Merge Summary:
+_Znam
+	Split Merge Summary:
+_ZN6Domain22AllocateElemPersistentEi
+	Split Merge Summary:
+_ZN6Domain7numNodeEv
+	Split Merge Summary:
+_ZN6Domain22AllocateNodePersistentEi
+	Split Merge Summary:
+_ZN6Domain16SetupCommBuffersEi
+	Split Merge Summary:
+llvm.lifetime.end.p0i8
+	Split Merge Summary:
+_ZN6Domain1eEi
+	Split Merge Summary:
+_ZN6Domain1pEi
+	Split Merge Summary:
+_ZN6Domain1qEi
+	Split Merge Summary:
+_ZN6Domain2ssEi
+	Split Merge Summary:
+_ZN6Domain1vEi
+	Split Merge Summary:
+_ZN6Domain2xdEi
+	Split Merge Summary:
+_ZN6Domain2ydEi
+	Split Merge Summary:
+_ZN6Domain2zdEi
+	Split Merge Summary:
+_ZN6Domain3xddEi
+	Split Merge Summary:
+_ZN6Domain3yddEi
+	Split Merge Summary:
+_ZN6Domain3zddEi
+	Split Merge Summary:
+_ZN6Domain9nodalMassEi
+	Split Merge Summary:
+_ZN6Domain9BuildMeshEiii
+	Split Merge Summary:
+
+		for.cond --- [   %plane.0 = phi i32 [ 0, %entry ], [ %inc53, %for.inc52 ] ]
+
+			FitNess: 0.230769
+			Add Blocks: 13
+			Add Phi Insts: 806
+			Add Block Insts: 76
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain21CreateRegionIndexSetsEii
+	Split Merge Summary:
+
+		while.cond --- [   %nextIndex.0 = phi i32 [ 0, %if.then ], [ %inc, %while.body ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 2
+			Add Phi Insts: 1832
+			Add Block Insts: 9
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain19SetupSymmetryPlanesEi
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc24, %for.inc23 ] ]
+
+			FitNess: 0.500000
+			Add Blocks: 6
+			Add Phi Insts: 170
+			Add Block Insts: 16
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain26SetupElementConnectivitiesEi
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 1, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 3
+			Add Phi Insts: 145
+			Add Block Insts: 14
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain23SetupBoundaryConditionsEi
+	Split Merge Summary:
+
+		for.cond4 --- [   %i3.0 = phi i32 [ 0, %for.end ], [ %inc9, %for.inc8 ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 3
+			Add Phi Insts: 783
+			Add Block Insts: 9
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain7dtfixedEv
+	Split Merge Summary:
+_ZN6Domain8stoptimeEv
+	Split Merge Summary:
+_ZN6Domain15deltatimemultlbEv
+	Split Merge Summary:
+_ZN6Domain15deltatimemultubEv
+	Split Merge Summary:
+_ZN6Domain9dtcourantEv
+	Split Merge Summary:
+_ZN6Domain7dthydroEv
+	Split Merge Summary:
+_ZN6Domain5dtmaxEv
+	Split Merge Summary:
+_ZN6Domain4timeEv
+	Split Merge Summary:
+_ZN6Domain5cycleEv
+	Split Merge Summary:
+_ZN6Domain8nodelistEi
+	Split Merge Summary:
+_ZN6Domain1xEi
+	Split Merge Summary:
+_ZN6Domain1yEi
+	Split Merge Summary:
+_ZN6Domain1zEi
+	Split Merge Summary:
+_ZN6Domain4voloEi
+	Split Merge Summary:
+_ZN6Domain8elemMassEi
+	Split Merge Summary:
+cbrt
+	Split Merge Summary:
+sqrt
+	Split Merge Summary:
+_ZN6Domain9deltatimeEv
+	Split Merge Summary:
+_ZNSt6vectorIdSaIdEED2Ev
+	Split Merge Summary:
+_ZNSt6vectorIiSaIiEED2Ev
+	Split Merge Summary:
+_ZNSt12_Vector_baseIiSaIiEE19_M_get_Tp_allocatorEv
+	Split Merge Summary:
+_ZSt8_DestroyIPiiEvT_S1_RSaIT0_E
+	Split Merge Summary:
+_ZNSt12_Vector_baseIiSaIiEED2Ev
+	Split Merge Summary:
+__clang_call_terminate
+	Split Merge Summary:
+__cxa_begin_catch
+	Split Merge Summary:
+_ZSt9terminatev
+	Split Merge Summary:
+_ZNSt12_Vector_baseIiSaIiEE13_M_deallocateEPim
+	Split Merge Summary:
+_ZN9__gnu_cxx13new_allocatorIiED2Ev
+	Split Merge Summary:
+_ZNSt16allocator_traitsISaIiEE10deallocateERS0_Pim
+	Split Merge Summary:
+_ZN9__gnu_cxx13new_allocatorIiE10deallocateEPim
+	Split Merge Summary:
+_ZdlPv
+	Split Merge Summary:
+_ZSt8_DestroyIPiEvT_S1_
+	Split Merge Summary:
+_ZNSt12_Destroy_auxILb1EE9__destroyIPiEEvT_S3_
+	Split Merge Summary:
+_ZNSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+	Split Merge Summary:
+_ZSt8_DestroyIPddEvT_S1_RSaIT0_E
+	Split Merge Summary:
+_ZNSt12_Vector_baseIdSaIdEED2Ev
+	Split Merge Summary:
+_ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
+	Split Merge Summary:
+_ZN9__gnu_cxx13new_allocatorIdED2Ev
+	Split Merge Summary:
+_ZNSt16allocator_traitsISaIdEE10deallocateERS0_Pdm
+	Split Merge Summary:
+_ZN9__gnu_cxx13new_allocatorIdE10deallocateEPdm
+	Split Merge Summary:
+_ZSt8_DestroyIPdEvT_S1_
+	Split Merge Summary:
+_ZNSt12_Destroy_auxILb1EE9__destroyIPdEEvT_S3_
+	Split Merge Summary:
+_ZNSt6vectorIdSaIdEEixEm
+	Split Merge Summary:
+_ZNSt6vectorIiSaIiEEixEm
+	Split Merge Summary:
+_ZN6Domain6elemBCEi
+	Split Merge Summary:
+_ZN6Domain5sizeXEv
+	Split Merge Summary:
+_ZN6Domain5sizeYEv
+	Split Merge Summary:
+_ZN6Domain5sizeZEv
+	Split Merge Summary:
+_ZN6Domain6lzetamEi
+	Split Merge Summary:
+_ZN6Domain6lzetapEi
+	Split Merge Summary:
+_ZN6Domain5letamEi
+	Split Merge Summary:
+_ZN6Domain5letapEi
+	Split Merge Summary:
+_ZN6Domain4lximEi
+	Split Merge Summary:
+_ZN6Domain4lxipEi
+	Split Merge Summary:
+srand
+	Split Merge Summary:
+_ZN6Domain6numRegEv
+	Split Merge Summary:
+_ZN6Domain10regNumListEi
+	Split Merge Summary:
+_ZN6Domain11regElemSizeEi
+	Split Merge Summary:
+_ZSt3powIiiEN9__gnu_cxx11__promote_2IT_T0_NS0_9__promoteIS2_Xsr3std12__is_integerIS2_EE7__valueEE6__typeENS4_IS3_Xsr3std12__is_integerIS3_EE7__valueEE6__typeEE6__typeES2_S3_
+	Split Merge Summary:
+rand
+	Split Merge Summary:
+_ZdaPv
+	Split Merge Summary:
+_ZN6Domain11regElemlistEii
+	Split Merge Summary:
+pow
+	Split Merge Summary:
+_ZNSt6vectorIiSaIiEE6resizeEm
+	Split Merge Summary:
+_ZNKSt6vectorIiSaIiEE4sizeEv
+	Split Merge Summary:
+_ZNSt6vectorIiSaIiEE17_M_default_appendEm
+	Split Merge Summary:
+_ZNSt6vectorIiSaIiEE15_M_erase_at_endEPi
+	Split Merge Summary:
+_ZSt27__uninitialized_default_n_aIPimiET_S1_T0_RSaIT1_E
+	Split Merge Summary:
+_ZNKSt6vectorIiSaIiEE12_M_check_lenEmPKc
+	Split Merge Summary:
+_ZNSt12_Vector_baseIiSaIiEE11_M_allocateEm
+	Split Merge Summary:
+_ZSt34__uninitialized_move_if_noexcept_aIPiS0_SaIiEET0_T_S3_S2_RT1_
+	Split Merge Summary:
+__cxa_end_catch
+	Split Merge Summary:
+__cxa_rethrow
+	Split Merge Summary:
+_ZSt32__make_move_if_noexcept_iteratorIiSt13move_iteratorIPiEET0_PT_
+	Split Merge Summary:
+_ZSt22__uninitialized_copy_aISt13move_iteratorIPiES1_iET0_T_S4_S3_RSaIT1_E
+	Split Merge Summary:
+llvm.memcpy.p0i8.p0i8.i64
+	Split Merge Summary:
+_ZSt18uninitialized_copyISt13move_iteratorIPiES1_ET0_T_S4_S3_
+	Split Merge Summary:
+_ZNSt20__uninitialized_copyILb1EE13__uninit_copyISt13move_iteratorIPiES3_EET0_T_S6_S5_
+	Split Merge Summary:
+_ZSt4copyISt13move_iteratorIPiES1_ET0_T_S4_S3_
+	Split Merge Summary:
+_ZSt12__miter_baseIPiEDTcl12__miter_basecldtfp_4baseEEESt13move_iteratorIT_E
+	Split Merge Summary:
+_ZSt14__copy_move_a2ILb1EPiS0_ET1_T0_S2_S1_
+	Split Merge Summary:
+_ZSt12__niter_baseIPiET_S1_
+	Split Merge Summary:
+_ZSt13__copy_move_aILb1EPiS0_ET1_T0_S2_S1_
+	Split Merge Summary:
+_ZNSt11__copy_moveILb1ELb1ESt26random_access_iterator_tagE8__copy_mIiEEPT_PKS3_S6_S4_
+	Split Merge Summary:
+llvm.memmove.p0i8.p0i8.i64
+	Split Merge Summary:
+_ZNKSt13move_iteratorIPiE4baseEv
+	Split Merge Summary:
+_ZSt12__miter_baseIPiET_S1_
+	Split Merge Summary:
+_ZNSt13move_iteratorIPiEC2ES0_
+	Split Merge Summary:
+_ZNSt16allocator_traitsISaIiEE8allocateERS0_m
+	Split Merge Summary:
+_ZN9__gnu_cxx13new_allocatorIiE8allocateEmPKv
+	Split Merge Summary:
+_ZNK9__gnu_cxx13new_allocatorIiE8max_sizeEv
+	Split Merge Summary:
+_ZSt17__throw_bad_allocv
+	Split Merge Summary:
+_Znwm
+	Split Merge Summary:
+_ZNKSt6vectorIiSaIiEE8max_sizeEv
+	Split Merge Summary:
+_ZSt20__throw_length_errorPKc
+	Split Merge Summary:
+_ZSt3maxImERKT_S2_S2_
+	Split Merge Summary:
+_ZNKSt12_Vector_baseIiSaIiEE19_M_get_Tp_allocatorEv
+	Split Merge Summary:
+_ZNSt16allocator_traitsISaIiEE8max_sizeERKS0_
+	Split Merge Summary:
+_ZSt25__uninitialized_default_nIPimET_S1_T0_
+	Split Merge Summary:
+_ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPimEET_S3_T0_
+	Split Merge Summary:
+_ZSt6fill_nIPimiET_S1_T0_RKT1_
+	Split Merge Summary:
+_ZSt10__fill_n_aIPimiEN9__gnu_cxx11__enable_ifIXsr11__is_scalarIT1_EE7__valueET_E6__typeES4_T0_RKS3_
+	Split Merge Summary:
+_ZNSt6vectorIdSaIdEE6resizeEm
+	Split Merge Summary:
+_ZNKSt6vectorIdSaIdEE4sizeEv
+	Split Merge Summary:
+_ZNSt6vectorIdSaIdEE17_M_default_appendEm
+	Split Merge Summary:
+_ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+	Split Merge Summary:
+_ZSt27__uninitialized_default_n_aIPdmdET_S1_T0_RSaIT1_E
+	Split Merge Summary:
+_ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+	Split Merge Summary:
+_ZNSt12_Vector_baseIdSaIdEE11_M_allocateEm
+	Split Merge Summary:
+_ZSt34__uninitialized_move_if_noexcept_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+	Split Merge Summary:
+_ZSt32__make_move_if_noexcept_iteratorIdSt13move_iteratorIPdEET0_PT_
+	Split Merge Summary:
+_ZSt22__uninitialized_copy_aISt13move_iteratorIPdES1_dET0_T_S4_S3_RSaIT1_E
+	Split Merge Summary:
+_ZSt18uninitialized_copyISt13move_iteratorIPdES1_ET0_T_S4_S3_
+	Split Merge Summary:
+_ZNSt20__uninitialized_copyILb1EE13__uninit_copyISt13move_iteratorIPdES3_EET0_T_S6_S5_
+	Split Merge Summary:
+_ZSt4copyISt13move_iteratorIPdES1_ET0_T_S4_S3_
+	Split Merge Summary:
+_ZSt12__miter_baseIPdEDTcl12__miter_basecldtfp_4baseEEESt13move_iteratorIT_E
+	Split Merge Summary:
+_ZSt14__copy_move_a2ILb1EPdS0_ET1_T0_S2_S1_
+	Split Merge Summary:
+_ZSt12__niter_baseIPdET_S1_
+	Split Merge Summary:
+_ZSt13__copy_move_aILb1EPdS0_ET1_T0_S2_S1_
+	Split Merge Summary:
+_ZNSt11__copy_moveILb1ELb1ESt26random_access_iterator_tagE8__copy_mIdEEPT_PKS3_S6_S4_
+	Split Merge Summary:
+_ZNKSt13move_iteratorIPdE4baseEv
+	Split Merge Summary:
+_ZSt12__miter_baseIPdET_S1_
+	Split Merge Summary:
+_ZNSt13move_iteratorIPdEC2ES0_
+	Split Merge Summary:
+_ZNSt16allocator_traitsISaIdEE8allocateERS0_m
+	Split Merge Summary:
+_ZN9__gnu_cxx13new_allocatorIdE8allocateEmPKv
+	Split Merge Summary:
+_ZNK9__gnu_cxx13new_allocatorIdE8max_sizeEv
+	Split Merge Summary:
+_ZNKSt6vectorIdSaIdEE8max_sizeEv
+	Split Merge Summary:
+_ZNKSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+	Split Merge Summary:
+_ZNSt16allocator_traitsISaIdEE8max_sizeERKS0_
+	Split Merge Summary:
+_ZSt25__uninitialized_default_nIPdmET_S1_T0_
+	Split Merge Summary:
+_ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+	Split Merge Summary:
+_ZSt6fill_nIPdmdET_S1_T0_RKT1_
+	Split Merge Summary:
+_ZSt10__fill_n_aIPdmdEN9__gnu_cxx11__enable_ifIXsr11__is_scalarIT1_EE7__valueET_E6__typeES4_T0_RKS3_
+	Split Merge Summary:
+_ZNSt12_Vector_baseIiSaIiEEC2Ev
+	Split Merge Summary:
+_ZNSt12_Vector_baseIiSaIiEE12_Vector_implC2Ev
+	Split Merge Summary:
+_ZNSaIiEC2Ev
+	Split Merge Summary:
+_ZN9__gnu_cxx13new_allocatorIiEC2Ev
+	Split Merge Summary:
+_ZNSt12_Vector_baseIdSaIdEEC2Ev
+	Split Merge Summary:
+_ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2Ev
+	Split Merge Summary:
+_ZNSaIdEC2Ev
+	Split Merge Summary:
+_ZN9__gnu_cxx13new_allocatorIdEC2Ev
+	Split Merge Summary:
+_ZN6DomainD2Ev
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %delete.end10 ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.500000
+			Add Blocks: 6
+			Add Phi Insts: 115
+			Add Block Insts: 18
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain28SetupThreadSupportStructuresEv
+	Split Merge Summary:
+fprintf
+	Split Merge Summary:
+exit
+	Split Merge Summary:
+_Z14InitMeshDecompiiPiS_S_S_
+	Split Merge Summary:
+printf
+	Split Merge Summary:
+_GLOBAL__sub_I_lulesh.cc
+	Split Merge Summary:
+__cxx_global_var_init
+	Split Merge Summary:
+_ZNSt8ios_base4InitC1Ev
+	Split Merge Summary:
+_ZNSt8ios_base4InitD1Ev
+	Split Merge Summary:
+__cxa_atexit
+	Split Merge Summary:
+_Z14CalcElemVolumePKdS0_S0_
+	Split Merge Summary:
+_ZL14CalcElemVolumedddddddddddddddddddddddd
+	Split Merge Summary:
+_Z22CalcKinematicsForElemsR6Domaindi
+	Split Merge Summary:
+
+		for.cond16 --- [   %lnode.0 = phi i32 [ 0, %for.body ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.272727
+			Add Blocks: 11
+			Add Phi Insts: 345
+			Add Block Insts: 124
+			Update Phi Unreachable Count: 0
+
+
+_ZL29CollectDomainNodesToElemNodesR6DomainPKiPdS3_S3_
+	Split Merge Summary:
+_ZN6Domain4vnewEi
+	Split Merge Summary:
+_ZN6Domain4delvEi
+	Split Merge Summary:
+_ZL28CalcElemCharacteristicLengthPKdS0_S0_d
+	Split Merge Summary:
+_ZN6Domain6arealgEi
+	Split Merge Summary:
+_ZL32CalcElemShapeFunctionDerivativesPKdS0_S0_PA8_dPd
+	Split Merge Summary:
+_ZL24CalcElemVelocityGradientPKdS0_S0_PA8_S_dPd
+	Split Merge Summary:
+_ZN6Domain3dxxEi
+	Split Merge Summary:
+_ZN6Domain3dyyEi
+	Split Merge Summary:
+_ZN6Domain3dzzEi
+	Split Merge Summary:
+_ZL8AreaFacedddddddddddd
+	Split Merge Summary:
+_ZSt3maxIdERKT_S2_S2_
+	Split Merge Summary:
+_Z4SQRTd
+	Split Merge Summary:
+main
+	Split Merge Summary:
+_ZNSolsEi
+	Split Merge Summary:
+_ZNSolsEl
+	Split Merge Summary:
+gettimeofday
+	Split Merge Summary:
+_ZL13TimeIncrementR6Domain
+	Split Merge Summary:
+_ZL16LagrangeLeapFrogR6Domain
+	Split Merge Summary:
+_ZSt10scientificRSt8ios_base
+	Split Merge Summary:
+_ZNSt8ios_base6unsetfESt13_Ios_Fmtflags
+	Split Merge Summary:
+_ZStcoSt13_Ios_Fmtflags
+	Split Merge Summary:
+_ZStaNRSt13_Ios_FmtflagsS_
+	Split Merge Summary:
+_ZStanSt13_Ios_FmtflagsS_
+	Split Merge Summary:
+_ZNSo9_M_insertIdEERSoT_
+	Split Merge Summary:
+_ZNSt8ios_base4setfESt13_Ios_FmtflagsS0_
+	Split Merge Summary:
+_ZStoRRSt13_Ios_FmtflagsS_
+	Split Merge Summary:
+_ZStorSt13_Ios_FmtflagsS_
+	Split Merge Summary:
+_ZL13LagrangeNodalR6Domain
+	Split Merge Summary:
+_ZL16LagrangeElementsR6Domaini
+	Split Merge Summary:
+_ZL27CalcTimeConstraintsForElemsR6Domain
+	Split Merge Summary:
+
+		for.cond --- [   %r.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.666667
+			Add Blocks: 3
+			Add Phi Insts: 8
+			Add Block Insts: 20
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain11regElemlistEi
+	Split Merge Summary:
+_ZNK6Domain3qqcEv
+	Split Merge Summary:
+_ZL29CalcCourantConstraintForElemsR6DomainiPidRd
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.333333
+			Add Blocks: 9
+			Add Phi Insts: 308
+			Add Block Insts: 51
+			Update Phi Unreachable Count: 0
+
+
+_ZNK6Domain7dvovmaxEv
+	Split Merge Summary:
+_ZL27CalcHydroConstraintForElemsR6DomainiPidRd
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.428571
+			Add Blocks: 7
+			Add Phi Insts: 224
+			Add Block Insts: 28
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain4vdovEi
+	Split Merge Summary:
+_Z4FABSd
+	Split Merge Summary:
+llvm.fabs.f64
+	Split Merge Summary:
+_ZL20CalcLagrangeElementsR6Domain
+	Split Merge Summary:
+
+		for.cond --- [   %k.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.500000
+			Add Blocks: 4
+			Add Phi Insts: 23
+			Add Block Insts: 33
+			Update Phi Unreachable Count: 0
+
+
+_ZL13CalcQForElemsR6Domain
+	Split Merge Summary:
+
+		cleanup --- [   %idx.0 = phi i32 [ %i.0, %if.then18 ], [ -1, %for.cond.cleanup ] ]
+
+			FitNess: 0.500000
+			Add Blocks: 2
+			Add Phi Insts: 43
+			Add Block Insts: 4
+			Update Phi Unreachable Count: 0
+
+
+_ZL31ApplyMaterialPropertiesForElemsR6Domain
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 3
+			Add Phi Insts: 687
+			Add Block Insts: 12
+			Update Phi Unreachable Count: 0
+
+
+_ZNK6Domain5v_cutEv
+	Split Merge Summary:
+_ZL21UpdateVolumesForElemsR6Domaindi
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.400000
+			Add Blocks: 5
+			Add Phi Insts: 21
+			Add Block Insts: 16
+			Update Phi Unreachable Count: 0
+
+
+_ZNK6Domain7eosvminEv
+	Split Merge Summary:
+_ZNK6Domain7eosvmaxEv
+	Split Merge Summary:
+_Z8AllocateIdEPT_m
+	Split Merge Summary:
+_ZL15EvalEOSForElemsR6DomainPdiPii
+	Split Merge Summary:
+
+		for.cond142 --- [   %i141.0 = phi i32 [ 0, %for.end140 ], [ %inc159, %for.inc158 ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 3
+			Add Phi Insts: 1501
+			Add Block Insts: 27
+			Update Phi Unreachable Count: 0
+
+
+_Z7ReleaseIdEvPPT_
+	Split Merge Summary:
+free
+	Split Merge Summary:
+_ZNK6Domain5e_cutEv
+	Split Merge Summary:
+_ZNK6Domain5p_cutEv
+	Split Merge Summary:
+_ZNK6Domain5ss4o3Ev
+	Split Merge Summary:
+_ZNK6Domain5q_cutEv
+	Split Merge Summary:
+_ZNK6Domain4pminEv
+	Split Merge Summary:
+_ZNK6Domain4eminEv
+	Split Merge Summary:
+_ZNK6Domain7refdensEv
+	Split Merge Summary:
+_ZN6Domain2qqEi
+	Split Merge Summary:
+_ZN6Domain2qlEi
+	Split Merge Summary:
+_ZL18CalcEnergyForElemsPdS_S_S_S_S_S_S_S_S_S_S_S_dddddS_S_ddiPi
+	Split Merge Summary:
+
+		for.cond87 --- [   %i86.0 = phi i32 [ 0, %for.end85 ], [ %inc113, %for.inc112 ] ]
+
+			FitNess: 0.857143
+			Add Blocks: 7
+			Add Phi Insts: 671
+			Add Block Insts: 34
+			Update Phi Unreachable Count: 0
+
+
+_ZL22CalcSoundSpeedForElemsR6DomainPddS1_S1_S1_S1_diPi
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.500000
+			Add Blocks: 6
+			Add Phi Insts: 35
+			Add Block Insts: 41
+			Update Phi Unreachable Count: 0
+
+
+_ZL20CalcPressureForElemsPdS_S_S_S_S_dddiPi
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 3
+			Add Phi Insts: 60
+			Add Block Insts: 17
+			Update Phi Unreachable Count: 0
+
+
+malloc
+	Split Merge Summary:
+_ZN6Domain17AllocateGradientsEii
+	Split Merge Summary:
+_ZL31CalcMonotonicQGradientsForElemsR6Domain
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.666667
+			Add Blocks: 3
+			Add Phi Insts: 13
+			Add Block Insts: 357
+			Update Phi Unreachable Count: 0
+
+
+_ZL22CalcMonotonicQForElemsR6Domain
+	Split Merge Summary:
+
+		for.cond --- [   %r.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.500000
+			Add Blocks: 4
+			Add Phi Insts: 18
+			Add Block Insts: 12
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain19DeallocateGradientsEv
+	Split Merge Summary:
+_ZNK6Domain5qstopEv
+	Split Merge Summary:
+_ZL28CalcMonotonicQRegionForElemsR6Domainid
+	Split Merge Summary:
+_ZNK6Domain18monoq_limiter_multEv
+	Split Merge Summary:
+_ZNK6Domain15monoq_max_slopeEv
+	Split Merge Summary:
+_ZNK6Domain9qlc_monoqEv
+	Split Merge Summary:
+_ZNK6Domain9qqc_monoqEv
+	Split Merge Summary:
+_ZN6Domain7delv_xiEi
+	Split Merge Summary:
+_ZN6Domain8delv_etaEi
+	Split Merge Summary:
+_ZN6Domain9delv_zetaEi
+	Split Merge Summary:
+_ZN6Domain7delx_xiEi
+	Split Merge Summary:
+_ZN6Domain8delx_etaEi
+	Split Merge Summary:
+_ZN6Domain9delx_zetaEi
+	Split Merge Summary:
+_ZN6Domain15AllocateStrainsEi
+	Split Merge Summary:
+_ZN6Domain17DeallocateStrainsEv
+	Split Merge Summary:
+_ZNK6Domain5u_cutEv
+	Split Merge Summary:
+_ZL17CalcForceForNodesR6Domain
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.666667
+			Add Blocks: 3
+			Add Phi Insts: 13
+			Add Block Insts: 12
+			Update Phi Unreachable Count: 0
+
+
+_ZL24CalcAccelerationForNodesR6Domaini
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.666667
+			Add Blocks: 3
+			Add Phi Insts: 8
+			Add Block Insts: 27
+			Update Phi Unreachable Count: 0
+
+
+_ZL43ApplyAccelerationBoundaryConditionsForNodesR6Domain
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.666667
+			Add Blocks: 3
+			Add Phi Insts: 93
+			Add Block Insts: 9
+			Update Phi Unreachable Count: 0
+
+
+_ZL20CalcVelocityForNodesR6Domainddi
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.250000
+			Add Blocks: 8
+			Add Phi Insts: 85
+			Add Block Insts: 44
+			Update Phi Unreachable Count: 0
+
+
+_ZL20CalcPositionForNodesR6Domaindi
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.666667
+			Add Blocks: 3
+			Add Phi Insts: 8
+			Add Block Insts: 27
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain10symmXemptyEv
+	Split Merge Summary:
+_ZN6Domain5symmXEi
+	Split Merge Summary:
+_ZN6Domain10symmYemptyEv
+	Split Merge Summary:
+_ZN6Domain5symmYEi
+	Split Merge Summary:
+_ZN6Domain10symmZemptyEv
+	Split Merge Summary:
+_ZN6Domain5symmZEi
+	Split Merge Summary:
+_ZNKSt6vectorIiSaIiEE5emptyEv
+	Split Merge Summary:
+_ZNKSt6vectorIiSaIiEE5beginEv
+	Split Merge Summary:
+_ZNKSt6vectorIiSaIiEE3endEv
+	Split Merge Summary:
+_ZN9__gnu_cxxeqIPKiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESB_
+	Split Merge Summary:
+_ZNK9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEE4baseEv
+	Split Merge Summary:
+_ZN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEC2ERKS2_
+	Split Merge Summary:
+_ZN6Domain2fxEi
+	Split Merge Summary:
+_ZN6Domain2fyEi
+	Split Merge Summary:
+_ZN6Domain2fzEi
+	Split Merge Summary:
+_ZL23CalcVolumeForceForElemsR6Domain
+	Split Merge Summary:
+
+		for.cond --- [   %k.0 = phi i32 [ 0, %if.then ], [ %inc, %for.inc ] ]
+
+			FitNess: 0.750000
+			Add Blocks: 4
+			Add Phi Insts: 67
+			Add Block Insts: 12
+			Update Phi Unreachable Count: 0
+
+
+_ZNK6Domain6hgcoefEv
+	Split Merge Summary:
+_ZL23InitStressTermsForElemsR6DomainPdS1_S1_i
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 3
+			Add Phi Insts: 8
+			Add Block Insts: 21
+			Update Phi Unreachable Count: 0
+
+
+_ZL23IntegrateStressForElemsR6DomainPdS1_S1_S1_ii
+	Split Merge Summary:
+
+		for.cond --- [   %k.0 = phi i32 [ 0, %if.end ], [ %inc69, %for.inc68 ] ]
+
+			FitNess: 0.363636
+			Add Blocks: 11
+			Add Phi Insts: 390
+			Add Block Insts: 93
+			Update Phi Unreachable Count: 0
+
+
+_ZL28CalcHourglassControlForElemsR6DomainPdd
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc56, %for.inc55 ] ]
+
+			FitNess: 0.444444
+			Add Blocks: 9
+			Add Phi Insts: 234
+			Add Block Insts: 106
+			Update Phi Unreachable Count: 0
+
+
+_ZL24CalcElemVolumeDerivativePdS_S_PKdS1_S1_
+	Split Merge Summary:
+_ZL28CalcFBHourglassForceForElemsR6DomainPdS1_S1_S1_S1_S1_S1_dii
+	Split Merge Summary:
+
+		for.cond --- [   %i2.0 = phi i32 [ 0, %if.end ], [ %inc634, %for.inc633 ] ]
+
+			FitNess: 0.363636
+			Add Blocks: 11
+			Add Phi Insts: 657
+			Add Block Insts: 775
+			Update Phi Unreachable Count: 0
+
+
+_Z4CBRTd
+	Split Merge Summary:
+_ZL24CalcElemFBHourglassForcePdS_S_PA4_ddS_S_S_
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 3
+			Add Phi Insts: 228
+			Add Block Insts: 72
+			Update Phi Unreachable Count: 0
+
+
+_ZN6Domain13nodeElemCountEi
+	Split Merge Summary:
+_ZN6Domain18nodeElemCornerListEi
+	Split Merge Summary:
+_ZL7VoluDerddddddddddddddddddPdS_S_
+	Split Merge Summary:
+_ZL19CalcElemNodeNormalsPdS_S_PKdS1_S1_
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 3
+			Add Phi Insts: 8
+			Add Block Insts: 15
+			Update Phi Unreachable Count: 0
+
+
+_ZL27SumElemStressesToNodeForcesPA8_KddddPdS2_S2_
+	Split Merge Summary:
+
+		for.cond --- [   %i.0 = phi i32 [ 0, %entry ], [ %inc, %for.inc ] ]
+
+			FitNess: 1.000000
+			Add Blocks: 3
+			Add Phi Insts: 8
+			Add Block Insts: 33
+			Update Phi Unreachable Count: 0
+
+
+_ZL17SumElemFaceNormalPdS_S_S_S_S_S_S_S_S_S_S_dddddddddddd
+	Split Merge Summary:
+_ZNSo9_M_insertIlEERSoT_
+	Split Merge Summary:
+_ZNSt11char_traitsIcE6lengthEPKc
+	Split Merge Summary:
+_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l
+	Split Merge Summary:
+strlen
+	Split Merge Summary:
+_ZStorSt12_Ios_IostateS_
+	Split Merge Summary:
+_ZNSt9basic_iosIcSt11char_traitsIcEE5clearESt12_Ios_Iostate
+	Split Merge Summary:
+_GLOBAL__sub_I_lulesh_util.cc
+	Split Merge Summary:
+__cxx_global_var_init.10
+	Split Merge Summary:
+_Z23ParseCommandLineOptionsiPPciP11cmdLineOpts
+	Split Merge Summary:
+
+		while.cond --- [   %i.0 = phi i32 [ 1, %if.then ], [ %i.9, %if.end144 ] ]
+
+			FitNess: 0.618182
+			Add Blocks: 55
+			Add Phi Insts: 1142
+			Add Block Insts: 210
+			Update Phi Unreachable Count: 0
+
+
+strcmp
+	Split Merge Summary:
+_ZL10ParseErrorPKci
+	Split Merge Summary:
+_Z8StrToIntIiEiPKcPT_
+	Split Merge Summary:
+_ZL23PrintCommandLineOptionsPci
+	Split Merge Summary:
+sprintf
+	Split Merge Summary:
+strtol
+	Split Merge Summary:
+_Z25VerifyAndWriteFinalOutputdR6Domainii
+	Split Merge Summary:
+
+		for.cond --- [   %j.0 = phi i32 [ 0, %entry ], [ %inc61, %for.inc60 ] ]
+
+			FitNess: 0.555556
+			Add Blocks: 9
+			Add Phi Insts: 545
+			Add Block Insts: 40
+			Update Phi Unreachable Count: 0
+
+
+_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+	Split Merge Summary:
+_ZNSolsEPFRSt8ios_baseS0_E
+	Split Merge Summary:
+_ZSt12setprecisioni
+	Split Merge Summary:
+_ZStlsIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_St13_Setprecision
+	Split Merge Summary:
+_ZSt4setwi
+	Split Merge Summary:
+_ZStlsIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_St5_Setw
+	Split Merge Summary:
+_ZNSolsEd
+	Split Merge Summary:
+_ZNSt8ios_base5widthEl
+	Split Merge Summary:
+_ZNSt8ios_base9precisionEl
+	Split Merge Summary:
+_ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+	Split Merge Summary:
+_ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
+	Split Merge Summary:
+_Z11DumpToVisitR6Domainiii
+	Split Merge Summary:
+
+
+=============================================================Summary:
+	Total Add Blocks: 239
+	Total Add Insts: 2424
+	Total Add Phi Insts: 19785

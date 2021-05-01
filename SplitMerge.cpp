@@ -362,36 +362,37 @@ namespace SplitMergeSpace {
       }
   };
 
-  struct StatisticFunc {
-      double FitNess;
-      std::size_t AddBlockNum;
-      std::size_t AddInstNum;
-      std::size_t RemoveInstNum;
+  // statistics for symbolic cfg
+  struct StatisticSymbolCFG {
+      double FitNess = 0.0;
+      std::size_t AddBlockNum = 0;
+      std::size_t AddInstNum = 0;
+      std::size_t PossibleRemoveInstNum = 0;
 
-    StatisticFunc(){}
+    StatisticSymbolCFG(){}
 
-    StatisticFunc(double Fit, std::size_t ABN, std::size_t AIN, std::size_t RIN) {
+    StatisticSymbolCFG(double Fit, std::size_t ABN, std::size_t AIN, std::size_t RIN) {
         this->FitNess = Fit;
         this->AddBlockNum = ABN;
         this->AddInstNum = AIN;
-        this->RemoveInstNum = RIN;
+        this->PossibleRemoveInstNum = RIN;
     }
 
-    StatisticFunc(const StatisticFunc& SF) {
+    StatisticSymbolCFG(const StatisticSymbolCFG& SF) {
        this->FitNess = SF.FitNess;
        this->AddBlockNum = SF.AddBlockNum;
        this->AddInstNum = SF.AddInstNum;
-       this->RemoveInstNum = SF.RemoveInstNum;
+       this->PossibleRemoveInstNum = SF.PossibleRemoveInstNum;
     }
 
-    bool operator==(const StatisticFunc& SF) const {
+    bool operator==(const StatisticSymbolCFG& SF) const {
       if (SF.AddBlockNum != this->AddBlockNum) {
         return false;
       }
       if (SF.AddInstNum != this->AddInstNum) {
         return false;
       }
-      if (SF.RemoveInstNum != this->RemoveInstNum) {
+      if (SF.PossibleRemoveInstNum != this->PossibleRemoveInstNum) {
         return false;
       }
       if (std::abs(SF.FitNess - this->FitNess) > 0.0001) {
@@ -400,15 +401,52 @@ namespace SplitMergeSpace {
       return true;
     }
 
-    static std::string sFString(const StatisticFunc& SF, std::string PreFix)  {
-        std::string SFStr = "";
-        SFStr += (PreFix + "FitNess: " + std::to_string(SF.FitNess) + "\n");
-        SFStr += (PreFix + "Add Blocks: " + std::to_string(SF.AddBlockNum) + "\n");
-        SFStr += (PreFix + "Add Insts: " + std::to_string(SF.AddInstNum) + "\n");
-        SFStr += (PreFix + "Remove Insts: " + std::to_string(SF.RemoveInstNum) + "\n");
-        return SFStr;
+    static std::string sCFGString(const StatisticSymbolCFG& SF, std::string PreFix)  {
+        std::string SCFGStr = "";
+        SCFGStr += (PreFix + "FitNess: " + std::to_string(SF.FitNess) + "\n");
+        SCFGStr += (PreFix + "Add Blocks: " + std::to_string(SF.AddBlockNum) + "\n");
+        SCFGStr += (PreFix + "Add Insts: " + std::to_string(SF.AddInstNum) + "\n");
+        SCFGStr += (PreFix + "Possible Remove Insts: " + std::to_string(SF.PossibleRemoveInstNum) + "\n");
+        return SCFGStr;
     }
   };
+
+  // statistics for module split merge
+  struct StatisticSplitMerge {
+      double FitNess = 0.0;
+      std::size_t AddBlockNum = 0;
+      std::size_t AddPhiNum = 0;
+      std::size_t AddInstNum = 0;
+      std::size_t UpdateUnreachableNum = 0;
+
+      StatisticSplitMerge(){}
+
+      void addBlockNum(std::size_t I) {
+          this->AddBlockNum = this->AddBlockNum + I;
+      }
+
+      void addPhiNum(std::size_t I) {
+          this->AddPhiNum = this->AddPhiNum + I;
+      }
+
+      void addInstNum(std::size_t I) {
+          this->AddInstNum = this->AddInstNum + I;
+      }
+
+      void addUnReachableNum(std::size_t I) {
+          this->UpdateUnreachableNum = this->UpdateUnreachableNum + I;
+      }
+
+      static std::string sSMString(const StatisticSplitMerge& SSM, std::string PreFix)  {
+        std::string SSMStr = "";
+        SSMStr += (PreFix + "FitNess: " + std::to_string(SSM.FitNess) + "\n");
+        SSMStr += (PreFix + "Add Blocks: " + std::to_string(SSM.AddBlockNum) + "\n");
+        SSMStr += (PreFix + "Add Phi Insts: " + std::to_string(SSM.AddPhiNum) + "\n");
+        SSMStr += (PreFix + "Add Block Insts: " + std::to_string(SSM.AddInstNum) + "\n");
+        SSMStr += (PreFix + "Update Phi Unreachable Count: " + std::to_string(SSM.UpdateUnreachableNum) + "\n");
+        return SSMStr;
+      }
+};
 } // namespace SplitMergeSpace
 
 static void printCFGSplit (std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph) {
@@ -661,7 +699,7 @@ struct FuncCFGSplitInfo : public ModulePass {
     errs() << "Function CFG Symbol Generate Pass: " << "\n";
 
     // get all predicate
-    std::unordered_map<Function*, SplitMergeSpace::StatisticFunc> ModuleSta;
+    std::unordered_map<Function*, SplitMergeSpace::StatisticSymbolCFG> ModuleSta;
 
     for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
 
@@ -707,7 +745,7 @@ struct FuncCFGSplitInfo : public ModulePass {
             // fitness
             double FitNess = getFitNess(PhiInfluenceNodes, RegionOfInfluence);
 
-            if (std::abs(FitNess - double(0)) < 0.198) {
+            if (FitNess < 0.198) {
                 continue;
             }
 
@@ -766,9 +804,8 @@ struct FuncCFGSplitInfo : public ModulePass {
             }
 
             assert(AddInstNum >= RemoveInstNum);
-            AddInstNum -= RemoveInstNum;
 
-            SplitMergeSpace::StatisticFunc SF{FitNess, AddBlockNum, AddInstNum, RemoveInstNum};
+            SplitMergeSpace::StatisticSymbolCFG SCFG{FitNess, AddBlockNum, AddInstNum, RemoveInstNum};
 
             errs() << "\t" << instInfo(PhiNode) << "\n\n";
             errs() << "\t\tOriginal CFG" << "\n";
@@ -778,11 +815,11 @@ struct FuncCFGSplitInfo : public ModulePass {
             printCFGSplit(CFGSplitGraph);
             errs() << "\n";
             errs() << "\t\tStatistics:" << "\n";
-            errs() << SplitMergeSpace::StatisticFunc::sFString(SF, "\t\t\t") << "\n";
+            errs() << SplitMergeSpace::StatisticSymbolCFG::sCFGString(SCFG, "\t\t\t") << "\n";
             errs() << "\n";
 
             if (ModuleSta.find(&*F) == ModuleSta.end() || ModuleSta[&*F].FitNess < FitNess) {
-                ModuleSta[&*F] = std::move(SF);
+                ModuleSta[&*F] = std::move(SCFG);
             }
           }
         }
@@ -797,14 +834,16 @@ struct FuncCFGSplitInfo : public ModulePass {
         auto& CurFunc = SFPair.first;
         ModuleAddBlocks += (ModuleSta[CurFunc].AddBlockNum);
         ModuleAddInsts += (ModuleSta[CurFunc].AddInstNum);
-        ModuleRemoveInsts += (ModuleSta[CurFunc].RemoveInstNum);
+        ModuleRemoveInsts += (ModuleSta[CurFunc].PossibleRemoveInstNum);
     }
 
-    errs() << "\n";
+    errs() << "\n\n";
+    errs() << "==========================================================================\n";
+    errs() << "Overall Statistics For Module (Only Check For Highest Fitness DM)\n";
     errs() << "Summary:" << "\n";
     errs() << "\t" << "Total Add Blocks: " << std::to_string(ModuleAddBlocks) << "\n";
     errs() << "\t" << "Total Add Insts: " << std::to_string(ModuleAddInsts) << "\n";
-    errs() << "\t" << "Total Remove Insts: " << std::to_string(ModuleRemoveInsts) << "\n";
+    errs() << "\t" << "Total Possible Remove Insts: " << std::to_string(ModuleRemoveInsts) << "\n";
 
     return false;
   }
@@ -859,7 +898,7 @@ struct ModuleSplitMerge : public ModulePass {
         }
     }
 
-    static void replaceUsage(SplitMergeSpace::BlockState BS, Function* F, BasicBlock* UnreachableBlock, std::unordered_map<BasicBlock*, std::size_t>& UnreachableRef,
+    static void replaceUsage(SplitMergeSpace::BlockState BS, Function* F, BasicBlock* UnreachableBlock, SplitMergeSpace::StatisticSplitMerge& StatisticsSM,
                              std::unordered_map<BasicBlock*, SplitMergeSpace::BlockState>& GenBlockBSMap,
                              std::unordered_map<SplitMergeSpace::BlockState, BasicBlock*, SplitMergeSpace::BlockState::BlockStateHashFunction>& BSGenBlockMap,
                              std::unordered_map<SplitMergeSpace::BlockState, ValueToValueMapTy*, SplitMergeSpace::BlockState::BlockStateHashFunction>& BSValueMap,
@@ -878,6 +917,12 @@ struct ModuleSplitMerge : public ModulePass {
         GenBlockBSMap[BB] = BS;
         BSValueMap[BS] = ValueMapTyPoint;
         BSPhiValueMap[BS] = std::unordered_map<Instruction*, Instruction*>();
+
+        // update statistics
+        if (BS.State != 0) {
+          StatisticsSM.addBlockNum(1);
+          StatisticsSM.addInstNum(BS.BB->sizeWithoutDebug());
+        }
 
         BasicBlock* OriBB = BS.BB;
         for (BasicBlock::iterator IN = OriBB->begin(), INE = OriBB->end(); IN != INE; ++IN) {
@@ -910,14 +955,14 @@ struct ModuleSplitMerge : public ModulePass {
         // check whether all predecessors all generate
         if (ReverseCFGSplitGraph.find(BS) != ReverseCFGSplitGraph.end()) {
             for (auto& PreBS : ReverseCFGSplitGraph[BS]) {
-                replaceUsage(PreBS, F, UnreachableBlock, UnreachableRef, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+                replaceUsage(PreBS, F, UnreachableBlock, StatisticsSM, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
             }
         }
 
         // generate all successors
         if (CFGSplitGraph.find(BS) != CFGSplitGraph.end()) {
             for (auto& SucBS : CFGSplitGraph[BS]) {
-                replaceUsage(SucBS, F, UnreachableBlock, UnreachableRef, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+                replaceUsage(SucBS, F, UnreachableBlock, StatisticsSM, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
             }
         }
 
@@ -946,80 +991,18 @@ struct ModuleSplitMerge : public ModulePass {
             for (std::size_t I = 0; I < NumSuccessor; I++) {
               if (SuccMapping.find(TemCur->getSuccessor(I)) == SuccMapping.end()) {
                 TemCur->setSuccessor(I, UnreachableBlock);
-
-                if (UnreachableRef.find(UnreachableBlock) == UnreachableRef.end()) {
-                  UnreachableRef[UnreachableBlock] = 0;
-                }
-                UnreachableRef[UnreachableBlock]++;
+                StatisticsSM.addUnReachableNum(1);
               } else {
                 TemCur->setSuccessor(I, BSGenBlockMap[SuccMapping[TemCur->getSuccessor(I)]]);
               }
             }
-
-            /*
-            if (isa<BranchInst>(TemCur)) {
-
-                BranchInst* BrInst = cast<BranchInst>(TemCur);
-                std::size_t NumSuccessor = BrInst->getNumSuccessors();
-
-                // std::string ChangeSucc = "";
-                //outs() << "Update Successor - " << Inst->getName() << "  -- " << *Inst << "\n";
-                for (std::size_t I = 0; I < NumSuccessor; I++) {
-                  //ChangeSucc += (SplitMergeSpace::BlockState::bsString(SuccMapping[BrInst->getSuccessor(I)]) + " , ");
-                  //outs() << "\t" << *(BrInst->getSuccessor(I)) << "\n";
-                  if (SuccMapping.find(BrInst->getSuccessor(I)) == SuccMapping.end()) {
-                      BrInst->setSuccessor(I, UnreachableBlock);
-
-                      if (UnreachableRef.find(UnreachableBlock) == UnreachableRef.end()) {
-                          UnreachableRef[UnreachableBlock] = 0;
-                      }
-                      UnreachableRef[UnreachableBlock]++;
-                  } else {
-                      BrInst->setSuccessor(I, BSGenBlockMap[SuccMapping[BrInst->getSuccessor(I)]]);
-                  }
-                }
-            } else if (isa<SwitchInst>(TemCur)) {
-
-                SwitchInst* SwInst = cast<SwitchInst>(TemCur);
-
-                std::size_t NumSuccessor = SwInst->getNumSuccessors();
-
-                for (std::size_t I = 0; I < NumSuccessor; I++) {
-                  if (SuccMapping.find(SwInst->getSuccessor(I)) == SuccMapping.end()) {
-                      SwInst->setSuccessor(I, UnreachableBlock);
-
-                      if (UnreachableRef.find(UnreachableBlock) == UnreachableRef.end()) {
-                        UnreachableRef[UnreachableBlock] = 0;
-                      }
-                      UnreachableRef[UnreachableBlock]++;
-                  } else {
-                      SwInst->setSuccessor(I, BSGenBlockMap[SuccMapping[SwInst->getSuccessor(I)]]);
-                  }
-                }
-            } else if (isa<InvokeInst>(TemCur)) {
-                InvokeInst* InvInst = cast<InvokeInst>(TemCur);
-
-                std::size_t NumSuccessor = InvInst->getNumSuccessors();
-                for (std::size_t I = 0; I < NumSuccessor; I++) {
-                  if (SuccMapping.find(InvInst->getSuccessor(I)) == SuccMapping.end()) {
-                    InvInst->setSuccessor(I, UnreachableBlock);
-
-                    if (UnreachableRef.find(UnreachableBlock) == UnreachableRef.end()) {
-                      UnreachableRef[UnreachableBlock] = 0;
-                    }
-                    UnreachableRef[UnreachableBlock]++;
-                  } else {
-                    InvInst->setSuccessor(I, BSGenBlockMap[SuccMapping[InvInst->getSuccessor(I)]]);
-                  }
-                }
-            }
-            */
         } else {
-            outs() << "Terminator Not Branch Or Switch - " << SplitMergeSpace::BlockState::bsString(BS) << "\n";
+            //outs() << "Terminator Not Branch Or Switch - " << SplitMergeSpace::BlockState::bsString(BS) << "\n";
         }
     }
 
     static void generateSplitCFGCode(Function* F,
+                                     SplitMergeSpace::StatisticSplitMerge& StatisticsSM,
                                      std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGOriGraph,
                                      std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& CFGSplitGraph,
                                      std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction>& ReverseCFGSplitGraph) {
@@ -1042,8 +1025,8 @@ struct ModuleSplitMerge : public ModulePass {
             BBStates[OriBB].insert(BS.State);
         }
 
-        printCFGSplit(CFGSplitGraph);
-
+        //printCFGSplit(CFGSplitGraph);
+        /*
         for (auto& BBPair : BBStates) {
             BasicBlock* BB = BBPair.first;
             std::string States = "";
@@ -1052,6 +1035,7 @@ struct ModuleSplitMerge : public ModulePass {
             }
             outs() << BB->getName() << " -- [ " << States << " ]" << "\n";
         }
+        */
 
         std::unordered_map<BasicBlock*, SplitMergeSpace::BlockState> GenBlockBSMap;
         std::unordered_map<SplitMergeSpace::BlockState, BasicBlock*, SplitMergeSpace::BlockState::BlockStateHashFunction> BSGenBlockMap;
@@ -1061,12 +1045,10 @@ struct ModuleSplitMerge : public ModulePass {
         // add dummy unreachable block
         BasicBlock* UnreachableBlock = BasicBlock::Create(F->getContext(), "Unreachable.dummy.dm", F);
         auto* URInst = new UnreachableInst(F->getContext(), UnreachableBlock);
-        std::unordered_map<BasicBlock*, std::size_t> UnreachableRef;
 
         // start from entry node
         SplitMergeSpace::BlockState BS = {0, &(F->getEntryBlock())};
-        replaceUsage(BS, F, UnreachableBlock, UnreachableRef, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
-
+        replaceUsage(BS, F, UnreachableBlock, StatisticsSM, GenBlockBSMap, BSGenBlockMap, BSValueMap, BSPhiValueMap, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
 
         // update dataflow BS -> Inst -> BS
         std::unordered_map<SplitMergeSpace::BlockState, std::unordered_map<Instruction*, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>>, SplitMergeSpace::BlockState::BlockStateHashFunction> BSAllPhiValueMap;
@@ -1099,7 +1081,7 @@ struct ModuleSplitMerge : public ModulePass {
             ////outs() << Visiting->getName() << "\n";
             WorkingSet.erase(CurBS);
 
-            outs() << SplitMergeSpace::BlockState::bsString(CurBS) << "\n";
+            // outs() << SplitMergeSpace::BlockState::bsString(CurBS) << "\n";
 
             assert(ReverseCFGSplitGraph.find(CurBS) != ReverseCFGSplitGraph.end());
 
@@ -1148,6 +1130,9 @@ struct ModuleSplitMerge : public ModulePass {
                   for (auto& PreBB : ReverseCFGSplitGraph[CurBS]) {
                       CreatePhi->addIncoming(UndefValue::get(Inst->getType()), BSGenBlockMap[PreBB]);
                   }
+
+                  // update statistics
+                  StatisticsSM.addPhiNum(1);
 
                   BSPhiValueMap[CurBS][Inst] = CreatePhi;
                   BSAllPhiValueMap[CurBS][Inst] = std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>();
@@ -1289,12 +1274,12 @@ struct ModuleSplitMerge : public ModulePass {
 
         //outs() << *F << "\n";
 
-        if (UnreachableRef.find(UnreachableBlock) == UnreachableRef.end()) {
+        if (StatisticsSM.UpdateUnreachableNum == 0) {
             UnreachableBlock->dropAllReferences();
             UnreachableBlock->eraseFromParent();
         }
 
-        outs() << "End Remove" << "\n";
+        //outs() << "End Remove" << "\n";
 
         for (auto& BSValuePair : BSValueMap) {
           delete BSValuePair.second;
@@ -1302,20 +1287,38 @@ struct ModuleSplitMerge : public ModulePass {
         BSValueMap.clear();
 
         for (auto& BBPair : BBStates) {
-            BasicBlock* BB = BBPair.first;
-            BB->dropAllReferences();
-            BB->removeFromParent();
+            BasicBlock* OriBB = BBPair.first;
+            OriBB->dropAllReferences();
+            std::unordered_set<Instruction*> BBInsts;
+            for (BasicBlock::iterator IN = OriBB->begin(), INE = OriBB->end(); IN != INE; ++IN) {
+                BBInsts.insert(&*IN);
+            }
+            for (auto& BBInst : BBInsts) {
+                BBInst->replaceAllUsesWith(UndefValue::get(BBInst->getType()));
+                BBInst->eraseFromParent();
+            }
+        }
+        for (auto& BBPair : BBStates) {
+            BBPair.first->removeFromParent();
         }
     }
 
     bool runOnModule(Module &M) override {
       errs() << "Function CFG Code Generate Pass: " << "\n";
 
+      std::size_t TotalAddBlocks = 0;
+      std::size_t TotalAddBlockInsts = 0;
+      std::size_t TotalAddPhiInsts = 0;
+
       for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
 
         errs().write_escaped(F->getName()) << '\n';
+        errs() << "\tSplit Merge Summary:" << "\n";
 
-        bool Changed = false;
+        bool Found = false;
+        PHINode* TargetPhi;
+        double HighestFitness = 0.0;
+
         for (Function::iterator BB = F->begin(), BBE = F->end(); BB != BBE; ++BB) {
 
           for (BasicBlock::iterator IN = BB->begin(), INE = BB->end(); IN != INE; ++IN) {
@@ -1345,62 +1348,90 @@ struct ModuleSplitMerge : public ModulePass {
 
             if (!AllNonConstant) {
               // print
-              std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>> ReachableMap = std::unordered_map<BasicBlock*, std::unordered_set<BasicBlock*>>();
-              std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>> PhiInfluenceNodes = std::unordered_map<BasicBlock*, std::unordered_set<Instruction*>>();
-              std::unordered_set<BasicBlock*> RegionOfInfluence = std::unordered_set<BasicBlock*>();
+              std::unordered_map<BasicBlock *, std::unordered_set<BasicBlock *>> ReachableMap = std::unordered_map<BasicBlock *, std::unordered_set<BasicBlock *>>();
+              std::unordered_map<BasicBlock *, std::unordered_set<Instruction *>> PhiInfluenceNodes = std::unordered_map<BasicBlock *, std::unordered_set<Instruction *>>();
+              std::unordered_set<BasicBlock *> RegionOfInfluence = std::unordered_set<BasicBlock *>();
 
               getReachableNodes(PhiNode, ReachableMap);
               getInfluencedNodes(PhiNode, PhiInfluenceNodes);
-              getRegionOfInfluence(PhiNode, ReachableMap, PhiInfluenceNodes, RegionOfInfluence);
+              getRegionOfInfluence(PhiNode, ReachableMap, PhiInfluenceNodes,RegionOfInfluence);
 
               // fitness
-              double FitNess = getFitNess(PhiInfluenceNodes, RegionOfInfluence);
+              double Fitness = getFitNess(PhiInfluenceNodes, RegionOfInfluence);
 
-              if (std::abs(FitNess - double(0)) < 0.198) {
+              if (std::abs(Fitness - double(0)) < 0.198) {
                 continue;
               }
 
-              // revival edges
-              std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
-
-              // Edge -> Value
-              std::unordered_map<SplitMergeSpace::Edge, int64_t, SplitMergeSpace::Edge::EdgeHashFunction> EdgeValueMap;
-              // Value -> Edges
-              std::unordered_map<int64_t, std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction>> ValueEdgesMap;
-
-              // Value -> State
-              std::unordered_map<int64_t , std::size_t> StateMap;
-              // State -> Value
-              std::unordered_map<std::size_t, int64_t> StateReverseMap;
-
-              // Kill Edges
-              std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> KillEdges;
-
-              // Original CFG
-              std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGOriGraph;
-
-              // Generate CFG
-              std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGSplitGraph;
-
-              // Reverse CFG
-              std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> ReverseCFGSplitGraph;
-
-              // generate cfg for test
-              generateSymbolSplitCFG(&*F, PhiNode, PhiInfluenceNodes, RegionOfInfluence, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
-
-              generateSplitCFGCode(&*F, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
-
-              Changed = true;
-              break;
+              if (Fitness > HighestFitness) {
+                HighestFitness = Fitness;
+                TargetPhi = PhiNode;
+                Found = true;
+              }
+            }
             }
           }
 
-          if (Changed) {
-              break;
-          }
+        if (Found) {
+            std::string PHiString = instInfo(TargetPhi);
+
+            std::unordered_map<BasicBlock *, std::unordered_set<BasicBlock *>> ReachableMap = std::unordered_map<BasicBlock *, std::unordered_set<BasicBlock *>>();
+            std::unordered_map<BasicBlock *, std::unordered_set<Instruction *>> PhiInfluenceNodes = std::unordered_map<BasicBlock *, std::unordered_set<Instruction *>>();
+            std::unordered_set<BasicBlock *> RegionOfInfluence = std::unordered_set<BasicBlock *>();
+
+            getReachableNodes(TargetPhi, ReachableMap);
+            getInfluencedNodes(TargetPhi, PhiInfluenceNodes);
+            getRegionOfInfluence(TargetPhi, ReachableMap, PhiInfluenceNodes,RegionOfInfluence);
+
+            // revival edges
+            std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> RevivalEdges;
+
+            // Edge -> Value
+            std::unordered_map<SplitMergeSpace::Edge, int64_t, SplitMergeSpace::Edge::EdgeHashFunction> EdgeValueMap;
+            // Value -> Edges
+            std::unordered_map<int64_t, std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction>> ValueEdgesMap;
+
+            // Value -> State
+            std::unordered_map<int64_t , std::size_t> StateMap;
+            // State -> Value
+            std::unordered_map<std::size_t, int64_t> StateReverseMap;
+
+            // Kill Edges
+            std::unordered_set<SplitMergeSpace::Edge, SplitMergeSpace::Edge::EdgeHashFunction> KillEdges;
+
+            // Original CFG
+            std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGOriGraph;
+
+            // Generate CFG
+            std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> CFGSplitGraph;
+
+            // Reverse CFG
+            std::unordered_map<SplitMergeSpace::BlockState, std::unordered_set<SplitMergeSpace::BlockState, SplitMergeSpace::BlockState::BlockStateHashFunction>, SplitMergeSpace::BlockState::BlockStateHashFunction> ReverseCFGSplitGraph;
+
+            // generate cfg for test
+            generateSymbolSplitCFG(&*F, TargetPhi, PhiInfluenceNodes, RegionOfInfluence, RevivalEdges, EdgeValueMap, ValueEdgesMap, StateMap, StateReverseMap, KillEdges, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+
+            SplitMergeSpace::StatisticSplitMerge SSM;
+            SSM.FitNess = HighestFitness;
+            generateSplitCFGCode(&*F, SSM, CFGOriGraph, CFGSplitGraph, ReverseCFGSplitGraph);
+
+            TotalAddBlocks += SSM.AddBlockNum;
+            TotalAddBlockInsts += SSM.AddInstNum;
+            TotalAddPhiInsts += SSM.AddPhiNum;
+
+            errs() << "\n";
+            errs() << "\t\t" << PHiString << "\n\n";
+            errs() << SplitMergeSpace::StatisticSplitMerge::sSMString(SSM, "\t\t\t") << "\n";
+            errs() << "\n";
         }
       }
-      return true;
+
+      errs() << "\n\n";
+      errs() << "=============================================================";
+      errs() << "Summary:" << "\n";
+      errs() << "\t" << "Total Add Blocks: " << std::to_string(TotalAddBlocks) << "\n";
+      errs() << "\t" << "Total Add Insts: " << std::to_string(TotalAddBlockInsts) << "\n";
+      errs() << "\t" << "Total Add Phi Insts: " << std::to_string(TotalAddPhiInsts) << "\n";
     }
 };
 } // namespace

@@ -20,41 +20,41 @@ if.end.dup2:                                      ; preds = %if.else.dup0
   br i1 %cmp1.dup2, label %if.then2.dup2, label %if.else3.dup2
 
 if.else3.dup2:                                    ; preds = %if.end.dup2
-  %x.0.dup26 = phi i32 [ %x.0.dup2, %if.end.dup2 ]
+  %x.0.dup212 = phi i32 [ %x.0.dup2, %if.end.dup2 ]
   br label %if.end4.dup2
 
 if.end4.dup2:                                     ; preds = %if.else3.dup2, %if.then2.dup2
   %y.0.dup2 = phi i32 [ 10, %if.else3.dup2 ], [ 30, %if.then2.dup2 ]
-  %x.0.dup217 = phi i32 [ %x.0.dup25, %if.then2.dup2 ], [ %x.0.dup26, %if.else3.dup2 ]
+  %x.0.dup216 = phi i32 [ %x.0.dup214, %if.then2.dup2 ], [ %x.0.dup212, %if.else3.dup2 ]
   %cmp5.dup2 = icmp sgt i32 %condition3, 20
   br i1 %cmp5.dup2, label %if.then6.dup2, label %if.else8.dup2
 
 if.then2.dup2:                                    ; preds = %if.end.dup2
-  %x.0.dup25 = phi i32 [ %x.0.dup2, %if.end.dup2 ]
+  %x.0.dup214 = phi i32 [ %x.0.dup2, %if.end.dup2 ]
   br label %if.end4.dup2
 
 if.else8.dup2:                                    ; preds = %if.end4.dup2
-  %y.0.dup27 = phi i32 [ %y.0.dup2, %if.end4.dup2 ]
-  %x.0.dup220 = phi i32 [ %x.0.dup217, %if.end4.dup2 ]
-  %sub9.dup2 = sub nsw i32 %x.0.dup220, 30
+  %y.0.dup215 = phi i32 [ %y.0.dup2, %if.end4.dup2 ]
+  %x.0.dup218 = phi i32 [ %x.0.dup216, %if.end4.dup2 ]
+  %sub9.dup2 = sub nsw i32 %x.0.dup218, 30
   br label %if.end10.dup2
 
 if.end10.dup2:                                    ; preds = %if.else8.dup2, %if.then6.dup2
   %m.0.dup2 = phi i32 [ %sub9.dup2, %if.else8.dup2 ], [ %add7.dup2, %if.then6.dup2 ]
-  %sub9.dup22 = phi i32 [ undef, %if.then6.dup2 ], [ %sub9.dup2, %if.else8.dup2 ]
-  %add7.dup23 = phi i32 [ %add7.dup2, %if.then6.dup2 ], [ undef, %if.else8.dup2 ]
-  %y.0.dup28 = phi i32 [ %y.0.dup211, %if.then6.dup2 ], [ %y.0.dup27, %if.else8.dup2 ]
-  %x.0.dup219 = phi i32 [ %x.0.dup218, %if.then6.dup2 ], [ %x.0.dup220, %if.else8.dup2 ]
-  %add12.dup2 = add nsw i32 10, %x.0.dup219
-  %add13.dup2 = add nsw i32 %add12.dup2, %y.0.dup28
+  %sub9.dup219 = phi i32 [ undef, %if.then6.dup2 ], [ %sub9.dup2, %if.else8.dup2 ]
+  %y.0.dup220 = phi i32 [ %y.0.dup213, %if.then6.dup2 ], [ %y.0.dup215, %if.else8.dup2 ]
+  %x.0.dup221 = phi i32 [ %x.0.dup217, %if.then6.dup2 ], [ %x.0.dup218, %if.else8.dup2 ]
+  %add7.dup222 = phi i32 [ %add7.dup2, %if.then6.dup2 ], [ undef, %if.else8.dup2 ]
+  %add12.dup2 = add nsw i32 10, %x.0.dup221
+  %add13.dup2 = add nsw i32 %add12.dup2, %y.0.dup220
   %add14.dup2 = add nsw i32 %add13.dup2, %m.0.dup2
   %call.dup2 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0), i32 %add14.dup2)
   ret i32 %add14.dup2
 
 if.then6.dup2:                                    ; preds = %if.end4.dup2
-  %y.0.dup211 = phi i32 [ %y.0.dup2, %if.end4.dup2 ]
-  %x.0.dup218 = phi i32 [ %x.0.dup217, %if.end4.dup2 ]
-  %add7.dup2 = add nsw i32 %x.0.dup218, 30
+  %y.0.dup213 = phi i32 [ %y.0.dup2, %if.end4.dup2 ]
+  %x.0.dup217 = phi i32 [ %x.0.dup216, %if.end4.dup2 ]
+  %add7.dup2 = add nsw i32 %x.0.dup217, 30
   br label %if.end10.dup2
 
 if.then.dup0:                                     ; preds = %entry.dup0
@@ -71,36 +71,36 @@ if.else3.dup1:                                    ; preds = %if.end.dup1
 
 if.end4.dup1:                                     ; preds = %if.else3.dup1, %if.then2.dup1
   %y.0.dup1 = phi i32 [ 30, %if.then2.dup1 ], [ 10, %if.else3.dup1 ]
-  %x.0.dup114 = phi i32 [ %x.0.dup11, %if.else3.dup1 ], [ %x.0.dup14, %if.then2.dup1 ]
+  %x.0.dup14 = phi i32 [ %x.0.dup11, %if.else3.dup1 ], [ %x.0.dup13, %if.then2.dup1 ]
   %cmp5.dup1 = icmp sgt i32 %condition3, 20
   br i1 %cmp5.dup1, label %if.then6.dup1, label %if.else8.dup1
 
 if.then2.dup1:                                    ; preds = %if.end.dup1
-  %x.0.dup14 = phi i32 [ %x.0.dup1, %if.end.dup1 ]
+  %x.0.dup13 = phi i32 [ %x.0.dup1, %if.end.dup1 ]
   br label %if.end4.dup1
 
 if.else8.dup1:                                    ; preds = %if.end4.dup1
-  %y.0.dup121 = phi i32 [ %y.0.dup1, %if.end4.dup1 ]
-  %x.0.dup122 = phi i32 [ %x.0.dup114, %if.end4.dup1 ]
-  %sub9.dup1 = sub nsw i32 %x.0.dup122, 30
+  %y.0.dup12 = phi i32 [ %y.0.dup1, %if.end4.dup1 ]
+  %x.0.dup15 = phi i32 [ %x.0.dup14, %if.end4.dup1 ]
+  %sub9.dup1 = sub nsw i32 %x.0.dup15, 30
   br label %if.end10.dup1
 
 if.end10.dup1:                                    ; preds = %if.else8.dup1, %if.then6.dup1
   %m.0.dup1 = phi i32 [ %add7.dup1, %if.then6.dup1 ], [ %sub9.dup1, %if.else8.dup1 ]
-  %add7.dup19 = phi i32 [ undef, %if.else8.dup1 ], [ %add7.dup1, %if.then6.dup1 ]
-  %sub9.dup110 = phi i32 [ %sub9.dup1, %if.else8.dup1 ], [ undef, %if.then6.dup1 ]
-  %y.0.dup113 = phi i32 [ %y.0.dup121, %if.else8.dup1 ], [ %y.0.dup112, %if.then6.dup1 ]
-  %x.0.dup116 = phi i32 [ %x.0.dup122, %if.else8.dup1 ], [ %x.0.dup115, %if.then6.dup1 ]
-  %add12.dup1 = add nsw i32 10, %x.0.dup116
-  %add13.dup1 = add nsw i32 %add12.dup1, %y.0.dup113
+  %add7.dup18 = phi i32 [ undef, %if.else8.dup1 ], [ %add7.dup1, %if.then6.dup1 ]
+  %y.0.dup19 = phi i32 [ %y.0.dup12, %if.else8.dup1 ], [ %y.0.dup16, %if.then6.dup1 ]
+  %x.0.dup110 = phi i32 [ %x.0.dup15, %if.else8.dup1 ], [ %x.0.dup17, %if.then6.dup1 ]
+  %sub9.dup111 = phi i32 [ %sub9.dup1, %if.else8.dup1 ], [ undef, %if.then6.dup1 ]
+  %add12.dup1 = add nsw i32 10, %x.0.dup110
+  %add13.dup1 = add nsw i32 %add12.dup1, %y.0.dup19
   %add14.dup1 = add nsw i32 %add13.dup1, %m.0.dup1
   %call.dup1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0), i32 %add14.dup1)
   ret i32 %add14.dup1
 
 if.then6.dup1:                                    ; preds = %if.end4.dup1
-  %y.0.dup112 = phi i32 [ %y.0.dup1, %if.end4.dup1 ]
-  %x.0.dup115 = phi i32 [ %x.0.dup114, %if.end4.dup1 ]
-  %add7.dup1 = add nsw i32 %x.0.dup115, 30
+  %y.0.dup16 = phi i32 [ %y.0.dup1, %if.end4.dup1 ]
+  %x.0.dup17 = phi i32 [ %x.0.dup14, %if.end4.dup1 ]
+  %add7.dup1 = add nsw i32 %x.0.dup17, 30
   br label %if.end10.dup1
 }
 

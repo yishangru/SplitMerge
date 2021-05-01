@@ -161,7 +161,10 @@ spec_write
 spec_fwrite
 spec_putc
 
+
+==========================================================================
+Overall Statistics For Module (Only Check For Highest Fitness DM)
 Summary:
 	Total Add Blocks: 0
 	Total Add Insts: 0
-	Total Remove Insts: 0
+	Total Possible Remove Insts: 0

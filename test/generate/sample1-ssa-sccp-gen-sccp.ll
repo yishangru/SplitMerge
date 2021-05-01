@@ -30,19 +30,19 @@ if.then2.dup2:                                    ; preds = %if.end.dup2
   br label %if.end4.dup2
 
 if.else8.dup2:                                    ; preds = %if.end4.dup2
-  %y.0.dup27 = phi i32 [ %y.0.dup2, %if.end4.dup2 ]
+  %y.0.dup215 = phi i32 [ %y.0.dup2, %if.end4.dup2 ]
   br label %if.end10.dup2
 
 if.end10.dup2:                                    ; preds = %if.then6.dup2, %if.else8.dup2
   %m.0.dup2 = phi i32 [ -25, %if.else8.dup2 ], [ 35, %if.then6.dup2 ]
-  %y.0.dup28 = phi i32 [ %y.0.dup211, %if.then6.dup2 ], [ %y.0.dup27, %if.else8.dup2 ]
-  %add13.dup2 = add nsw i32 15, %y.0.dup28
+  %y.0.dup220 = phi i32 [ %y.0.dup213, %if.then6.dup2 ], [ %y.0.dup215, %if.else8.dup2 ]
+  %add13.dup2 = add nsw i32 15, %y.0.dup220
   %add14.dup2 = add nsw i32 %add13.dup2, %m.0.dup2
   %call.dup2 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0), i32 %add14.dup2)
   ret i32 %add14.dup2
 
 if.then6.dup2:                                    ; preds = %if.end4.dup2
-  %y.0.dup211 = phi i32 [ %y.0.dup2, %if.end4.dup2 ]
+  %y.0.dup213 = phi i32 [ %y.0.dup2, %if.end4.dup2 ]
   br label %if.end10.dup2
 
 if.then.dup0:                                     ; preds = %entry.dup0
@@ -64,19 +64,19 @@ if.then2.dup1:                                    ; preds = %if.end.dup1
   br label %if.end4.dup1
 
 if.else8.dup1:                                    ; preds = %if.end4.dup1
-  %y.0.dup121 = phi i32 [ %y.0.dup1, %if.end4.dup1 ]
+  %y.0.dup12 = phi i32 [ %y.0.dup1, %if.end4.dup1 ]
   br label %if.end10.dup1
 
 if.end10.dup1:                                    ; preds = %if.then6.dup1, %if.else8.dup1
   %m.0.dup1 = phi i32 [ 45, %if.then6.dup1 ], [ -15, %if.else8.dup1 ]
-  %y.0.dup113 = phi i32 [ %y.0.dup121, %if.else8.dup1 ], [ %y.0.dup112, %if.then6.dup1 ]
-  %add13.dup1 = add nsw i32 25, %y.0.dup113
+  %y.0.dup19 = phi i32 [ %y.0.dup12, %if.else8.dup1 ], [ %y.0.dup16, %if.then6.dup1 ]
+  %add13.dup1 = add nsw i32 25, %y.0.dup19
   %add14.dup1 = add nsw i32 %add13.dup1, %m.0.dup1
   %call.dup1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i64 0, i64 0), i32 %add14.dup1)
   ret i32 %add14.dup1
 
 if.then6.dup1:                                    ; preds = %if.end4.dup1
-  %y.0.dup112 = phi i32 [ %y.0.dup1, %if.end4.dup1 ]
+  %y.0.dup16 = phi i32 [ %y.0.dup1, %if.end4.dup1 ]
   br label %if.end10.dup1
 }
 

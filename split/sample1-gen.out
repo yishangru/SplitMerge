@@ -1,0 +1,25 @@
+Function CFG Code Generate Pass: 
+dm_sample_cond_3
+	Split Merge Summary:
+
+		if.end --- [   %x.0 = phi i32 [ 15, %if.then ], [ 5, %if.else ] ]
+
+			FitNess: 0.428571
+			Add Blocks: 14
+			Add Phi Insts: 22
+			Add Block Insts: 36
+			Update Phi Unreachable Count: 0
+
+
+llvm.lifetime.start.p0i8
+	Split Merge Summary:
+printf
+	Split Merge Summary:
+llvm.lifetime.end.p0i8
+	Split Merge Summary:
+
+
+=============================================================Summary:
+	Total Add Blocks: 14
+	Total Add Insts: 36
+	Total Add Phi Insts: 22

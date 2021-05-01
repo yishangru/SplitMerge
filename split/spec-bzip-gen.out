@@ -1,0 +1,329 @@
+Function CFG Code Generate Pass: 
+BZ2_blockSort
+	Split Merge Summary:
+fallbackSort
+	Split Merge Summary:
+mainSort
+	Split Merge Summary:
+fprintf
+	Split Merge Summary:
+mainQSort3
+	Split Merge Summary:
+mainSimpleSort
+	Split Merge Summary:
+mmed3
+	Split Merge Summary:
+mainGtU
+	Split Merge Summary:
+fallbackQSort3
+	Split Merge Summary:
+fallbackSimpleSort
+	Split Merge Summary:
+fopen_output_safely
+	Split Merge Summary:
+open
+	Split Merge Summary:
+fdopen
+	Split Merge Summary:
+close
+	Split Merge Summary:
+main
+	Split Merge Summary:
+mySIGSEGVorSIGBUScatcher
+	Split Merge Summary:
+signal
+	Split Merge Summary:
+copyFileName
+	Split Merge Summary:
+addFlagsFromEnvVar
+	Split Merge Summary:
+snocString
+	Split Merge Summary:
+strcmp
+	Split Merge Summary:
+strlen
+	Split Merge Summary:
+strstr
+	Split Merge Summary:
+license
+	Split Merge Summary:
+usage
+	Split Merge Summary:
+exit
+	Split Merge Summary:
+redundant
+	Split Merge Summary:
+strncmp
+	Split Merge Summary:
+mySignalCatcher
+	Split Merge Summary:
+compress
+	Split Merge Summary:
+uncompress
+	Split Merge Summary:
+setExit
+	Split Merge Summary:
+testf
+	Split Merge Summary:
+free
+	Split Merge Summary:
+panic
+	Split Merge Summary:
+containsDubiousChars
+	Split Merge Summary:
+fileExists
+	Split Merge Summary:
+__errno_location
+	Split Merge Summary:
+strerror
+	Split Merge Summary:
+stat
+	Split Merge Summary:
+fileno
+	Split Merge Summary:
+isatty
+	Split Merge Summary:
+fopen
+	Split Merge Summary:
+pad
+	Split Merge Summary:
+fflush
+	Split Merge Summary:
+testStream
+	Split Merge Summary:
+ferror
+	Split Merge Summary:
+myfeof
+	Split Merge Summary:
+fclose
+	Split Merge Summary:
+configError
+	Split Merge Summary:
+ioError
+	Split Merge Summary:
+outOfMemory
+	Split Merge Summary:
+showFileNames
+	Split Merge Summary:
+cleanUpAndFail
+	Split Merge Summary:
+remove
+	Split Merge Summary:
+perror
+	Split Merge Summary:
+fgetc
+	Split Merge Summary:
+ungetc
+	Split Merge Summary:
+mapSuffix
+	Split Merge Summary:
+strcat
+	Split Merge Summary:
+notAStandardFile
+	Split Merge Summary:
+countHardLinks
+	Split Merge Summary:
+saveInputFileMetaInfo
+	Split Merge Summary:
+uncompressStream
+	Split Merge Summary:
+applySavedMetaInfoToOutputFile
+	Split Merge Summary:
+chmod
+	Split Merge Summary:
+utime
+	Split Merge Summary:
+chown
+	Split Merge Summary:
+fwrite
+	Split Merge Summary:
+rewind
+	Split Merge Summary:
+fread
+	Split Merge Summary:
+crcError
+	Split Merge Summary:
+compressedStreamEOF
+	Split Merge Summary:
+cadvise
+	Split Merge Summary:
+lstat
+	Split Merge Summary:
+hasSuffix
+	Split Merge Summary:
+compressStream
+	Split Merge Summary:
+uInt64_from_UInt32s
+	Split Merge Summary:
+uInt64_to_double
+	Split Merge Summary:
+uInt64_toAscii
+	Split Merge Summary:
+llvm.memcpy.p0i8.p0i8.i64
+	Split Merge Summary:
+uInt64_qrm10
+	Split Merge Summary:
+uInt64_isZero
+	Split Merge Summary:
+mkCell
+	Split Merge Summary:
+myMalloc
+	Split Merge Summary:
+strcpy
+	Split Merge Summary:
+malloc
+	Split Merge Summary:
+getenv
+	Split Merge Summary:
+__ctype_b_loc
+	Split Merge Summary:
+strncpy
+	Split Merge Summary:
+BZ2_bz__AssertH__fail
+	Split Merge Summary:
+BZ2_bzlibVersion
+	Split Merge Summary:
+BZ2_bzCompressInit
+	Split Merge Summary:
+bz_config_ok
+	Split Merge Summary:
+default_bzalloc
+	Split Merge Summary:
+default_bzfree
+	Split Merge Summary:
+init_RL
+	Split Merge Summary:
+prepare_new_block
+	Split Merge Summary:
+BZ2_bzCompress
+	Split Merge Summary:
+handle_compress
+	Split Merge Summary:
+isempty_RL
+	Split Merge Summary:
+copy_output_until_stop
+	Split Merge Summary:
+copy_input_until_stop
+	Split Merge Summary:
+flush_RL
+	Split Merge Summary:
+add_pair_to_block
+	Split Merge Summary:
+BZ2_bzCompressEnd
+	Split Merge Summary:
+BZ2_bzDecompressInit
+	Split Merge Summary:
+BZ2_indexIntoF
+	Split Merge Summary:
+BZ2_bzDecompress
+	Split Merge Summary:
+unRLE_obuf_to_output_SMALL
+	Split Merge Summary:
+unRLE_obuf_to_output_FAST
+	Split Merge Summary:
+BZ2_bzDecompressEnd
+	Split Merge Summary:
+BZ2_bzWriteOpen
+	Split Merge Summary:
+BZ2_bzWrite
+	Split Merge Summary:
+BZ2_bzWriteClose
+	Split Merge Summary:
+BZ2_bzWriteClose64
+	Split Merge Summary:
+BZ2_bzReadOpen
+	Split Merge Summary:
+BZ2_bzReadClose
+	Split Merge Summary:
+BZ2_bzRead
+	Split Merge Summary:
+myfeof.123
+	Split Merge Summary:
+BZ2_bzReadGetUnused
+	Split Merge Summary:
+BZ2_bzBuffToBuffCompress
+	Split Merge Summary:
+BZ2_bzBuffToBuffDecompress
+	Split Merge Summary:
+BZ2_bzopen
+	Split Merge Summary:
+bzopen_or_bzdopen
+	Split Merge Summary:
+llvm.memset.p0i8.i64
+	Split Merge Summary:
+BZ2_bzdopen
+	Split Merge Summary:
+BZ2_bzread
+	Split Merge Summary:
+BZ2_bzwrite
+	Split Merge Summary:
+BZ2_bzflush
+	Split Merge Summary:
+BZ2_bzclose
+	Split Merge Summary:
+BZ2_bzerror
+	Split Merge Summary:
+BZ2_bsInitWrite
+	Split Merge Summary:
+BZ2_compressBlock
+	Split Merge Summary:
+bsPutUChar
+	Split Merge Summary:
+bsPutUInt32
+	Split Merge Summary:
+bsW
+	Split Merge Summary:
+generateMTFValues
+	Split Merge Summary:
+sendMTFValues
+	Split Merge Summary:
+bsFinishWrite
+	Split Merge Summary:
+makeMaps_e
+	Split Merge Summary:
+BZ2_decompress
+	Split Merge Summary:
+makeMaps_d
+	Split Merge Summary:
+BZ2_hbMakeCodeLengths
+	Split Merge Summary:
+BZ2_hbAssignCodes
+	Split Merge Summary:
+BZ2_hbCreateDecodeTables
+	Split Merge Summary:
+ran
+	Split Merge Summary:
+spec_init
+	Split Merge Summary:
+printf
+	Split Merge Summary:
+spec_random_load
+	Split Merge Summary:
+spec_load
+	Split Merge Summary:
+read
+	Split Merge Summary:
+spec_read
+	Split Merge Summary:
+spec_fread
+	Split Merge Summary:
+spec_getc
+	Split Merge Summary:
+spec_ungetc
+	Split Merge Summary:
+spec_rewind
+	Split Merge Summary:
+spec_reset
+	Split Merge Summary:
+spec_write
+	Split Merge Summary:
+spec_fwrite
+	Split Merge Summary:
+spec_putc
+	Split Merge Summary:
+
+
+=============================================================Summary:
+	Total Add Blocks: 0
+	Total Add Insts: 0
+	Total Add Phi Insts: 0
