@@ -36,7 +36,7 @@ in phi.
 
 --- 
 (Actual CFG Generated)
-<img align="center" src="/graph/sample1-gen-sccp-cfg.png" width="850" height="780" alt="Actual CFG Generated"/>
+<img align="center" src="/graph/sample1-gen-sccp-cfg.png" width="860" height="820" alt="Actual CFG Generated"/>
 
 ### Directory Structure
 - cfg: generated symbolic cfg with block duplications
