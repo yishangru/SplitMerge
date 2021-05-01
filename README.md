@@ -23,8 +23,8 @@ clear that the split will recover some constants from the original destructive m
 the code size is increased, we can still expect some optimizations available.
 
 <p float="left">
-    <img src="/graph/sample1-cfg.png" width="300"/>
-    <img src="/graph/sample1.if.end.png" width="300"/>
+    <img src="/graph/sample1-cfg.png" width="320" height="800"/>
+    <img src="/graph/sample1.if.end.png" width="320" height="800"/>
 </p>
 
 ### Directory Structure
