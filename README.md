@@ -37,5 +37,10 @@ the code size is increased, we can still expect some optimizations available.
     4. src: src for test samples
     
 ### Project Run
+We use LLVM 11.0.0 on Ubuntu 18.04 with `release` mode and assert enable.
+
+`cmake -DLLVM_FORCE_ENABLE_STATS=1 -DLLVM_ENABLE_PROJECTS=clang -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=On -DLLVM_TARGETS_TO_BUILD=host ../llvm`
+
 1. Update the data directory in `script.sh`
 2. Run `script.sh` under the build directory.
+3. There are more commands for running in `reference.md`
