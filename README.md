@@ -23,17 +23,19 @@ It is clear that the CFG is now a clear two branch with each branch representing
 state, i.e. a constant. Then, some further optimizations can be performed. Given this, it is 
 clear that the split will recover some constants from the original destructive merges. Although 
 the code size is increased, we can still expect some optimizations available. The actual 
-generated code with its CFG are shown in the third figure.
+generated code with its CFG are shown in the third figure. It is clear that `%x.0` is replaced 
+with constant at each branch and enable both `%m.0.dup1` and `%m.0.dup2` with conditions known 
+in phi.
 
 ---
 
-<p float="middle">
+<p float="center">
     <img src="/graph/sample1-cfg.png" width="360" height="600"/>
     <img src="/graph/sample1.if.end.png" width="450" height="600"/>
 </p>
 
 --- 
-<p float="middle">
+<p float="center">
     <img src="/graph/sample1-gen-sccp-cfg.png" width="680" height="650"/>
 </p>
 
