@@ -33,3 +33,6 @@ int dm_sample_cond_3 (int condition1, int condition2, int condition3) {
 	printf("result was %d\n", retval);
 	return retval;
 }
+
+
+
