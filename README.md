@@ -19,7 +19,7 @@ block is a destructive merge. Before this merge, there are two constant value fo
 i.e. 15 and 5. However, after the PHI merge, `%x.0` is no longer a constant and thus prevents 
 some further optimization. We then perform the split and generate a symbolic representation 
 of blocks shown in second graph. The suffix represents the state of the constructed automata. 
-It is clear that the CFG is now a clear two branch with each branch representing an unified 
+The generated CFG is now with two branches and each branch represents an unified 
 state, i.e. a constant. Then, some further optimizations can be performed. Given this, it is 
 clear that the split will recover some constants from the original destructive merges. Although 
 the code size is increased, we can still expect some optimizations available. The actual 
